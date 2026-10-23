@@ -177,7 +177,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f0f6fa] flex flex-col font-sans">
       {/* Top Navbar */}
       <header className="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 text-white shadow-md">
         <div className="max-w-6xl mx-auto px-4 h-18 py-2 flex items-center justify-between">
@@ -330,7 +330,7 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="no-print bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+      <footer className="no-print bg-[#e8f1f7] border-t border-blue-200/60 py-6 text-center text-xs text-slate-500">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 3ο Γενικό Λύκειο Χανίων</p>
           <p className="flex items-center gap-1 text-[11px] text-slate-400">
