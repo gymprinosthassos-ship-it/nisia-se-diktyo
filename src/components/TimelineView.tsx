@@ -56,7 +56,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
           Νησιά σε Δίκτυο: Θάσος & Κρήτη
         </h1>
         <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-          Συνεργατική ιστορική έρευνα, αρχειακά τεκμήρια και προφορικές μαρτυρίες από τις μαθητικές ομάδες του <strong>Γυμνασίου Πρίνου Θάσου</strong> και του <strong>4ου ΓΕΛ Χανίων</strong>.
+          Συνεργατική ιστορική έρευνα, αρχειακά τεκμήρια και προφορικές μαρτυρίες από τις μαθητικές ομάδες του <strong>Γυμνασίου Πρίνου Θάσου</strong> και του <strong>3ου ΓΕΛ Χανίων</strong>.
         </p>
       </div>
 

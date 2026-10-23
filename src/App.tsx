@@ -283,7 +283,7 @@ export function App() {
                 <span className="text-slate-400 text-xs">✕</span>
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-600 text-white flex items-center gap-1">
                   <Compass className="w-3 h-3" />
-                  4ο Γενικό Λύκειο Χανίων
+                  3ο Γενικό Λύκειο Χανίων
                 </span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black text-white">
@@ -332,7 +332,7 @@ export function App() {
       {/* Footer */}
       <footer className="no-print bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 4ο Γενικό Λύκειο Χανίων</p>
+          <p>© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 3ο Γενικό Λύκειο Χανίων</p>
           <p className="flex items-center gap-1 text-[11px] text-slate-400">
             <span>Ομάδα Ιστορίας: Νησιά σε Δίκτυο</span>
             <span>•</span>
