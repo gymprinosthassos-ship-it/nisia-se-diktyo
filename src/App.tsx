@@ -212,7 +212,7 @@ export function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f0f6fa] flex flex-col font-sans selection:bg-amber-500 selection:text-slate-900">
+    <div className="min-h-screen bg-[#f0f6fa] flex flex-col selection:bg-amber-500 selection:text-slate-900">
       {/* Top Navbar */}
       <header className="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
