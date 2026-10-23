@@ -6,7 +6,20 @@ import { TeacherDashboard } from './components/TeacherDashboard';
 import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
-import { BookOpen, Users, ShieldCheck, Compass, Anchor, Map as MapIcon, Cloud } from 'lucide-react';
+import { 
+  BookOpen, 
+  Users, 
+  ShieldCheck, 
+  Compass, 
+  Anchor, 
+  Map as MapIcon, 
+  Cloud,
+  Menu,
+  X,
+  ChevronUp,
+  ScrollText,
+  MonitorPlay
+} from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<'timeline' | 'map' | 'teams' | 'teachers'>('timeline');
@@ -14,6 +27,21 @@ export function App() {
   const [schools, setSchools] = useState<School[]>(mockSchools);
   const [teams, setTeams] = useState<Team[]>(mockTeams);
   const [isLiveConnected, setIsLiveConnected] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+
+  // Παρακολούθηση scroll για το Scroll-to-Top κουμπί
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Φόρτωση ζωντανών δεδομένων από Supabase
   useEffect(() => {
@@ -176,139 +204,224 @@ export function App() {
     }
   };
 
+  const navItems = [
+    { id: 'timeline' as const, label: 'Χρονολόγιο', icon: BookOpen, desc: 'Διαδραστικό ιστορικό χρονολόγιο' },
+    { id: 'map' as const, label: 'Χάρτης Δικτύου', icon: MapIcon, desc: 'Ναυτικοί & εμπορικοί δρόμοι' },
+    { id: 'teams' as const, label: 'Υποβολή Ομάδων', icon: Users, desc: 'Καταχώριση αρχειακών τεκμηρίων' },
+    { id: 'teachers' as const, label: 'Εκπαιδευτικοί', icon: ShieldCheck, desc: 'Επιμέλεια & αξιολόγηση' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#f0f6fa] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f0f6fa] flex flex-col font-sans selection:bg-amber-500 selection:text-slate-900">
       {/* Top Navbar */}
-      <header className="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 text-white shadow-md">
-        <div className="max-w-6xl mx-auto px-4 h-18 py-2 flex items-center justify-between">
+      <header className="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-lg">
+        <div className="max-w-6xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
           {/* Logo & Τίτλος */}
           <div 
-            onClick={() => setCurrentTab('timeline')}
+            onClick={() => {
+              setCurrentTab('timeline');
+              setIsMobileMenuOpen(false);
+            }}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <img 
-              src="/logo.jpg" 
-              alt="Ομάδα Ιστορίας: Θάσος - Κρήτη" 
-              className="w-12 h-12 rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 transition"
-            />
+            <div className="relative">
+              <img 
+                src="/logo.jpg" 
+                alt="Ομάδα Ιστορίας: Θάσος - Κρήτη" 
+                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
+              />
+              <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-blue-500 border-2 border-slate-900 rounded-full"></span>
+            </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base sm:text-lg font-black text-white tracking-tight leading-tight">
+                <span className="text-base sm:text-lg font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition">
                   ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ
                 </span>
-                <span className="hidden md:inline px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-[10px] font-bold">
+                <span className="hidden sm:inline-block px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold tracking-wider uppercase">
                   19ος αι.
                 </span>
                 {isLiveConnected && (
-                  <span className="hidden lg:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-[10px] font-bold">
+                  <span className="hidden lg:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold">
                     <Cloud className="w-3 h-3 text-emerald-400" />
                     <span>Cloud Live</span>
                   </span>
                 )}
               </div>
-              <span className="text-xs text-slate-300 block font-medium">
+              <span className="text-[11px] sm:text-xs text-slate-300 block font-normal text-slate-400 line-clamp-1">
                 Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή
               </span>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1 sm:gap-2">
-            <button
-              onClick={() => setCurrentTab('timeline')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                currentTab === 'timeline'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              <span className="hidden sm:inline">Χρονολόγιο</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentTab('map')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                currentTab === 'map'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              <MapIcon className="w-4 h-4" />
-              <span>Χάρτης Δικτύου</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentTab('teams')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                currentTab === 'teams'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              <span>Υποβολή Ομάδων</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentTab('teachers')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                currentTab === 'teachers'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Εκπαιδευτικοί</span>
-            </button>
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentTab(item.id)}
+                  className={`relative px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-3 right-3 h-0.5 bg-amber-300 rounded-full"></span>
+                  )}
+                </button>
+              );
+            })}
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            aria-label="Μενού πλοήγησης"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-6 space-y-2 animate-fadeIn">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setCurrentTab(item.id);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-3 transition ${
+                    isActive
+                      ? 'bg-amber-500 text-slate-950 font-black'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                  }`}
+                >
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <div>
+                    <div>{item.label}</div>
+                    <div className={`text-[11px] font-normal ${isActive ? 'text-slate-900' : 'text-slate-400'}`}>
+                      {item.desc}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 px-2">
+              <span>Γυμνάσιο Πρίνου Θάσου ⟷ 3ο ΓΕΛ Χανίων</span>
+              <span className="text-amber-400 font-bold">2026-2027</span>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Hero Banner */}
-      <div className="no-print bg-gradient-to-b from-slate-900 to-slate-800 text-white border-b border-slate-700 py-6 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <img 
-              src="/logo.jpg" 
-              alt="Logo" 
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-amber-400/80 shadow-2xl object-cover shrink-0"
-            />
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-600 text-white flex items-center gap-1">
-                  <Anchor className="w-3 h-3" />
-                  Γυμνάσιο Πρίνου Θάσου
-                </span>
-                <span className="text-slate-400 text-xs">✕</span>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-600 text-white flex items-center gap-1">
-                  <Compass className="w-3 h-3" />
-                  3ο Γενικό Λύκειο Χανίων
-                </span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-black text-white">
-                Διασχολικό Εργαστήριο Ιστορίας (2026 – 2027)
-              </h1>
-              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                Συνεργατική ιστορική έρευνα 8 μαθητικών υποομάδων: Αρχειακή έρευνα για την κοινωνία, τη διοίκηση, το εμπόριο και την αρχιτεκτονική, σε διασύνδεση με ψηφιακή επιμέλεια, οπτικοακουστικά τεκμήρια και διαδραστική χαρτογράφηση.
-              </p>
-            </div>
+      {/* Hero Banner with Historical Aesthetic */}
+      <section className="no-print relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-14 px-4 overflow-hidden border-b border-slate-800">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="relative max-w-6xl mx-auto">
+          {/* School Collaborative Badge */}
+          <div className="inline-flex flex-wrap items-center gap-2 p-1.5 pr-4 bg-slate-800/90 border border-slate-700/80 rounded-full shadow-inner mb-4">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white flex items-center gap-1.5 shadow-sm">
+              <Anchor className="w-3.5 h-3.5" />
+              Γυμνάσιο Πρίνου Θάσου
+            </span>
+            <span className="text-amber-400 text-xs font-bold px-1">⟷</span>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-600 text-white flex items-center gap-1.5 shadow-sm">
+              <Compass className="w-3.5 h-3.5" />
+              3ο Γενικό Λύκειο Χανίων
+            </span>
+            <span className="hidden sm:inline text-[11px] text-slate-400 ml-1">
+              • Διασχολική Σύμπραξη Ιστορίας
+            </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2.5 text-xs shrink-0">
-            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-2.5 px-3">
-              <span className="text-amber-400 font-bold block mb-0.5">Α΄ ΠΤΕΡΥΓΑ</span>
-              <span className="text-slate-300">Αρχειακή Έρευνα (4 Υποομάδες)</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Title & Description */}
+            <div className="lg:col-span-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <img 
+                src="/logo.jpg" 
+                alt="Logo Διασχολικού Εργαστηρίου" 
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-amber-400/90 shadow-2xl object-cover shrink-0 ring-4 ring-slate-800"
+              />
+              <div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight">
+                  Διασχολικό Εργαστήριο Ιστορίας <span className="text-amber-400 whitespace-nowrap">(2026 – 2027)</span>
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-300 mt-2.5 max-w-2xl leading-relaxed">
+                  Συνεργατική ιστορική έρευνα 8 μαθητικών υποομάδων: Αρχειακή έρευνα για την κοινωνία, τη διοίκηση, το εμπόριο και την αρχιτεκτονική, σε διασύνδεση με ψηφιακή επιμέλεια, οπτικοακουστικά τεκμήρια και διαδραστική χαρτογράφηση.
+                </p>
+              </div>
             </div>
-            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-2.5 px-3">
-              <span className="text-blue-400 font-bold block mb-0.5">Β΄ ΠΤΕΡΥΓΑ</span>
-              <span className="text-slate-300">Ψηφιακή Δημιουργία (4 Υποομάδες)</span>
+
+            {/* Wings / Πτέρυγες (Interactive Cards) */}
+            <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
+              <div className="group bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-400/60 rounded-xl p-3 shadow-md transition-all duration-200 cursor-default">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 group-hover:scale-110 transition">
+                    <ScrollText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-amber-400 font-bold text-xs uppercase tracking-wider block">
+                      Α΄ ΠΤΕΡΥΓΑ
+                    </span>
+                    <span className="text-white text-xs font-semibold">
+                      Αρχειακή Έρευνα <span className="text-slate-400 font-normal">(4 Υποομάδες)</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-400/60 rounded-xl p-3 shadow-md transition-all duration-200 cursor-default">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 group-hover:scale-110 transition">
+                    <MonitorPlay className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-blue-400 font-bold text-xs uppercase tracking-wider block">
+                      Β΄ ΠΤΕΡΥΓΑ
+                    </span>
+                    <span className="text-white text-xs font-semibold">
+                      Ψηφιακή Δημιουργία <span className="text-slate-400 font-normal">(4 Υποομάδες)</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
+        {/* Decorative Wave Divider Transition to Light Content */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none pointer-events-none">
+          <svg 
+            className="relative block w-full h-6 sm:h-9" 
+            data-name="Layer 1" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 1200 120" 
+            preserveAspectRatio="none"
+          >
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,121.31,192,108.79,235.8,99.78,278.43,76.54,321.39,56.44Z" 
+              fill="#f0f6fa"
+            ></path>
+          </svg>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
       <main className="flex-1">
         {currentTab === 'timeline' && <TimelineView entries={entries.filter(e => e.status === 'approved')} />}
         {currentTab === 'map' && <InteractiveMap entries={entries.filter(e => e.status === 'approved')} />}
@@ -329,15 +442,100 @@ export function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="no-print bg-[#e8f1f7] border-t border-blue-200/60 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 3ο Γενικό Λύκειο Χανίων</p>
-          <p className="flex items-center gap-1 text-[11px] text-slate-400">
-            <span>Ομάδα Ιστορίας: Νησιά σε Δίκτυο</span>
-            <span>•</span>
-            <span>100% Δωρεάν & Ασφαλής Πλατφόρμα</span>
-          </p>
+      {/* Floating Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="no-print fixed bottom-6 right-6 z-50 p-3 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-amber-300"
+          title="Επιστροφή στην κορυφή"
+          aria-label="Επιστροφή στην κορυφή"
+        >
+          <ChevronUp className="w-5 h-5 stroke-[2.5]" />
+        </button>
+      )}
+
+      {/* Rich Multi-Column Footer */}
+      <footer className="no-print bg-slate-900 text-slate-300 border-t border-slate-800 pt-12 pb-8 text-xs">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+            {/* Identity Column */}
+            <div className="md:col-span-5 space-y-3">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/logo.jpg" 
+                  alt="Logo" 
+                  className="w-10 h-10 rounded-full border border-amber-400 object-cover"
+                />
+                <div>
+                  <span className="font-serif font-bold text-white text-base block tracking-tight">
+                    ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ
+                  </span>
+                  <span className="text-[11px] text-amber-400">
+                    Θάσος & Κρήτη στην Οθωμανική Μεσόγειο (19ος αι.)
+                  </span>
+                </div>
+              </div>
+              <p className="text-slate-400 leading-relaxed text-xs max-w-sm">
+                Εκπαιδευτικό πρόγραμμα ιστορικής έρευνας, μελέτης αρχειακών τεκμηρίων και ψηφιακής διασύνδεσης μαθητών από το Βόρειο και Νότιο Αιγαίο.
+              </p>
+            </div>
+
+            {/* Quick Navigation Column */}
+            <div className="md:col-span-3 space-y-2.5">
+              <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
+                Πλοήγηση
+              </span>
+              <ul className="space-y-2">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => {
+                        setCurrentTab(item.id);
+                        scrollToTop();
+                      }}
+                      className="hover:text-amber-400 transition flex items-center gap-2"
+                    >
+                      <span className="text-amber-400">•</span>
+                      <span>{item.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Schools & Credits Column */}
+            <div className="md:col-span-4 space-y-2.5">
+              <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
+                Συνεργαζόμενα Σχολεία
+              </span>
+              <div className="space-y-2 text-slate-400">
+                <div className="flex items-start gap-2">
+                  <Anchor className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-slate-200 block">Γυμνάσιο Πρίνου Θάσου</strong>
+                    <span className="text-[11px]">Πρίνος, Θάσος • Α΄ & Β΄ Πτέρυγες</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Compass className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-slate-200 block">3ο Γενικό Λύκειο Χανίων</strong>
+                    <span className="text-[11px]">Χανιά, Κρήτη • Α΄ & Β΄ Πτέρυγες</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-[11px]">
+            <p>© 2026–2027 • Διασχολικό Εργαστήριο Ιστορίας</p>
+            <div className="flex items-center gap-3">
+              <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+                100% Ασφαλής & Ανοικτή Πλατφόρμα
+              </span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
