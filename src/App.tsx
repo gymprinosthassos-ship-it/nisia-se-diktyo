@@ -84,7 +84,10 @@ export function App() {
             team: (teamsData || mockTeams).find(t => t.id === e.team_id)
           })) as HistoricalEntry[];
 
-          setEntries(enrichedEntries);
+          // Συγχώνευση με τα mock entries ώστε να υπάρχουν πάντα τεκμήρια και για τα δύο σχολεία (Θάσος & Χανιά)
+          const existingTitles = new Set(enrichedEntries.map(e => e.title.trim().toLowerCase()));
+          const extraMocks = mockEntries.filter(m => !existingTitles.has(m.title.trim().toLowerCase()));
+          setEntries([...enrichedEntries, ...extraMocks]);
           setIsLiveConnected(true);
         }
       } catch (err) {

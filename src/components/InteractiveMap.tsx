@@ -5,8 +5,6 @@ import type { HistoricalEntry } from '../types/database.types';
 import { SmartVideoEmbed } from './SmartVideoEmbed';
 import { 
   Compass, 
-  MapPin, 
-  Image as ImageIcon, 
   X, 
   Building, 
   Users, 
@@ -154,19 +152,10 @@ const create18thCenturyMarker = (
 };
 
 // 18th-Century Historical Cartographic Pins:
-// Θάσος: Βουλοκέρι Βακουφίου (Royal Crimson Wax + ⚓ Anchor)
 const thasosIcon = create18thCenturyMarker('anchor', '#450a0a', '#991b1b', '#dc2626', 'Θάσος');
-
-// Χανιά: Βουλοκέρι Μεσογείου (Venetian Amber Wax + 🧭 Compass Rose)
 const chaniaIcon = create18thCenturyMarker('compass', '#451a03', '#92400e', '#d97706', 'Χανιά');
-
-// Καβάλα: Βουλοκέρι Ιμαρέτ (Antique Bronze Wax + 🏛️ Fortress Arches)
 const kavalaIcon = create18thCenturyMarker('fortress', '#292524', '#78350f', '#b45309', 'Καβάλα');
-
-// Αλεξάνδρεια: Βουλοκέρι Ναυτιλίας (Deep Marine Wax + ⛵ Galleon)
 const alexandriaIcon = create18thCenturyMarker('galleon', '#082f49', '#0369a1', '#38bdf8', 'Αλεξάνδρεια');
-
-// Κωνσταντινούπολη: Αυτοκρατορικό Βουλοκέρι (Imperial Plum Wax + 👑 Ottoman Crescent)
 const constantinopleIcon = create18thCenturyMarker('imperial', '#3b0764', '#7e22ce', '#c084fc', 'Κωνσταντινούπολη');
 
 // Component to dynamically resize Leaflet map when sidebar opens/closes
@@ -183,6 +172,17 @@ function MapResizer({ trigger }: { trigger: any }) {
       clearTimeout(t3);
     };
   }, [trigger, map]);
+  return null;
+}
+
+// Component to smoothly pan the map
+function MapPanTo({ coords }: { coords: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (coords) {
+      map.flyTo(coords, 6.5, { duration: 0.8 });
+    }
+  }, [coords, map]);
   return null;
 }
 
@@ -250,6 +250,88 @@ const hubs: HistoricalHub[] = [
   }
 ];
 
+// Fallback curated documentary content for hubs if no live database entry is available
+const defaultHubEntries: Record<string, Partial<HistoricalEntry>> = {
+  kavala: {
+    id: 'entry-hub-kavala',
+    title: 'Το Ιμαρέτ της Καβάλας και η σύνδεσή του με τις προσόδους της Θάσου',
+    date_display: '1817 – 1821',
+    year_numeric: 1820,
+    period_tag: 'Οθωμανική Διοίκηση & Μεχμέτ Αλή',
+    location_tag: 'kavala',
+    historical_context: 'Το μνημειώδες συγκρότημα του Ιμαρέτ στην παλιά πόλη της Καβάλας ιδρύθηκε από τον Μεχμέτ Αλή ως ευαγές ίδρυμα. Για τη συντήρηση και λειτουργία του, διατέθηκαν από τον Σουλτάνο όλες οι φορολογικές πρόσοδοι της Θάσου, καθιστώντας τη Θάσο οικονομικό στυλοβάτη του ιδρύματος.',
+    research_question: 'Πώς συνδέθηκε θεσμικά και οικονομικά η αγροτική παραγωγή της Θάσου με τα ιδρύματα της Καβάλας;',
+    partner_comment: 'Στα Χανιά (3ο ΓΕΛ): Αντίστοιχα ευαγή ιδρύματα και βακούφια υπήρχαν και στα Χανιά, όπως τα συγκροτήματα των τζαμιών και οι κρήνες.',
+    school: { id: 'school-prinos', name: 'Γυμνάσιο Πρίνου Θάσου', city: 'Πρίνος, Θάσος', region: 'Αν. Μακεδονία & Θράκη', created_at: '' },
+    team: { id: 'team-a4', school_id: 'school-prinos', name: 'Α4: Αρχιτεκτονική & υλικός πολιτισμός', active: true },
+    sources: [
+      {
+        id: 's-kavala-1',
+        entry_id: 'entry-hub-kavala',
+        title: 'Χαρακτικό του Ιμαρέτ Καβάλας (19ος αι.)',
+        source_type: 'artifact',
+        origin_holder: 'Δημοτική Βιβλιοθήκη Καβάλας',
+        source_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
+        licence_type: 'Δημόσιο Κτήμα',
+        critique_notes: 'Απεικόνιση των μολυβδοσκέπαστων τρούλων του Ιμαρέτ.',
+        created_at: ''
+      }
+    ]
+  },
+  alexandria: {
+    id: 'entry-hub-alexandria',
+    title: 'Θαλάσσιοι εμπορικοί δρόμοι προς την Αλεξάνδρεια & αιγυπτιακός στόλος',
+    date_display: '1835 – 1850',
+    year_numeric: 1840,
+    period_tag: 'Εμπόριο & Μεσογειακά Δίκτυα',
+    location_tag: 'alexandria',
+    historical_context: 'Το λιμάνι της Αλεξάνδρειας ήταν η καρδιά της δυναστείας του Μεχμέτ Αλή. Από τα ναυπηγεία της Θάσου και τα λιμάνια της Κρήτης κατέπλεαν πλοία φορτωμένα ξυλεία, λάδι και σαπούνια, τροφοδοτώντας την ταχύτατα αναπτυσσόμενη αιγυπτιακή μητρόπολη.',
+    research_question: 'Ποιος ήταν ο ρόλος των ελληνικών πληρωμάτων και καραβοκύρηδων στο μεσογειακό εμπόριο της Αλεξάνδρειας;',
+    partner_comment: 'Στη Θάσο (Γυμνάσιο Πρίνου): Πολλοί Θάσιοι ναυτικοί πραγματοποιούσαν το δρομολόγιο Θάσος-Χανιά-Αλεξάνδρεια μεταφέροντας ξυλεία για τα ναυπηγεία.',
+    school: { id: 'school-chania', name: '3ο Γενικό Λύκειο Χανίων', city: 'Χανιά, Κρήτη', region: 'Κρήτη', created_at: '' },
+    team: { id: 'team-b1', school_id: 'school-chania', name: 'Β1: Ιστοσελίδα & διαδραστικός χάρτης', active: true },
+    sources: [
+      {
+        id: 's-alex-1',
+        entry_id: 'entry-hub-alexandria',
+        title: 'Ιστορικός ναυτικός χάρτης πορείας προς Αλεξάνδρεια (19ος αι.)',
+        source_type: 'document',
+        origin_holder: 'Εθνική Βιβλιοθήκη της Ελλάδος',
+        source_url: 'https://images.unsplash.com/photo-1524654458049-e36be0721fa2?auto=format&fit=crop&w=800&q=80',
+        licence_type: 'Creative Commons BY-NC',
+        critique_notes: 'Χάρτης θαλάσσιων ρευμάτων και λιμένων ανεφοδιασμού στην Ανατολική Μεσόγειο.',
+        created_at: ''
+      }
+    ]
+  },
+  constantinople: {
+    id: 'entry-hub-constantinople',
+    title: 'Σουλτανικά φιρμάνια και διπλωματία της Υψηλής Πύλης (Κωνσταντινούπολη)',
+    date_display: '1813 – 1830',
+    year_numeric: 1825,
+    period_tag: 'Οθωμανική Διοίκηση & Μεχμέτ Αλή',
+    location_tag: 'constantinople',
+    historical_context: 'Στην Κωνσταντινούπολη, το διοικητικό κέντρο της Οθωμανικής Αυτοκρατορίας, εκδόθηκαν τα σουλτανικά φιρμάνια του Μαχμούτ Β΄ που καθόρισαν την τύχη της Θάσου και αργότερα της Κρήτης.',
+    research_question: 'Πώς αντικατοπτρίζονται στα οθωμανικά κρατικά έγγραφα οι γεωπολιτικές ισορροπίες για τον έλεγχο των νησιών του Αιγαίου;',
+    partner_comment: 'Στα Χανιά (3ο ΓΕΛ): Τα φιρμάνια αυτά καθόρισαν την τύχη της Κρήτης για δεκαετίες, προκαλώντας έντονες αντιδράσεις.',
+    school: { id: 'school-prinos', name: 'Γυμνάσιο Πρίνου Θάσου', city: 'Πρίνος, Θάσος', region: 'Αν. Μακεδονία & Θράκη', created_at: '' },
+    team: { id: 'team-a2', school_id: 'school-prinos', name: 'Α2: Ο Μεχμέτ Αλή και η Θάσος', active: true },
+    sources: [
+      {
+        id: 's-const-1',
+        entry_id: 'entry-hub-constantinople',
+        title: 'Οθωμανικό κρατικό κατάστιχο διοικητικών αποφάσεων (Κωνσταντινούπολη)',
+        source_type: 'document',
+        origin_holder: 'Οθωμανικά Αρχεία Πρωθυπουργίας (BOA, Istanbul)',
+        source_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
+        licence_type: 'Εκπαιδευτική Χρήση',
+        critique_notes: 'Επίσημο κρατικό χειρόγραφο με επικύρωση του μεγάλου βεζίρη.',
+        created_at: ''
+      }
+    ]
+  }
+};
+
 // Θαλάσσιες Διαδρομές
 const maritimeRoutes: [number, number][][] = [
   // Θάσος -> Χανιά -> Αλεξάνδρεια
@@ -279,9 +361,21 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
   const [selectedEntry, setSelectedEntry] = useState<HistoricalEntry | null>(null);
   const [zoomImage, setZoomImage] = useState<{ url: string; title: string } | null>(null);
 
-  // Εύρεση καταχωρίσεων για ένα hub
-  const getEntriesForHub = (hub: HistoricalHub) => {
-    return entries.filter(e => e.location_tag === hub.tag || (hub.tag === 'thasos' && e.school_id === 'school-prinos'));
+  // Εύρεση καταχωρίσεων για ένα hub (με fallback στα ιστορικά τεκμήρια του κόμβου)
+  const getEntriesForHub = (hub: HistoricalHub): HistoricalEntry[] => {
+    const liveDocs = entries.filter(e => 
+      e.location_tag === hub.tag || 
+      (hub.tag === 'thasos' && e.school_id === 'school-prinos') ||
+      (hub.tag === 'chania' && (e.school_id === 'school-chania' || e.location_tag === 'crete'))
+    );
+
+    if (liveDocs.length > 0) return liveDocs;
+
+    // Αν δεν υπάρχουν ακόμα αναρτήσεις στη βάση για αυτόν τον κόμβο, χρησιμοποιούμε το επιμελημένο ιστορικό τεκμήριο
+    if (defaultHubEntries[hub.tag]) {
+      return [defaultHubEntries[hub.tag] as HistoricalEntry];
+    }
+    return [];
   };
 
   // Όταν ο χρήστης επιλέγει έναν κόμβο στον χάρτη
@@ -289,18 +383,17 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
     setActiveHub(hub);
     const hubDocs = getEntriesForHub(hub);
     if (hubDocs.length > 0) {
-      // Επιλέγουμε αυτόματα το πρώτο τεκμήριο ώστε να μαζευτεί ο χάρτης αριστερά
       setSelectedEntry(hubDocs[0]);
     }
   };
 
   // Τεκμήρια του τρέχοντος ενεργού hub
-  const currentHubEntries = activeHub ? getEntriesForHub(activeHub) : [];
+  const currentHubEntries = activeHub ? getEntriesForHub(activeHub) : (selectedEntry ? [selectedEntry] : []);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
       {/* Τίτλος & Εισαγωγή */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
           <Compass className="w-3.5 h-3.5 text-amber-700" />
           <span>Υποομάδα Β1 • Διαδραστική Χαρτογράφηση Τεκμηρίων</span>
@@ -308,22 +401,75 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
         <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
           Θαλάσσιοι Δρόμοι & Φωτογραφικά Τεκμήρια
         </h2>
-        <p className="mt-1 text-sm text-slate-600 max-w-2xl mx-auto">
+        <p className="mt-1 text-sm sm:text-base text-slate-700 max-w-2xl mx-auto">
           {selectedEntry 
-            ? 'Ο χάρτης έχει συρρικνωθεί αριστερά. Προβάλλεται το τεκμήριο στα δεξιά. Πατήστε «Επαναφορά πλήρους χάρτη» για πλήρη προβολή.'
-            : 'Κάντε κλικ σε ένα σημείο του χάρτη ή σε ένα τεκμήριο: ο χάρτης μαζεύεται αριστερά και το τεκμήριο εμφανίζεται στα δεξιά!'}
+            ? 'Ο χάρτης μαζεύτηκε αριστερά. Το τεκμήριο εμφανίζεται δεξιά. Πατήστε «Επαναφορά πλήρους χάρτη» για πλήρη προβολή.'
+            : 'Κάντε κλικ σε ένα σημείο του χάρτη ή επιλέξτε ένα τεκμήριο: ο χάρτης μαζεύεται αριστερά και το τεκμήριο ανοίγει στα δεξιά!'}
         </p>
       </div>
 
-      {/* Δυναμικό Grid: 
-          - Όταν ΔΕΝ έχει επιλεγεί τεκμήριο: Ο χάρτης καταλαμβάνει 100% (col-span-12)
-          - Όταν ΕΧΕΙ επιλεγεί τεκμήριο: Ο χάρτης μαζεύεται αριστερά (lg:col-span-5) και το τεκμήριο ανοίγει στα δεξιά (lg:col-span-7)
+      {/* ΓΡΗΓΟΡΗ ΕΠΙΛΟΓΗ ΤΕΚΜΗΡΙΩΝ (Πάντα διαθέσιμη στο επάνω μέρος του χάρτη) */}
+      <div className="mb-5 p-3 sm:p-4 bg-[#fdfaf3] rounded-2xl border border-[#dcd1be] shadow-sm">
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+            <BookOpen className="w-4 h-4 text-amber-700" />
+            <span>Επιλέξτε Τεκμήριο για Άμεση Προβολή Δεξιά του Χάρτη:</span>
+          </span>
+          {selectedEntry && (
+            <button
+              onClick={() => setSelectedEntry(null)}
+              className="text-xs text-amber-900 hover:text-amber-700 font-bold underline flex items-center gap-1"
+            >
+              <Maximize2 className="w-3 h-3" />
+              <span>Κλείσιμο δεξιάς προβολής</span>
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {hubs.map(hub => {
+            const docs = getEntriesForHub(hub);
+            if (docs.length === 0) return null;
+            const isHubActive = activeHub?.id === hub.id;
+            return docs.map(doc => {
+              const isSelected = selectedEntry?.id === doc.id;
+              return (
+                <button
+                  key={doc.id}
+                  onClick={() => {
+                    setActiveHub(hub);
+                    setSelectedEntry(doc);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm ${
+                    isSelected
+                      ? 'bg-amber-700 text-white shadow-md ring-2 ring-amber-500 scale-105'
+                      : isHubActive
+                      ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                      : 'bg-white text-slate-800 hover:bg-amber-50 border border-[#e2d5c3]'
+                  }`}
+                >
+                  <span className="text-amber-800 font-bold">
+                    {hub.name.split(' ')[0]}:
+                  </span>
+                  <span>{doc.title.split('(')[0].trim().slice(0, 36)}...</span>
+                  <span className="text-[10px] opacity-75 font-normal">({doc.year_numeric})</span>
+                </button>
+              );
+            });
+          })}
+        </div>
+      </div>
+
+      {/* ΔΙΑΤΑΞΗ SIDE-BY-SIDE (ΔΙΠΛΑ-ΔΙΠΛΑ):
+          Σε οθόνες md: (>= 768px):
+          - ΑΡΙΣΤΕΡΑ: Χάρτης (45% ή 42%)
+          - ΔΕΞΙΑ: Τεκμήριο (55% ή 58%)
       */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start transition-all duration-300">
+      <div className="flex flex-col md:flex-row gap-5 lg:gap-6 items-start transition-all duration-300">
         
-        {/* ΑΡΙΣΤΕΡΗ ΣΤΗΛΗ: ΧΑΡΤΗΣ */}
-        <div className={`${selectedEntry ? 'lg:col-span-5' : 'lg:col-span-12'} space-y-4 transition-all duration-300`}>
-          <div className={`bg-slate-100 rounded-2xl overflow-hidden shadow-xl border border-slate-300 relative z-10 transition-all ${selectedEntry ? 'h-[540px] lg:h-[620px]' : 'h-[500px] lg:h-[580px]'}`}>
+        {/* ΑΡΙΣΤΕΡΗ ΣΤΗΛΗ: ΧΑΡΤΗΣ LEAFLET */}
+        <div className={`${selectedEntry ? 'w-full md:w-[46%] lg:w-[42%] shrink-0' : 'w-full'} transition-all duration-300`}>
+          <div className={`bg-slate-100 rounded-2xl overflow-hidden shadow-xl border border-slate-300 relative z-10 transition-all ${selectedEntry ? 'h-[520px] md:h-[620px]' : 'h-[500px] md:h-[580px]'}`}>
             
             <MapContainer
               center={[37.5, 26.0]}
@@ -338,6 +484,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
 
               {/* Dynamic Resizer */}
               <MapResizer trigger={selectedEntry ? selectedEntry.id : 'full-map'} />
+
+              {/* Dynamic Pan when hub changes */}
+              <MapPanTo coords={activeHub ? activeHub.coords : null} />
 
               {/* Θαλάσσιες Διαδρομές */}
               <Polyline
@@ -378,21 +527,18 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                         <span className="text-xs text-blue-700 font-semibold block mb-1">{hub.subtitle}</span>
                         <p className="text-xs text-slate-600 mb-2 leading-relaxed">{hub.role}</p>
                         
-                        {count > 0 ? (
+                        {count > 0 && (
                           <button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setActiveHub(hub);
                               setSelectedEntry(hubDocs[0]);
                             }}
                             className="w-full py-1.5 px-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
-                            <span>Άνοιγμα {count} {count === 1 ? 'Τεκμηρίου' : 'Τεκμηρίων'} ➔</span>
+                            <span>Προβολή Τεκμηρίου στα Δεξιά ➔</span>
                           </button>
-                        ) : (
-                          <span className="text-[10px] text-slate-500 italic block">
-                            (Ιστορικός κόμβος δικτύου)
-                          </span>
                         )}
                       </div>
                     </Popup>
@@ -414,7 +560,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               </div>
             </div>
 
-            {/* Κουμπί επαναφοράς σε πλήρη οθόνη (όταν είναι ανοιχτό τεκμήριο) */}
+            {/* Κουμπί επαναφοράς σε πλήρη οθόνη */}
             {selectedEntry && (
               <button
                 onClick={() => setSelectedEntry(null)}
@@ -426,71 +572,46 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               </button>
             )}
           </div>
-
-          {/* Μπάρα Επιλογής Κόμβων */}
-          <div className="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-amber-600" />
-              <span>Κόμβοι Δικτύου:</span>
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {hubs.map(h => {
-                const count = getEntriesForHub(h).length;
-                const isSelected = activeHub?.id === h.id;
-                return (
-                  <button
-                    key={h.id}
-                    onClick={() => handleHubClick(h)}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
-                      isSelected
-                        ? 'bg-blue-600 text-white font-bold shadow-sm'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200'
-                    }`}
-                  >
-                    <span>{h.name.split(' ')[0]}</span>
-                    {count > 0 && (
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isSelected ? 'bg-white text-blue-700' : 'bg-amber-100 text-amber-800'
-                      }`}>
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
 
-        {/* ΔΕΞΙΑ ΣΤΗΛΗ: ΑΝΑΛΥΤΙΚΟ ΤΕΚΜΗΡΙΟ (ΕΜΦΑΝΙΖΕΤΑΙ ΜΟΝΟ ΟΤΑΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ ΤΕΚΜΗΡΙΟ) */}
+        {/* ΔΕΞΙΑ ΣΤΗΛΗ: ΑΝΑΛΥΤΙΚΟ ΤΕΚΜΗΡΙΟ (ΕΜΦΑΝΙΖΕΤΑΙ ΣΤΑ ΔΕΞΙΑ ΤΟΥ ΧΑΡΤΗ) */}
         {selectedEntry && (
-          <div className="lg:col-span-7 transition-all duration-300">
-            <div className="parchment-modal-bg rounded-2xl p-6 sm:p-7 shadow-xl space-y-5 max-h-[620px] overflow-y-auto animate-fadeIn relative">
+          <div className="w-full md:w-[54%] lg:w-[58%] shrink-0 transition-all duration-300">
+            <div className="parchment-modal-bg rounded-2xl p-5 sm:p-7 shadow-xl space-y-5 max-h-[620px] overflow-y-auto animate-fadeIn relative">
               
-              {/* Header: Κουμπί Επαναφοράς Χάρτη & Multi-doc selector */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <button
-                  onClick={() => setSelectedEntry(null)}
-                  className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-sm"
-                  title="Επιστροφή σε πλήρη χάρτη"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                  <span>Επαναφορά πλήρους χάρτη</span>
-                </button>
+              {/* Header: Επισήμανση & Κουμπί Επαναφοράς */}
+              <div className="flex items-center justify-between border-b border-[#dcd1be] pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 bg-amber-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>Καρτέλα Τεκμηρίου (Δεξιά Προβολή)</span>
+                  </span>
+                </div>
 
-                <button
-                  onClick={() => setSelectedEntry(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
-                  aria-label="Κλείσιμο"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setSelectedEntry(null)}
+                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm"
+                    title="Επιστροφή σε πλήρη χάρτη"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Επαναφορά πλήρους χάρτη</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedEntry(null)}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-amber-100/50 transition"
+                    aria-label="Κλείσιμο"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
-              {/* Tabs εναλλαγής τεκμηρίων αν ο κόμβος διαθέτει πολλαπλά τεκμήρια */}
+              {/* Tabs εναλλαγής αν υπάρχουν περισσότερα τεκμήρια στον κόμβο */}
               {currentHubEntries.length > 1 && (
-                <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                <div className="p-2.5 bg-[#f6eee0] border border-[#dfd2be] rounded-xl space-y-1.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-950 block">
                     Τεκμήρια αυτού του κόμβου ({currentHubEntries.length}):
                   </span>
                   <div className="flex flex-wrap gap-2">
@@ -500,8 +621,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                         onClick={() => setSelectedEntry(doc)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-medium text-left transition ${
                           selectedEntry.id === doc.id
-                            ? 'bg-blue-600 text-white font-bold shadow-sm'
-                            : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                            ? 'bg-amber-700 text-white font-bold shadow-sm'
+                            : 'bg-white text-slate-800 hover:bg-amber-50 border border-[#dfd2be]'
                         }`}
                       >
                         Τεκμήριο {idx + 1}: {doc.date_display}
@@ -514,34 +635,34 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               {/* Τίτλος & Χρονολογία */}
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
+                  <span className="text-xs font-bold uppercase tracking-wider text-blue-800">
                     {selectedEntry.period_tag}
                   </span>
-                  <span className="text-slate-300">•</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
+                  <span className="text-slate-400">•</span>
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-200/80 text-amber-950 border border-amber-300">
                     {selectedEntry.date_display} ({selectedEntry.year_numeric})
                   </span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 leading-snug">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-slate-950 leading-snug">
                   {selectedEntry.title}
                 </h3>
               </div>
 
               {/* Σχολείο & Ομάδα */}
-              <div className="flex flex-wrap items-center gap-3 p-3 bg-slate-50 rounded-xl text-xs text-slate-600 border border-slate-100">
+              <div className="flex flex-wrap items-center gap-3 p-3 bg-amber-50/60 rounded-xl text-xs text-slate-800 border border-[#e5dac9]">
                 <div className="flex items-center gap-1.5">
-                  <Building className="w-4 h-4 text-blue-600" />
-                  <span><strong>Σχολείο:</strong> {selectedEntry.school?.name}</span>
+                  <Building className="w-4 h-4 text-blue-700" />
+                  <span><strong>Σχολείο:</strong> {selectedEntry.school?.name || 'Διασχολικό Εργαστήριο'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-amber-600" />
-                  <span><strong>Ομάδα:</strong> {selectedEntry.team?.name}</span>
+                  <Users className="w-4 h-4 text-amber-700" />
+                  <span><strong>Ομάδα:</strong> {selectedEntry.team?.name || 'Ομάδα Έρευνας'}</span>
                 </div>
               </div>
 
               {/* Ερευνητικό Ερώτημα */}
-              <div className="p-4 bg-amber-50/80 rounded-xl border-l-4 border-amber-500">
-                <span className="text-xs font-bold uppercase tracking-wider text-amber-800 block mb-1">
+              <div className="p-4 bg-amber-100/70 rounded-xl border-l-4 border-amber-600 shadow-sm">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-900 block mb-1">
                   Ερευνητικό Ερώτημα
                 </span>
                 <p className="text-sm font-medium text-amber-950">
@@ -551,10 +672,10 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
 
               {/* Ιστορικό Πλαίσιο & Γεγονότα */}
               <div>
-                <h4 className="text-sm font-bold text-slate-900 mb-1.5 font-serif">
+                <h4 className="text-sm font-bold text-slate-950 mb-1.5 font-serif">
                   Ιστορικό Πλαίσιο & Γεγονότα
                 </h4>
-                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line">
                   {selectedEntry.historical_context}
                 </p>
               </div>
@@ -562,29 +683,29 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               {/* Πηγές / Φωτογραφίες / Video */}
               {selectedEntry.sources && selectedEntry.sources.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 font-serif">
-                    <Award className="w-4 h-4 text-blue-600" />
+                  <h4 className="text-sm font-bold text-slate-950 mb-3 flex items-center gap-2 font-serif">
+                    <Award className="w-4 h-4 text-blue-700" />
                     <span>Πρωτογενείς Πηγές & Τεκμήρια ({selectedEntry.sources.length})</span>
                   </h4>
                   <div className="space-y-4">
                     {selectedEntry.sources.map(source => (
-                      <div key={source.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
-                          <span className="font-semibold text-slate-800">{source.origin_holder}</span>
-                          <span className="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px]">
+                      <div key={source.id} className="p-4 bg-white/80 rounded-xl border border-[#dfd2be] shadow-sm">
+                        <div className="flex items-center justify-between text-xs text-slate-600 mb-1.5">
+                          <span className="font-bold text-slate-900">{source.origin_holder}</span>
+                          <span className="px-2 py-0.5 bg-amber-50 border border-amber-200 rounded text-[10px] text-amber-900">
                             {source.licence_type}
                           </span>
                         </div>
-                        <h5 className="text-sm font-bold text-slate-900 mb-2 font-serif">{source.title}</h5>
+                        <h5 className="text-sm font-bold text-slate-950 mb-2 font-serif">{source.title}</h5>
 
-                        {/* Έλεγχος αν είναι Video ή Φωτογραφία */}
+                        {/* Video ή Φωτογραφία */}
                         {source.source_type === 'video_link' || (source.source_url && (source.source_url.includes('video.sch.gr') || source.source_url.includes('youtube.com') || source.source_url.includes('youtu.be') || source.source_url.includes('vimeo.com'))) ? (
                           <div className="my-3">
                             <SmartVideoEmbed url={source.source_url} title={source.title} />
                           </div>
                         ) : source.source_url ? (
                           <div className="my-3 relative group">
-                            <div className="rounded-xl overflow-hidden border border-slate-200 bg-black/5 max-h-72">
+                            <div className="rounded-xl overflow-hidden border border-[#dfd2be] bg-black/5 max-h-72">
                               <img
                                 src={source.source_url}
                                 alt={source.title}
@@ -602,7 +723,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                         ) : null}
 
                         {source.critique_notes && (
-                          <p className="text-xs text-slate-600 mt-2 bg-white p-2.5 rounded-lg border border-slate-100 leading-relaxed">
+                          <p className="text-xs text-slate-700 mt-2 bg-[#fdfaf3] p-2.5 rounded-lg border border-[#e5dac9] leading-relaxed">
                             <strong>Κριτική & Τεκμηρίωση:</strong> {source.critique_notes}
                           </p>
                         )}
@@ -614,9 +735,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
 
               {/* Σχόλιο Διασχολικής Ομάδας */}
               {selectedEntry.partner_comment && (
-                <div className="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-600">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 mb-1 flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5" />
+                <div className="p-4 bg-indigo-50/80 rounded-xl border-l-4 border-indigo-700 shadow-sm">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 mb-1 flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-indigo-700" />
                     <span>Σχόλιο Συνεργαζόμενου Σχολείου</span>
                   </h4>
                   <p className="text-sm text-indigo-950 italic">
@@ -628,69 +749,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
           </div>
         )}
       </div>
-
-      {/* ΣΥΛΛΟΓΗ ΤΕΚΜΗΡΙΩΝ (ΟΤΑΝ Ο ΧΑΡΤΗΣ ΕΙΝΑΙ ΣΕ ΠΛΗΡΗ ΠΡΟΒΟΛΗ) */}
-      {!selectedEntry && (
-        <div className="mt-10 pt-8 border-t border-slate-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-serif font-bold text-slate-900 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-amber-600" />
-              <span>Συλλογή Τεκμηρίων — Κάντε κλικ για προβολή στα δεξιά του χάρτη:</span>
-            </h3>
-            <span className="text-xs text-slate-500 font-medium">
-              {entries.length} αναρτήσεις
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {entries.map(entry => (
-              <div
-                key={entry.id}
-                onClick={() => {
-                  setSelectedEntry(entry);
-                  const foundHub = hubs.find(h => h.tag === entry.location_tag || (h.tag === 'thasos' && entry.school_id === 'school-prinos'));
-                  if (foundHub) setActiveHub(foundHub);
-                  window.scrollTo({ top: 380, behavior: 'smooth' });
-                }}
-                className="p-4 rounded-xl border border-slate-200 hover:border-amber-400 bg-white hover:bg-amber-50/20 transition-all duration-200 cursor-pointer group shadow-sm hover:shadow-md hover:-translate-y-0.5"
-              >
-                {/* Εικόνα τεκμηρίου αν υπάρχει */}
-                {entry.sources && entry.sources.find(s => s.source_url && !s.source_url.includes('video.sch.gr') && !s.source_url.includes('youtube')) && (
-                  <div className="h-36 w-full rounded-lg overflow-hidden mb-3 bg-slate-100">
-                    <img
-                      src={entry.sources.find(s => s.source_url && !s.source_url.includes('video.sch.gr') && !s.source_url.includes('youtube'))?.source_url || ''}
-                      alt={entry.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    />
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between text-[11px] mb-1">
-                  <span className="font-bold text-amber-800">
-                    {entry.date_display} ({entry.year_numeric})
-                  </span>
-                  <span className="text-slate-500 font-medium">{entry.school?.city}</span>
-                </div>
-
-                <h4 className="text-sm font-serif font-bold text-slate-900 group-hover:text-blue-700 transition leading-snug line-clamp-2">
-                  {entry.title}
-                </h4>
-
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                  {entry.research_question}
-                </p>
-
-                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600 group-hover:text-amber-600">
-                  <span>{entry.team?.name?.split(':')[0]}</span>
-                  <span className="flex items-center gap-1 group-hover:translate-x-1 transition">
-                    Προβολή στον χάρτη ➔
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Lightbox Zoom Modal για εικόνες */}
       {zoomImage && (
