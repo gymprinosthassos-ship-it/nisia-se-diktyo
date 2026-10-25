@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         serif: ['"EB Garamond"', 'Literata', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"EB Garamond"', 'Literata', 'Georgia', 'serif'],
       },
       colors: {
         history: {

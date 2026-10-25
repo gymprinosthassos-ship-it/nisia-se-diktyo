@@ -348,7 +348,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
       {/* MODAL ΑΝΑΛΥΤΙΚΗΣ ΠΡΟΒΟΛΗΣ ΤΕΚΜΗΡΙΟΥ & ΠΗΓΩΝ */}
       {activeModalEntry && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative animate-fadeIn">
+          <div className="parchment-modal-bg rounded-2xl max-w-3xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fadeIn">
             {/* Κουμπί κλεισίματος */}
             <button
               onClick={() => setActiveModalEntry(null)}

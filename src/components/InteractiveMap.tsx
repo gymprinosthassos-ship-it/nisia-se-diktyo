@@ -465,7 +465,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
         {/* ΔΕΞΙΑ ΣΤΗΛΗ: ΑΝΑΛΥΤΙΚΟ ΤΕΚΜΗΡΙΟ (ΕΜΦΑΝΙΖΕΤΑΙ ΜΟΝΟ ΟΤΑΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ ΤΕΚΜΗΡΙΟ) */}
         {selectedEntry && (
           <div className="lg:col-span-7 transition-all duration-300">
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-xl space-y-5 max-h-[620px] overflow-y-auto animate-fadeIn relative">
+            <div className="parchment-modal-bg rounded-2xl p-6 sm:p-7 shadow-xl space-y-5 max-h-[620px] overflow-y-auto animate-fadeIn relative">
               
               {/* Header: Κουμπί Επαναφοράς Χάρτη & Multi-doc selector */}
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">

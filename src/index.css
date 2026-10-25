@@ -5,17 +5,64 @@
 @tailwind utilities;
 
 @layer base {
+  *, ::before, ::after {
+    font-family: 'EB Garamond', 'Literata', Georgia, serif;
+  }
   html {
     scroll-behavior: smooth;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'EB Garamond', 'Literata', Georgia, serif;
   }
   body {
     @apply bg-[#f0f6fa] text-slate-900 antialiased;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'EB Garamond', 'Literata', Georgia, serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
   }
-  h1, h2, h3, h4, .font-serif {
+  h1, h2, h3, h4, h5, h6, .font-serif {
     font-family: 'EB Garamond', 'Literata', Georgia, serif !important;
   }
+  p, span, a, button, input, select, textarea, label {
+    font-family: 'EB Garamond', 'Literata', Georgia, serif;
+  }
+}
+
+/* Soft & Discreet Historical Parchment Background for Document Modals / Popups */
+.parchment-modal-bg {
+  background-color: #faf6ee !important;
+  background-image: 
+    radial-gradient(ellipse at 15% 15%, rgba(255, 255, 255, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 85%, rgba(217, 198, 165, 0.22) 0%, transparent 60%),
+    linear-gradient(180deg, #fdfbf7 0%, #faf4e8 45%, #f4ece0 100%) !important;
+  border: 1.5px solid #dcd1be !important;
+  box-shadow: 
+    0 25px 45px -12px rgba(45, 25, 10, 0.22),
+    0 12px 20px -6px rgba(45, 25, 10, 0.12),
+    inset 0 0 50px rgba(190, 155, 105, 0.08) !important;
+}
+
+.parchment-modal-bg .bg-slate-50 {
+  background-color: rgba(246, 239, 226, 0.75) !important;
+  border-color: #e5dac9 !important;
+}
+
+.parchment-modal-bg .bg-white {
+  background-color: rgba(255, 253, 248, 0.92) !important;
+  border-color: #e2d5c3 !important;
+}
+
+/* Also style Leaflet map popups with authentic parchment aesthetic */
+.leaflet-popup-content-wrapper {
+  background-color: #faf5eb !important;
+  background-image: linear-gradient(180deg, #fdfbf7 0%, #f6eee0 100%) !important;
+  border: 1.5px solid #cbb89b !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 28px rgba(45, 22, 5, 0.25) !important;
+  color: #2b1d0c !important;
+  font-family: 'EB Garamond', Georgia, serif !important;
+}
+
+.leaflet-popup-tip {
+  background: #f6eee0 !important;
 }
 
 /* Custom subtle scrollbar */
