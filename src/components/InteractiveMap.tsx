@@ -17,54 +17,157 @@ import {
   BookOpen
 } from 'lucide-react';
 
-// Custom Marker Icons with labels
-const createCustomIcon = (bgColor: string, borderColor: string, label: string) => {
+// 18th-Century Cartographic Wax Seal Markers (Βουλοκέρια & Ναυτικά Σύμβολα 18ου αι.)
+const create18thCenturyMarker = (
+  type: 'anchor' | 'compass' | 'fortress' | 'galleon' | 'imperial',
+  waxColorDark: string,
+  waxColorMid: string,
+  waxColorLight: string,
+  label: string
+) => {
+  let emblemSvg = '';
+  if (type === 'anchor') {
+    // ⚓ 18th century naval anchor
+    emblemSvg = `
+      <g stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <circle cx="22" cy="12.5" r="2.2" stroke="#fef08a" stroke-width="1.5" />
+        <line x1="22" y1="14.7" x2="22" y2="26.5" />
+        <line x1="16.5" y1="17.5" x2="27.5" y2="17.5" />
+        <path d="M15.5 23 C17 28 27 28 28.5 23" />
+        <line x1="15.5" y1="23" x2="14" y2="21.5" />
+        <line x1="28.5" y1="23" x2="30" y2="21.5" />
+      </g>
+    `;
+  } else if (type === 'compass') {
+    // 🧭 18th century 8-point compass rose / ανεμολόγιο
+    emblemSvg = `
+      <g transform="translate(22, 20)">
+        <polygon points="0,-10 2.5,-2.5 0,0 -2.5,-2.5" fill="#fef08a" stroke="#78350f" stroke-width="0.5"/>
+        <polygon points="0,10 2.5,2.5 0,0 -2.5,2.5" fill="#d97706" stroke="#78350f" stroke-width="0.5"/>
+        <polygon points="10,0 2.5,2.5 0,0 2.5,-2.5" fill="#facc15" stroke="#78350f" stroke-width="0.5"/>
+        <polygon points="-10,0 -2.5,2.5 0,0 -2.5,-2.5" fill="#b45309" stroke="#78350f" stroke-width="0.5"/>
+        <polygon points="6,-6 1.5,-1.5 0,0 0,-2" fill="#fef9c3" opacity="0.95"/>
+        <polygon points="-6,-6 -1.5,-1.5 0,0 -2,0" fill="#fef9c3" opacity="0.95"/>
+        <polygon points="6,6 1.5,1.5 0,0 2,0" fill="#92400e" opacity="0.95"/>
+        <polygon points="-6,6 -1.5,1.5 0,0 0,2" fill="#92400e" opacity="0.95"/>
+        <circle cx="0" cy="0" r="2" fill="#fef08a" stroke="#451a03" stroke-width="0.8"/>
+      </g>
+    `;
+  } else if (type === 'fortress') {
+    // 🏛️ Ottoman Imaret / fortress arches
+    emblemSvg = `
+      <g stroke="#fef08a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M16 25.5 L16 19 C16 16.5 18.5 14.5 22 14.5 C25.5 14.5 28 16.5 28 19 L28 25.5" />
+        <path d="M19 25.5 L19 21 C19 19.5 20.2 18.5 22 18.5 C23.8 18.5 25 19.5 25 21 L25 25.5" fill="#ca8a04" opacity="0.4" />
+        <line x1="14" y1="25.5" x2="30" y2="25.5" />
+        <line x1="22" y1="12.5" x2="22" y2="14.5" />
+        <circle cx="22" cy="12" r="0.9" fill="#fef08a" />
+      </g>
+    `;
+  } else if (type === 'galleon') {
+    // ⛵ 18th century caravel / merchant sailing ship
+    emblemSvg = `
+      <g stroke="#fef08a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M14.5 24 C16.5 27 27.5 27 29.5 24 L28 21.5 L16 21.5 Z" fill="#ca8a04" opacity="0.85" />
+        <line x1="22" y1="12.5" x2="22" y2="21.5" />
+        <path d="M22 13.5 C25.5 15 25.5 18.5 22 19.5 Z" fill="#fef08a" opacity="0.95" />
+        <line x1="17.5" y1="14.5" x2="17.5" y2="21.5" />
+        <path d="M17.5 15.5 C19.5 16.5 19.5 19 17.5 19.8 Z" fill="#fef08a" opacity="0.85" />
+        <path d="M14 26 C16 25 18 27 20 26 C22 25 24 27 26 26 C28 25 30 27" stroke="#93c5fd" stroke-width="1.2" />
+      </g>
+    `;
+  } else {
+    // 👑 18th century Imperial Cartographic Insignia
+    emblemSvg = `
+      <g stroke="#fef08a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M23 13.5 C18.5 13.5 15.5 16.8 15.5 21 C15.5 25.2 18.5 28.5 23 28.5 C19.8 26 18.8 23 18.8 21 C18.8 19 19.8 16 23 13.5 Z" fill="#fef08a" opacity="0.9" />
+        <polygon points="25,18 25.8,19.8 27.5,20 26.2,21.2 26.6,23 25,22 23.4,23 23.8,21.2 22.5,20 24.2,19.8" fill="#fef08a" />
+      </g>
+    `;
+  }
+
+  const uniqueId = `wax_${type}_${Math.random().toString(36).substring(2, 7)}`;
+
   return L.divIcon({
-    className: 'custom-map-marker',
+    className: 'cartographic-18th-marker',
     html: `
       <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+        <svg width="44" height="56" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.45));">
+          <defs>
+            <radialGradient id="${uniqueId}" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="${waxColorLight}" />
+              <stop offset="50%" stop-color="${waxColorMid}" />
+              <stop offset="100%" stop-color="${waxColorDark}" />
+            </radialGradient>
+            <linearGradient id="needle_${uniqueId}" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#78716c" />
+              <stop offset="50%" stop-color="#e7e5e4" />
+              <stop offset="100%" stop-color="#44403c" />
+            </linearGradient>
+          </defs>
+
+          <!-- Antique Needle / Pointer -->
+          <path d="M19 32 L22 54 L25 32 Z" fill="url(#needle_${uniqueId})" stroke="#292524" stroke-width="0.8" />
+          <circle cx="22" cy="54" r="1.5" fill="#1c1917" />
+
+          <!-- Wax Seal Outer Body -->
+          <circle cx="22" cy="20" r="18" fill="url(#${uniqueId})" stroke="#fef08a" stroke-width="1.2" stroke-dasharray="3, 1.5" />
+          
+          <!-- Inner Relief Rim -->
+          <circle cx="22" cy="20" r="14.5" fill="none" stroke="#fef08a" stroke-width="0.8" opacity="0.85" />
+          
+          <!-- Center 18th-century Emblem -->
+          ${emblemSvg}
+        </svg>
+
+        <!-- Parchment Cartouche Label (Περγαμηνή ταμπελίτσα εποχής) -->
         <div style="
-          background-color: ${bgColor}; 
-          border: 2.5px solid ${borderColor}; 
-          width: 30px; 
-          height: 30px; 
-          border-radius: 50%; 
-          box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+          margin-top: 1px;
+          background: #fdf6e7;
+          background-image: linear-gradient(180deg, #fefae0 0%, #faedd0 100%);
+          color: #3b1d05;
+          font-family: 'EB Garamond', Georgia, serif;
+          font-weight: 700;
+          font-size: 12px;
+          letter-spacing: 0.02em;
+          padding: 2px 8px;
+          border-radius: 4px;
+          white-space: nowrap;
+          border: 1.5px solid #854d0e;
+          box-shadow: 0 3px 8px rgba(45, 20, 5, 0.4), inset 0 1px 1px rgba(255,255,255,0.8);
+          pointer-events: none;
           display: flex;
           align-items: center;
-          justify-content: center;
+          gap: 4px;
+          line-height: 1.2;
         ">
-          <div style="background-color: white; width: 9px; height: 9px; border-radius: 50%;"></div>
-        </div>
-        <div style="
-          margin-top: 4px;
-          background: rgba(15, 23, 42, 0.92);
-          color: white;
-          font-family: inherit;
-          font-weight: 700;
-          font-size: 11px;
-          padding: 2px 7px;
-          border-radius: 6px;
-          white-space: nowrap;
-          border: 1px solid rgba(255,255,255,0.3);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-          pointer-events: none;
-        ">
-          ${label}
+          <span style="color: #991b1b; font-size: 9px; line-height: 1;">✦</span>
+          <span>${label}</span>
+          <span style="color: #991b1b; font-size: 9px; line-height: 1;">✦</span>
         </div>
       </div>
     `,
-    iconSize: [30, 52],
-    iconAnchor: [15, 15],
-    popupAnchor: [0, -18]
+    iconSize: [44, 76],
+    iconAnchor: [22, 54],
+    popupAnchor: [0, -56]
   });
 };
 
-const thasosIcon = createCustomIcon('#2563EB', '#93C5FD', '⚓ Θάσος');
-const chaniaIcon = createCustomIcon('#D97706', '#FDE68A', '🧭 Χανιά');
-const kavalaIcon = createCustomIcon('#0F172A', '#E2E8F0', '🏛️ Καβάλα');
-const alexandriaIcon = createCustomIcon('#0F172A', '#E2E8F0', '🚢 Αλεξάνδρεια');
-const constantinopleIcon = createCustomIcon('#0F172A', '#E2E8F0', '👑 Κωνσταντινούπολη');
+// 18th-Century Historical Cartographic Pins:
+// Θάσος: Βουλοκέρι Βακουφίου (Royal Crimson Wax + ⚓ Anchor)
+const thasosIcon = create18thCenturyMarker('anchor', '#450a0a', '#991b1b', '#dc2626', 'Θάσος');
+
+// Χανιά: Βουλοκέρι Μεσογείου (Venetian Amber Wax + 🧭 Compass Rose)
+const chaniaIcon = create18thCenturyMarker('compass', '#451a03', '#92400e', '#d97706', 'Χανιά');
+
+// Καβάλα: Βουλοκέρι Ιμαρέτ (Antique Bronze Wax + 🏛️ Fortress Arches)
+const kavalaIcon = create18thCenturyMarker('fortress', '#292524', '#78350f', '#b45309', 'Καβάλα');
+
+// Αλεξάνδρεια: Βουλοκέρι Ναυτιλίας (Deep Marine Wax + ⛵ Galleon)
+const alexandriaIcon = create18thCenturyMarker('galleon', '#082f49', '#0369a1', '#38bdf8', 'Αλεξάνδρεια');
+
+// Κωνσταντινούπολη: Αυτοκρατορικό Βουλοκέρι (Imperial Plum Wax + 👑 Ottoman Crescent)
+const constantinopleIcon = create18thCenturyMarker('imperial', '#3b0764', '#7e22ce', '#c084fc', 'Κωνσταντινούπολη');
 
 // Component to dynamically resize Leaflet map when sidebar opens/closes
 function MapResizer({ trigger }: { trigger: any }) {
