@@ -326,15 +326,24 @@ export function App() {
         )}
       </header>
 
-      {/* Hero Banner with Historical Aesthetic */}
-      <section className="no-print relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white pt-8 pb-14 px-4 overflow-hidden border-b border-slate-800">
+      {/* Hero Banner with Historical Aesthetic & Artwork Background */}
+      <section className="no-print relative bg-slate-950 text-white pt-8 pb-14 px-4 overflow-hidden border-b border-slate-800">
+        {/* Background Artwork Layer (using the historical logo artwork) */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 filter contrast-125 saturate-110 pointer-events-none scale-105"
+          style={{ backgroundImage: `url('/logo.jpg')` }}
+        />
+        {/* Dark Gradient Overlays for Enhanced Text Contrast & Depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-slate-950/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-transparent to-slate-950/95 pointer-events-none" />
+
         {/* Subtle background glow */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="relative max-w-6xl mx-auto">
           {/* School Collaborative Badge */}
-          <div className="inline-flex flex-wrap items-center gap-2 p-1.5 pr-4 bg-slate-800/90 border border-slate-700/80 rounded-full shadow-inner mb-4">
+          <div className="inline-flex flex-wrap items-center gap-2 p-1.5 pr-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700/80 rounded-full shadow-lg mb-4">
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white flex items-center gap-1.5 shadow-sm">
               <Anchor className="w-3.5 h-3.5" />
               Γυμνάσιο Πρίνου Θάσου
@@ -350,15 +359,17 @@ export function App() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Title & Description */}
+            {/* Title & Description with Circular Seal Medallion */}
             <div className="lg:col-span-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <img 
-                src="/logo.jpg" 
-                alt="Logo Διασχολικού Εργαστηρίου" 
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-amber-400/90 shadow-2xl object-cover shrink-0 ring-4 ring-slate-800"
-              />
+              <div className="relative shrink-0 group">
+                <img 
+                  src="/logo.jpg" 
+                  alt="Σφραγίδα Διασχολικού Εργαστηρίου" 
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400/90 shadow-2xl object-cover ring-4 ring-amber-500/20 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
+                />
+              </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight drop-shadow-sm">
                   Διασχολικό Εργαστήριο Ιστορίας <span className="text-amber-400 whitespace-nowrap">(2026 – 2027)</span>
                 </h1>
                 <p className="text-xs sm:text-sm text-slate-300 mt-2.5 max-w-2xl leading-relaxed">
