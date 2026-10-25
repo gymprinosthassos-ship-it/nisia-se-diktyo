@@ -3,6 +3,7 @@ import { TimelineView } from './components/TimelineView';
 import { InteractiveMap } from './components/InteractiveMap';
 import { TeamPortal } from './components/TeamPortal';
 import { TeacherDashboard } from './components/TeacherDashboard';
+import { UserGuideModal } from './components/UserGuideModal';
 import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
@@ -18,7 +19,8 @@ import {
   X,
   ChevronUp,
   ScrollText,
-  MonitorPlay
+  MonitorPlay,
+  HelpCircle
 } from 'lucide-react';
 
 export function App() {
@@ -29,6 +31,7 @@ export function App() {
   const [isLiveConnected, setIsLiveConnected] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
 
   // Παρακολούθηση scroll για το Scroll-to-Top κουμπί
   useEffect(() => {
@@ -289,6 +292,16 @@ export function App() {
                 </button>
               );
             })}
+
+            {/* Help & Guide Button */}
+            <button
+              onClick={() => setIsGuideOpen(true)}
+              className="ml-1 px-3 py-2 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition flex items-center gap-1.5 shadow-sm"
+              title="Εγχειρίδιο Χρήσης & Βοήθεια"
+            >
+              <HelpCircle className="w-4 h-4 text-amber-400" />
+              <span>Βοήθεια</span>
+            </button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -330,6 +343,21 @@ export function App() {
                 </button>
               );
             })}
+
+            {/* Mobile Help Button */}
+            <button
+              onClick={() => {
+                setIsGuideOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-3 text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition"
+            >
+              <HelpCircle className="w-5 h-5 text-amber-400 shrink-0" />
+              <div>
+                <div>Εγχειρίδιο Χρήσης & Βοήθεια</div>
+                <div className="text-[11px] font-normal text-amber-200/80">Οδηγίες για μαθητές & καθηγητές</div>
+              </div>
+            </button>
 
             <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 px-2">
               <span>Γυμνάσιο Πρίνου Θάσου ⟷ 3ο ΓΕΛ Χανίων</span>
@@ -505,6 +533,18 @@ export function App() {
                     </button>
                   </li>
                 ))}
+                <li>
+                  <button
+                    onClick={() => {
+                      setIsGuideOpen(true);
+                      scrollToTop();
+                    }}
+                    className="hover:text-amber-400 transition flex items-center gap-2 text-amber-300 font-medium"
+                  >
+                    <span className="text-amber-400">★</span>
+                    <span>Εγχειρίδιο Χρήσης (Οδηγός)</span>
+                  </button>
+                </li>
               </ul>
             </div>
 
@@ -543,6 +583,11 @@ export function App() {
           </div>
         </div>
       </footer>
+      {/* Interactive User Guide Modal */}
+      <UserGuideModal 
+        isOpen={isGuideOpen} 
+        onClose={() => setIsGuideOpen(false)} 
+      />
     </div>
   );
 }
