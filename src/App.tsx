@@ -241,7 +241,7 @@ export function App() {
                   19ος αι.
                 </span>
                 {isLiveConnected && (
-                  <span className="hidden lg:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold">
+                  <span className="hidden xl:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold">
                     <Cloud className="w-3 h-3 text-emerald-400" />
                     <span>Cloud Live</span>
                   </span>
@@ -251,6 +251,19 @@ export function App() {
                 Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή
               </span>
             </div>
+          </div>
+
+          {/* School Badges in Top Navbar (Proposal 2) */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 shadow-md text-xs">
+            <span className="text-blue-300 font-semibold flex items-center gap-1.5">
+              <Anchor className="w-3.5 h-3.5 text-blue-400" />
+              Γυμνάσιο Πρίνου Θάσου
+            </span>
+            <span className="text-amber-400 text-xs font-bold px-0.5">⟷</span>
+            <span className="text-amber-300 font-semibold flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              3ο Γενικό Λύκειο Χανίων
+            </span>
           </div>
 
           {/* Desktop Navigation Links */}
@@ -343,7 +356,7 @@ export function App() {
 
         <div className="relative max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Title & School Badges with Circular Seal Medallion */}
+            {/* Title with Circular Seal Medallion */}
             <div className="lg:col-span-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
               <div className="relative shrink-0 group">
                 <img 
@@ -352,20 +365,7 @@ export function App() {
                   className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400 shadow-2xl object-cover ring-4 ring-amber-500/30 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
                 />
               </div>
-              <div className="space-y-1.5">
-                {/* School Badges directly above title */}
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-bold bg-blue-600/90 text-white flex items-center gap-1.5 shadow-sm border border-blue-400/30">
-                    <Anchor className="w-3.5 h-3.5" />
-                    Γυμνάσιο Πρίνου Θάσου
-                  </span>
-                  <span className="text-amber-400 text-xs font-bold">⟷</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-bold bg-amber-600/90 text-white flex items-center gap-1.5 shadow-sm border border-amber-400/30">
-                    <Compass className="w-3.5 h-3.5" />
-                    3ο Γενικό Λύκειο Χανίων
-                  </span>
-                </div>
-
+              <div>
                 <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                   Διασχολικό Εργαστήριο Ιστορίας <span className="text-amber-400 whitespace-nowrap">(2026 – 2027)</span>
                 </h1>
