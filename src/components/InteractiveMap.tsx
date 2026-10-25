@@ -408,58 +408,6 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
         </p>
       </div>
 
-      {/* ΓΡΗΓΟΡΗ ΕΠΙΛΟΓΗ ΤΕΚΜΗΡΙΩΝ (Πάντα διαθέσιμη στο επάνω μέρος του χάρτη) */}
-      <div className="mb-5 p-3 sm:p-4 bg-[#fdfaf3] rounded-2xl border border-[#dcd1be] shadow-sm">
-        <div className="flex items-center justify-between gap-2 mb-2.5">
-          <span className="text-xs font-bold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
-            <BookOpen className="w-4 h-4 text-amber-700" />
-            <span>Επιλέξτε Τεκμήριο για Άμεση Προβολή Δεξιά του Χάρτη:</span>
-          </span>
-          {selectedEntry && (
-            <button
-              onClick={() => setSelectedEntry(null)}
-              className="text-xs text-amber-900 hover:text-amber-700 font-bold underline flex items-center gap-1"
-            >
-              <Maximize2 className="w-3 h-3" />
-              <span>Κλείσιμο δεξιάς προβολής</span>
-            </button>
-          )}
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {hubs.map(hub => {
-            const docs = getEntriesForHub(hub);
-            if (docs.length === 0) return null;
-            const isHubActive = activeHub?.id === hub.id;
-            return docs.map(doc => {
-              const isSelected = selectedEntry?.id === doc.id;
-              return (
-                <button
-                  key={doc.id}
-                  onClick={() => {
-                    setActiveHub(hub);
-                    setSelectedEntry(doc);
-                  }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm ${
-                    isSelected
-                      ? 'bg-amber-700 text-white shadow-md ring-2 ring-amber-500 scale-105'
-                      : isHubActive
-                      ? 'bg-amber-100 text-amber-900 border border-amber-300'
-                      : 'bg-white text-slate-800 hover:bg-amber-50 border border-[#e2d5c3]'
-                  }`}
-                >
-                  <span className="text-amber-800 font-bold">
-                    {hub.name.split(' ')[0]}:
-                  </span>
-                  <span>{doc.title.split('(')[0].trim().slice(0, 36)}...</span>
-                  <span className="text-[10px] opacity-75 font-normal">({doc.year_numeric})</span>
-                </button>
-              );
-            });
-          })}
-        </div>
-      </div>
-
       {/* ΔΙΑΤΑΞΗ SIDE-BY-SIDE (ΔΙΠΛΑ-ΔΙΠΛΑ):
           Σε οθόνες md: (>= 768px):
           - ΑΡΙΣΤΕΡΑ: Χάρτης (45% ή 42%)
