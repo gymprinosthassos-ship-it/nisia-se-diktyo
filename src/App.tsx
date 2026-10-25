@@ -576,23 +576,25 @@ export function App() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-xs border-t border-slate-800/80 mt-6">
-            <p>© 2026–2027 • Διασχολικό Εργαστήριο Ιστορίας</p>
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-slate-400 text-xs border-t border-slate-800/80 mt-6">
+            <p className="text-slate-400 text-xs sm:text-sm">
+              © 2026–2027 • Διασχολικό Εργαστήριο Ιστορίας
+            </p>
 
-            {/* Developer Credit: Ανάπτυξη Ιστοσελίδας & Logo */}
-            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 shadow-inner hover:border-amber-500/40 transition group">
-              <span className="text-slate-300 font-medium text-xs sm:text-sm tracking-wide">
+            {/* Developer Credit: Ανάπτυξη Ιστοσελίδας & Logo (Μεγάλο & Ευανάγνωστο) */}
+            <div className="flex items-center gap-4 px-4 py-2.5 rounded-2xl bg-slate-950/90 border border-slate-800 shadow-xl hover:border-amber-500/50 transition duration-300 group">
+              <span className="text-slate-200 font-serif font-bold text-sm sm:text-base tracking-wide">
                 Ανάπτυξη Ιστοσελίδας:
               </span>
               <img 
                 src="/anaskalli-logo.png" 
                 alt="ANASKALLI" 
-                className="h-9 w-auto object-contain rounded-md shadow-md group-hover:scale-105 transition duration-200"
+                className="h-20 sm:h-24 w-auto object-contain rounded-lg shadow-lg group-hover:scale-105 transition duration-300 border border-amber-400/30 ring-2 ring-amber-500/10"
               />
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 text-slate-300 text-[11px]">
+              <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-medium">
                 100% Ασφαλής & Ανοικτή Πλατφόρμα
               </span>
             </div>
