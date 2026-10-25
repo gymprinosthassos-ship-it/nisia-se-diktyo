@@ -328,14 +328,14 @@ export function App() {
 
       {/* Hero Banner with Historical Aesthetic & Artwork Background */}
       <section className="no-print relative bg-slate-950 text-white pt-8 pb-14 px-4 overflow-hidden border-b border-slate-800">
-        {/* Background Artwork Layer (using the historical logo artwork) */}
+        {/* Background Artwork Layer (clearly visible, saturated historical illustration) */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 filter contrast-125 saturate-110 pointer-events-none scale-105"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 filter saturate-125 contrast-110 pointer-events-none scale-105"
           style={{ backgroundImage: `url('/logo.jpg')` }}
         />
-        {/* Dark Gradient Overlays for Enhanced Text Contrast & Depth */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-slate-950/90 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-transparent to-slate-950/95 pointer-events-none" />
+        {/* Soft Localized Dark Overlays to ensure text is crisp and readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/60 pointer-events-none" />
 
         {/* Subtle background glow */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -343,7 +343,7 @@ export function App() {
 
         <div className="relative max-w-6xl mx-auto">
           {/* School Collaborative Badge */}
-          <div className="inline-flex flex-wrap items-center gap-2 p-1.5 pr-4 bg-slate-900/90 backdrop-blur-sm border border-slate-700/80 rounded-full shadow-lg mb-4">
+          <div className="inline-flex flex-wrap items-center gap-2 p-1.5 pr-4 bg-slate-950/85 backdrop-blur-md border border-slate-700/80 rounded-full shadow-xl mb-4">
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white flex items-center gap-1.5 shadow-sm">
               <Anchor className="w-3.5 h-3.5" />
               Γυμνάσιο Πρίνου Θάσου
@@ -353,7 +353,7 @@ export function App() {
               <Compass className="w-3.5 h-3.5" />
               3ο Γενικό Λύκειο Χανίων
             </span>
-            <span className="hidden sm:inline text-[11px] text-slate-400 ml-1">
+            <span className="hidden sm:inline text-[11px] text-slate-300 ml-1 font-medium">
               • Διασχολική Σύμπραξη Ιστορίας
             </span>
           </div>
@@ -365,14 +365,14 @@ export function App() {
                 <img 
                   src="/logo.jpg" 
                   alt="Σφραγίδα Διασχολικού Εργαστηρίου" 
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400/90 shadow-2xl object-cover ring-4 ring-amber-500/20 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400 shadow-2xl object-cover ring-4 ring-amber-500/30 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
                 />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight drop-shadow-sm">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                   Διασχολικό Εργαστήριο Ιστορίας <span className="text-amber-400 whitespace-nowrap">(2026 – 2027)</span>
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-300 mt-2.5 max-w-2xl leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-200 mt-2.5 max-w-2xl leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] font-medium">
                   Συνεργατική ιστορική έρευνα 8 μαθητικών υποομάδων: Αρχειακή έρευνα για την κοινωνία, τη διοίκηση, το εμπόριο και την αρχιτεκτονική, σε διασύνδεση με ψηφιακή επιμέλεια, οπτικοακουστικά τεκμήρια και διαδραστική χαρτογράφηση.
                 </p>
               </div>
@@ -380,9 +380,9 @@ export function App() {
 
             {/* Wings / Πτέρυγες (Interactive Cards) */}
             <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
-              <div className="group bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-400/60 rounded-xl p-3 shadow-md transition-all duration-200 cursor-default">
+              <div className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-amber-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-default">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 group-hover:scale-110 transition">
+                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition">
                     <ScrollText className="w-5 h-5" />
                   </div>
                   <div>
@@ -390,15 +390,15 @@ export function App() {
                       Α΄ ΠΤΕΡΥΓΑ
                     </span>
                     <span className="text-white text-xs font-semibold">
-                      Αρχειακή Έρευνα <span className="text-slate-400 font-normal">(4 Υποομάδες)</span>
+                      Αρχειακή Έρευνα <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="group bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-400/60 rounded-xl p-3 shadow-md transition-all duration-200 cursor-default">
+              <div className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-blue-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-default">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 group-hover:scale-110 transition">
+                  <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 group-hover:scale-110 transition">
                     <MonitorPlay className="w-5 h-5" />
                   </div>
                   <div>
@@ -406,7 +406,7 @@ export function App() {
                       Β΄ ΠΤΕΡΥΓΑ
                     </span>
                     <span className="text-white text-xs font-semibold">
-                      Ψηφιακή Δημιουργία <span className="text-slate-400 font-normal">(4 Υποομάδες)</span>
+                      Ψηφιακή Δημιουργία <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
                     </span>
                   </div>
                 </div>
