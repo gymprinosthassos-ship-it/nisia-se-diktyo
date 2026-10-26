@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ProjectIdentityView } from './components/ProjectIdentityView';
 import { TimelineView } from './components/TimelineView';
 import { InteractiveMap } from './components/InteractiveMap';
 import { TeamPortal } from './components/TeamPortal';
@@ -8,6 +9,7 @@ import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
 import { 
+  Home,
   BookOpen, 
   Users, 
   ShieldCheck, 
@@ -24,7 +26,7 @@ import {
 } from 'lucide-react';
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState<'timeline' | 'map' | 'teams' | 'teachers'>('timeline');
+  const [currentTab, setCurrentTab] = useState<'identity' | 'timeline' | 'map' | 'teams' | 'teachers'>('identity');
   const [entries, setEntries] = useState<HistoricalEntry[]>(mockEntries);
   const [schools, setSchools] = useState<School[]>(mockSchools);
   const [teams, setTeams] = useState<Team[]>(mockTeams);
@@ -224,6 +226,7 @@ export function App() {
   };
 
   const navItems = [
+    { id: 'identity' as const, label: 'Ταυτότητα Έργου', icon: Home, desc: 'Σκοπός, σχολεία & ομάδες' },
     { id: 'timeline' as const, label: 'Χρονολόγιο', icon: BookOpen, desc: 'Διαδραστικό ιστορικό χρονολόγιο' },
     { id: 'map' as const, label: 'Χάρτης Δικτύου', icon: MapIcon, desc: 'Ναυτικοί & εμπορικοί δρόμοι' },
     { id: 'teams' as const, label: 'Υποβολή Ομάδων', icon: Users, desc: 'Καταχώριση αρχειακών τεκμηρίων' },
@@ -238,7 +241,7 @@ export function App() {
           {/* Logo & Τίτλος */}
           <div 
             onClick={() => {
-              setCurrentTab('timeline');
+              setCurrentTab('identity');
               setIsMobileMenuOpen(false);
             }}
             className="flex items-center gap-3 cursor-pointer group"
@@ -246,17 +249,17 @@ export function App() {
             <div className="relative">
               <img 
                 src="/logo.jpg" 
-                alt="Ομάδα Ιστορίας: Θάσος - Κρήτη" 
+                alt="Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας" 
                 className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
               />
               <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-blue-500 border-2 border-slate-900 rounded-full"></span>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-base sm:text-lg font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition">
-                  ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ
+                <span className="text-xs sm:text-sm md:text-base font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition line-clamp-1">
+                  ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ
                 </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold tracking-wider uppercase">
+                <span className="hidden xl:inline-block px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold tracking-wider uppercase">
                   19ος αι.
                 </span>
                 {isLiveConnected && (
@@ -410,15 +413,25 @@ export function App() {
                 />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-                  Διασχολικό Εργαστήριο Ιστορίας <span className="text-amber-400 whitespace-nowrap">(2026 – 2027)</span>
+                <h1 className="text-xl sm:text-2xl lg:text-[1.65rem] font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                  ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ <span className="text-amber-400 whitespace-nowrap text-base sm:text-lg block sm:inline mt-1 sm:mt-0 font-sans font-bold">(2026 – 2027)</span>
                 </h1>
+                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl font-serif">
+                  «Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή»
+                </p>
               </div>
             </div>
 
             {/* Wings / Πτέρυγες (Interactive Cards) */}
             <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
-              <div className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-amber-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-default">
+              <div 
+                onClick={() => {
+                  setCurrentTab('identity');
+                  scrollToTop();
+                }}
+                className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-amber-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
+                title="Προβολή ομάδων και ρόλου της Α΄ Πτέρυγας"
+              >
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition">
                     <ScrollText className="w-5 h-5" />
@@ -434,7 +447,14 @@ export function App() {
                 </div>
               </div>
 
-              <div className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-blue-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-default">
+              <div 
+                onClick={() => {
+                  setCurrentTab('identity');
+                  scrollToTop();
+                }}
+                className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-blue-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
+                title="Προβολή ομάδων και ρόλου της Β΄ Πτέρυγας"
+              >
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 group-hover:scale-110 transition">
                     <MonitorPlay className="w-5 h-5" />
@@ -472,6 +492,15 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
+        {currentTab === 'identity' && (
+          <ProjectIdentityView 
+            teams={teams}
+            onNavigateToTab={(tab) => {
+              setCurrentTab(tab);
+              scrollToTop();
+            }}
+          />
+        )}
         {currentTab === 'timeline' && <TimelineView entries={entries.filter(e => e.status === 'approved')} />}
         {currentTab === 'map' && <InteractiveMap entries={entries.filter(e => e.status === 'approved')} />}
         {currentTab === 'teams' && (
@@ -517,7 +546,7 @@ export function App() {
                 />
                 <div>
                   <span className="font-serif font-bold text-white text-base block tracking-tight">
-                    ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ
+                    ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ
                   </span>
                   <span className="text-[11px] text-amber-400">
                     Θάσος & Κρήτη στην Οθωμανική Μεσόγειο (19ος αι.)
@@ -535,7 +564,19 @@ export function App() {
                 ΠΛΟΗΓΗΣΗ
               </span>
               <ul className="space-y-2">
-                {navItems.map((item) => (
+                <li>
+                  <button
+                    onClick={() => {
+                      setCurrentTab('identity');
+                      scrollToTop();
+                    }}
+                    className="hover:text-amber-400 transition flex items-center gap-2"
+                  >
+                    <span className="text-amber-400">•</span>
+                    <span>Ταυτότητα Έργου</span>
+                  </button>
+                </li>
+                {navItems.filter(i => i.id !== 'identity').map((item) => (
                   <li key={item.id}>
                     <button
                       onClick={() => {
@@ -591,7 +632,7 @@ export function App() {
           {/* Bottom Bar */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-slate-400 text-xs border-t border-slate-800/80 mt-6">
             <p className="text-slate-400 text-xs sm:text-sm">
-              © 2026–2027 • Διασχολικό Εργαστήριο Ιστορίας
+              © 2026–2027 • Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας
             </p>
 
             {/* Developer Credit: Ανάπτυξη Ιστοσελίδας & Logo (Μεγάλο & Ευανάγνωστο) */}
