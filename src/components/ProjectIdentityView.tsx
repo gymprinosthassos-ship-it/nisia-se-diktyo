@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building, 
   Users, 
@@ -17,22 +17,81 @@ import {
   BookOpen,
   Ship,
   Landmark,
-  Lightbulb
+  Lightbulb,
+  UserCheck,
+  CheckCircle2,
+  Edit3,
+  X
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
+import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 
 interface ProjectIdentityViewProps {
   teams: Team[];
   onNavigateToTab: (tab: 'timeline' | 'map' | 'teams' | 'teachers') => void;
 }
 
-export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ teams, onNavigateToTab }) => {
-  // Οργάνωση υποομάδων
-  const prinosTeams = teams.filter(t => t.school_id === 'school-prinos');
-  const chaniaTeams = teams.filter(t => t.school_id === 'school-chania');
+export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab }) => {
+  // Φόρτωση συμμετεχόντων (με υποστήριξη τοπικής προσαρμογής στο localStorage)
+  const [participants, setParticipants] = useState<IslandParticipants[]>(() => {
+    try {
+      const saved = localStorage.getItem('nisia_participants_data');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch {
+      // fallback
+    }
+    return islandParticipantsData;
+  });
+
+  const [isEditingNames, setIsEditingNames] = useState<boolean>(false);
+  const [editSchoolId, setEditSchoolId] = useState<'school-prinos' | 'school-chania'>('school-prinos');
+  const [tempParticipants, setTempParticipants] = useState<IslandParticipants[]>(participants);
+  const [saveNotification, setSaveNotification] = useState<string>('');
+
+  // Συγχρονισμός τοπικών αλλαγών
+  useEffect(() => {
+    try {
+      localStorage.setItem('nisia_participants_data', JSON.stringify(participants));
+    } catch {
+      // ignore
+    }
+  }, [participants]);
+
+  const handleOpenEdit = (schoolId: 'school-prinos' | 'school-chania') => {
+    setEditSchoolId(schoolId);
+    setTempParticipants(JSON.parse(JSON.stringify(participants)));
+    setIsEditingNames(true);
+  };
+
+  const handleSaveEdit = () => {
+    setParticipants(tempParticipants);
+    setIsEditingNames(false);
+    setSaveNotification('Τα ονόματα αποθηκεύτηκαν επιτυχώς!');
+    setTimeout(() => setSaveNotification(''), 4000);
+  };
+
+  const handleResetDefaults = () => {
+    if (window.confirm('Επαναφορά στα αρχικά πρότυπα ονομάτων;')) {
+      setParticipants(islandParticipantsData);
+      localStorage.removeItem('nisia_participants_data');
+      setIsEditingNames(false);
+    }
+  };
+
+  const currentEditIsland = tempParticipants.find(p => p.schoolId === editSchoolId);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 space-y-12">
+      {/* Toast Notification */}
+      {saveNotification && (
+        <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-bold animate-bounce">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{saveNotification}</span>
+        </div>
+      )}
+
       {/* Κεντρική Επικεφαλίδα Ταυτότητας */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-100/80 text-amber-950 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
@@ -135,7 +194,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ teams,
       </div>
 
       {/* ============================================================== */}
-      {/* ΤΑ ΤΡΙΑ ΣΤΑΔΙΑ ΤΗΣ ΕΡΕΥΝΗΤΙΚΗΣ ΔΙΑΔΙΚΑΣΙΑΣ (ΝΕΑ ΕΝΟΤΗΤΑ) */}
+      {/* ΤΑ ΤΡΙΑ ΣΤΑΔΙΑ ΤΗΣ ΕΡΕΥΝΗΤΙΚΗΣ ΔΙΑΔΙΚΑΣΙΑΣ */}
       {/* ============================================================== */}
       <div className="bg-white rounded-3xl p-6 sm:p-9 border border-amber-200/90 shadow-md space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -317,118 +376,323 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ teams,
         </div>
       </div>
 
-      {/* Αναλυτική Κατηγοριοποίηση Ομάδων (Μαθητές & Εκπαιδευτικοί) */}
+      {/* ============================================================== */}
+      {/* ΧΩΡΟΣ ΑΝΑΓΡΑΦΗΣ ΟΝΟΜΑΤΩΝ ΚΑΘΗΓΗΤΩΝ & ΜΑΘΗΤΩΝ ΑΝΑ ΝΗΣΙ */}
+      {/* ============================================================== */}
       <div className="space-y-6">
-        <div className="border-b border-slate-200 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider mb-1">
+              <Users className="w-3.5 h-3.5 text-amber-700" />
+              <span>ΣΥΜΜΕΤΕΧΟΝΤΕΣ ΑΝΑ ΝΗΣΙ</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
-              Οργανωτική Δομή & Ερευνητικές Ομάδες
+              Καθηγητές & Μαθητικές Ομάδες Εργασίας
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              Κατανομή ρόλων, θεματικών πτερύγων και μαθητικών ομάδων εργασίας
+              Ονόματα των υπεύθυνων εκπαιδευτικών και των μαθητών ανά υποομάδα και νησί (Θάσος & Κρήτη)
             </p>
           </div>
-          <button
-            onClick={() => onNavigateToTab('timeline')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-amber-300 rounded-xl text-xs font-bold transition shadow-sm w-fit"
-          >
-            <span>Προβολή Τεκμηρίων στο Χρονολόγιο</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleOpenEdit('school-prinos')}
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold transition shadow-sm"
+              title="Επεξεργασία ονομάτων Θάσου"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-amber-700" />
+              <span>Επεξεργασία Θάσου</span>
+            </button>
+            <button
+              onClick={() => handleOpenEdit('school-chania')}
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 rounded-xl text-xs font-bold transition shadow-sm"
+              title="Επεξεργασία ονομάτων Κρήτης"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-blue-700" />
+              <span>Επεξεργασία Κρήτης</span>
+            </button>
+          </div>
         </div>
 
+        {/* 2 ΣΤΗΛΕΣ ΑΝΑ ΝΗΣΙ (ΘΑΣΟΣ & ΚΡΗΤΗ) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Α΄ Πτέρυγα — Γυμνάσιο Πρίνου */}
-          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                  <ScrollText className="w-6 h-6" />
-                </div>
+          {participants.map((island) => {
+            const isThasos = island.schoolId === 'school-prinos';
+
+            return (
+              <div 
+                key={island.schoolId}
+                className="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6 flex flex-col justify-between"
+              >
                 <div>
-                  <span className="text-amber-400 text-xs font-bold uppercase tracking-wider block">
-                    Α΄ ΠΤΕΡΥΓΑ • ΓΥΜΝΑΣΙΟ ΠΡΙΝΟΥ ΘΑΣΟΥ
-                  </span>
-                  <h3 className="text-xl font-serif font-bold text-white">
-                    Αρχειακή Έρευνα & Τεκμηρίωση
-                  </h3>
+                  {/* Header Νησιού & Σχολείου */}
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2.5 rounded-xl ${isThasos ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
+                        {isThasos ? <Anchor className="w-6 h-6" /> : <Compass className="w-6 h-6" />}
+                      </div>
+                      <div>
+                        <span className={`${isThasos ? 'text-amber-400' : 'text-blue-400'} text-xs font-bold uppercase tracking-wider block`}>
+                          {island.wingName}
+                        </span>
+                        <h3 className="text-xl font-serif font-bold text-white">
+                          {island.schoolName}
+                        </h3>
+                        <span className="text-[11px] text-slate-400 block mt-0.5">
+                          Νησί: <strong>{island.island}</strong> ({island.wingBadge})
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleOpenEdit(island.schoolId as 'school-prinos' | 'school-chania')}
+                      className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+                      title="Επεξεργασία ονομάτων"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* 1. ΥΠΕΥΘΥΝΟΙ ΚΑΘΗΓΗΤΕΣ */}
+                  <div className="mt-5 p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300 mb-3">
+                      <GraduationCap className="w-4 h-4 text-amber-400" />
+                      <span>ΣΥΝΤΟΝΙΣΤΕΣ ΕΚΠΑΙΔΕΥΤΙΚΟΙ</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {island.teachers.map((teacher, tIdx) => (
+                        <div 
+                          key={tIdx} 
+                          className="flex items-center justify-between p-2.5 bg-slate-900/90 rounded-xl border border-slate-800/80 text-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center text-[11px]">
+                              {tIdx + 1}
+                            </span>
+                            <strong className="text-slate-100 font-serif text-sm">
+                              {teacher.name}
+                            </strong>
+                          </div>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            {teacher.role}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 2. ΜΑΘΗΤΙΚΕΣ ΟΜΑΔΕΣ & ΜΑΘΗΤΕΣ */}
+                  <div className="mt-5 space-y-3.5">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300 px-1">
+                      <Users className="w-4 h-4 text-slate-400" />
+                      <span>ΜΑΘΗΤΙΚΕΣ ΟΜΑΔΕΣ & ΜΑΘΗΤΕΣ</span>
+                    </div>
+
+                    <div className="space-y-3">
+                      {island.teams.map((group) => (
+                        <div 
+                          key={group.code}
+                          className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 hover:border-slate-700 transition"
+                        >
+                          {/* Τίτλος Υποομάδας */}
+                          <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800/70">
+                            <span className={`px-2.5 py-0.5 rounded-md ${isThasos ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'} font-bold text-xs`}>
+                              Ομάδα {group.code}
+                            </span>
+                            <span className="text-[11px] text-slate-400">
+                              {island.island}
+                            </span>
+                          </div>
+
+                          <h4 className="text-xs sm:text-sm font-semibold text-slate-200 mb-3">
+                            {group.name}
+                          </h4>
+
+                          {/* Λίστα Ονομάτων Μαθητών */}
+                          <div className="space-y-1.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                              Μαθητές & Μαθήτριες Ομάδας:
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {group.students.map((student, sIdx) => (
+                                <span 
+                                  key={sIdx}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 font-medium hover:text-white hover:border-slate-700 transition"
+                                >
+                                  <UserCheck className="w-3 h-3 text-slate-500" />
+                                  <span>{student}</span>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Κάρτας Νησιού */}
+                <div className="pt-4 mt-6 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                  <span>4 Ερευνητικές Υποομάδες</span>
+                  <button
+                    onClick={() => handleOpenEdit(island.schoolId as 'school-prinos' | 'school-chania')}
+                    className="text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1"
+                  >
+                    <span>Συμπλήρωση / Αλλαγή Ονομάτων</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
-            </div>
-
-            {/* Υποομάδες Α1 - Α4 */}
-            <div className="space-y-3">
-              {prinosTeams.map((team) => (
-                <div 
-                  key={team.id}
-                  className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 hover:border-amber-500/50 transition group"
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-xs">
-                      Ομάδα {team.name.split(':')[0]}
-                    </span>
-                    <span className="text-[11px] text-slate-400">
-                      Θάσος
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition">
-                    {team.name.includes(':') ? team.name.split(':')[1].trim() : team.name}
-                  </h4>
-                  <div className="mt-2.5 pt-2 border-t border-slate-800/60 flex items-center gap-1.5 text-xs text-slate-400">
-                    <Users className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Μαθητική ομάδα έρευνας & αρχείων</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Β΄ Πτέρυγα — 3ο ΓΕΛ Χανίων */}
-          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  <MonitorPlay className="w-6 h-6" />
-                </div>
-                <div>
-                  <span className="text-blue-400 text-xs font-bold uppercase tracking-wider block">
-                    Β΄ ΠΤΕΡΥΓΑ • 3ο ΓΕΛ ΧΑΝΙΩΝ
-                  </span>
-                  <h3 className="text-xl font-serif font-bold text-white">
-                    Ψηφιακή Δημιουργία & Επιμέλεια
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Υποομάδες Β1 - Β4 */}
-            <div className="space-y-3">
-              {chaniaTeams.map((team) => (
-                <div 
-                  key={team.id}
-                  className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 hover:border-blue-500/50 transition group"
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 font-bold text-xs">
-                      Ομάδα {team.name.split(':')[0]}
-                    </span>
-                    <span className="text-[11px] text-slate-400">
-                      Χανιά
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-semibold text-slate-200 group-hover:text-blue-300 transition">
-                    {team.name.includes(':') ? team.name.split(':')[1].trim() : team.name}
-                  </h4>
-                  <div className="mt-2.5 pt-2 border-t border-slate-800/60 flex items-center gap-1.5 text-xs text-slate-400">
-                    <Users className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Μαθητική ομάδα ψηφιακής παραγωγής</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* ============================================================== */}
+      {/* MODAL ΕΠΕΞΕΡΓΑΣΙΑΣ ΟΝΟΜΑΤΩΝ ΚΑΘΗΓΗΤΩΝ & ΜΑΘΗΤΩΝ */}
+      {/* ============================================================== */}
+      {isEditingNames && currentEditIsland && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-300 max-h-[90vh] overflow-y-auto space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-amber-100 text-amber-900">
+                  <Edit3 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold font-serif text-slate-900">
+                    Επεξεργασία Ονομάτων: {currentEditIsland.schoolName} ({currentEditIsland.island})
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Πληκτρολογήστε τα ονόματα των εκπαιδευτικών και των μαθητών ανά ομάδα
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsEditingNames(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* 1. Επεξεργασία Καθηγητών */}
+            <div className="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <GraduationCap className="w-4 h-4 text-amber-700" />
+                <span>Υπεύθυνοι Καθηγητές / Συντονιστές</span>
+              </h4>
+
+              {currentEditIsland.teachers.map((teacher, tIdx) => (
+                <div key={tIdx} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">
+                      Ονοματεπώνυμο Εκπαιδευτικού {tIdx + 1}:
+                    </label>
+                    <input
+                      type="text"
+                      value={teacher.name}
+                      onChange={(e) => {
+                        const updated = [...tempParticipants];
+                        const target = updated.find(p => p.schoolId === editSchoolId);
+                        if (target) {
+                          target.teachers[tIdx].name = e.target.value;
+                          setTempParticipants(updated);
+                        }
+                      }}
+                      className="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">
+                      Ρόλος / Ειδικότητα:
+                    </label>
+                    <input
+                      type="text"
+                      value={teacher.role}
+                      onChange={(e) => {
+                        const updated = [...tempParticipants];
+                        const target = updated.find(p => p.schoolId === editSchoolId);
+                        if (target) {
+                          target.teachers[tIdx].role = e.target.value;
+                          setTempParticipants(updated);
+                        }
+                      }}
+                      className="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 2. Επεξεργασία Μαθητών ανά Ομάδα */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-blue-700" />
+                <span>Μαθητές ανά Υποομάδα</span>
+              </h4>
+
+              {currentEditIsland.teams.map((team, tmIdx) => (
+                <div key={team.code} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-900">
+                      Ομάδα {team.code}: {team.name}
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      (Χωρίστε τα ονόματα με κόμμα)
+                    </span>
+                  </div>
+
+                  <textarea
+                    rows={2}
+                    value={team.students.join(', ')}
+                    onChange={(e) => {
+                      const updated = [...tempParticipants];
+                      const target = updated.find(p => p.schoolId === editSchoolId);
+                      if (target) {
+                        const studentNames = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                        target.teams[tmIdx].students = studentNames;
+                        setTempParticipants(updated);
+                      }
+                    }}
+                    placeholder="π.χ. Μαρία Παπαδοπούλου, Νίκος Καραγιάννης, Ελένη Γεωργίου"
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 font-sans"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={handleResetDefaults}
+                className="text-xs text-red-600 hover:text-red-800 underline font-medium"
+              >
+                Επαναφορά προτύπων
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingNames(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition"
+                >
+                  Ακύρωση
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveEdit}
+                  className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-md transition"
+                >
+                  Αποθήκευση Ονομάτων
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Access to Portals */}
       <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
