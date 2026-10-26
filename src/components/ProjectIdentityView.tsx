@@ -8,9 +8,16 @@ import {
   ScrollText, 
   MonitorPlay, 
   MapPin, 
-  Sparkles,
-  Award,
-  ArrowRight
+  Sparkles, 
+  ArrowRight,
+  ArrowDown,
+  Layers,
+  GitMerge,
+  Globe,
+  BookOpen,
+  Ship,
+  Landmark,
+  Lightbulb
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
 
@@ -36,7 +43,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ teams,
           Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας
         </h1>
         <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto font-serif italic">
-          «Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή (19ος Αιώνας)»
+          «ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή (19ος Αιώνας)»
         </p>
       </div>
 
@@ -127,28 +134,185 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ teams,
         </div>
       </div>
 
-      {/* Πλαίσιο: Σκοπός & Περιγραφή Έργου */}
-      <div className="bg-gradient-to-br from-amber-50/70 via-white to-amber-50/40 rounded-3xl p-7 sm:p-9 border border-amber-200/90 shadow-sm relative overflow-hidden">
-        <div className="max-w-4xl space-y-4 text-slate-800 leading-relaxed text-sm sm:text-base font-serif">
-          <div className="flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-wider text-amber-800">
-            <Award className="w-4 h-4" />
-            <span>ΤΟ ΙΣΤΟΡΙΚΟ ΠΛΑΙΣΙΟ ΚΑΙ ΟΙ ΣΤΟΧΟΙ ΤΗΣ ΣΥΝΕΡΓΑΣΙΑΣ</span>
+      {/* ============================================================== */}
+      {/* ΤΑ ΤΡΙΑ ΣΤΑΔΙΑ ΤΗΣ ΕΡΕΥΝΗΤΙΚΗΣ ΔΙΑΔΙΚΑΣΙΑΣ (ΝΕΑ ΕΝΟΤΗΤΑ) */}
+      {/* ============================================================== */}
+      <div className="bg-white rounded-3xl p-6 sm:p-9 border border-amber-200/90 shadow-md space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">
+            <Layers className="w-3.5 h-3.5 text-amber-700" />
+            <span>ΜΕΘΟΔΟΛΟΓΙΑ & ΣΧΕΔΙΑΣΜΟΣ</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
+            Τα Τρία Στάδια της Ερευνητικής Διαδικασίας
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 font-serif">
+            Πώς συνεργάζονται τα δύο σχολεία: από την τοπική έρευνα πηγών έως την κοινή ψηφιακή σύνθεση
+          </p>
+        </div>
+
+        {/* Διάγραμμα 3 Σταδίων */}
+        <div className="space-y-6">
+          {/* 1ο ΣΤΑΔΙΟ */}
+          <div className="relative bg-gradient-to-br from-amber-50/60 to-white border-2 border-amber-300/80 rounded-2xl p-6 sm:p-7 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-amber-200">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm shadow">
+                  1
+                </span>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-amber-800 block">
+                    1ο ΣΤΑΔΙΟ | ΠΑΡΑΛΛΗΛΗ ΤΟΠΙΚΗ ΕΡΕΥΝΑ
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-900">
+                    Έρευνα ανά Σχολική Μονάδα
+                  </h3>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-amber-100/70 px-3 py-1.5 rounded-lg border border-amber-200 w-fit">
+                <span>Γυμνάσιο Πρίνου Θάσου • Θάσος</span>
+                <span>⟷</span>
+                <span>3ο ΓΕΛ Χανίων • Κρήτη</span>
+              </div>
+            </div>
+
+            <p className="mt-4 text-xs sm:text-sm text-slate-700 italic font-serif">
+              Κάθε σχολείο μελετά την ιστορία του τόπου του με βάση τις τέσσερις ήδη καθορισμένες θεματικές, συλλέγοντας, καταχωρώντας και τεκμηριώνοντας ιστορικές πηγές.
+            </p>
+
+            {/* Οι 4 Καθορισμένες Θεματικές */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-5">
+              <div className="bg-white p-4 rounded-xl border border-amber-200/80 shadow-sm flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                  <Users className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    1. Κοινωνία και καθημερινή ζωή στη Θάσο/Κρήτη
+                  </h4>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Αναζητούμε πληροφορίες για την κοινωνία, τις συνήθειες και τη ζωή των κατοίκων τον 19ο αιώνα.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl border border-amber-200/80 shadow-sm flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                  <BookOpen className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    2. Ο Μεχμέτ Αλής και η Θάσος/Κρήτη
+                  </h4>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Μελετούμε τη σχέση του Μεχμέτ Αλή με το νησί, την εξουσία και τη διοίκηση.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl border border-amber-200/80 shadow-sm flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                  <Ship className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    3. Εμπόριο, λιμάνια και μεσογειακά δίκτυα
+                  </h4>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Εξερευνούμε τις θαλάσσιες διαδρομές και τις εμπορικές συνδέσεις της Θάσου και της Κρήτης.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl border border-amber-200/80 shadow-sm flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                  <Landmark className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    4. Αρχιτεκτονική και υλικός πολιτισμός
+                  </h4>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Μελετούμε κτίρια, αντικείμενα και άλλα υλικά ίχνη του παρελθόντος.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
-            Δύο Νησιά, Μία Κοινή Εποχή: Η Μεσόγειος του 19ου Αιώνα
-          </h3>
+          {/* Βέλος Μετάβασης 1 -> 2 */}
+          <div className="flex justify-center -my-2">
+            <div className="w-8 h-8 rounded-full bg-amber-200/80 border border-amber-400 text-amber-900 flex items-center justify-center shadow-sm">
+              <ArrowDown className="w-4 h-4 stroke-[2.5]" />
+            </div>
+          </div>
 
-          <p className="text-justify">
-            Το <strong>Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας</strong> φέρνει σε δημιουργική σύμπραξη μαθητές και καθηγητές από το <strong>Γυμνάσιο Πρίνου Θάσου</strong> και το <strong>3ο Γενικό Λύκειο Χανίων</strong> κατά τη σχολική χρονιά <strong>2026–2027</strong>.
-          </p>
+          {/* 2ο ΣΤΑΔΙΟ */}
+          <div className="relative bg-gradient-to-br from-blue-50/60 to-white border-2 border-blue-300/80 rounded-2xl p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 pb-3 border-b border-blue-200">
+              <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-black flex items-center justify-center text-sm shadow">
+                2
+              </span>
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-900 block">
+                  2ο ΣΤΑΔΙΟ | ΚΟΙΝΗ ΣΥΝΘΕΣΗ ΚΑΙ ΣΥΓΚΡΙΣΗ
+                </span>
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-900">
+                  Συνάντηση των Ευρημάτων των Δύο Σχολείων
+                </h3>
+              </div>
+            </div>
+            <div className="mt-4 flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-blue-100 text-blue-800 shrink-0 mt-0.5">
+                <GitMerge className="w-5 h-5" />
+              </div>
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-serif">
+                Οι μαθητές αντιπαραβάλλουν τα αποτελέσματα ανά θεματική, εντοπίζουν ομοιότητες, διαφορές και ιστορικές συνδέσεις και διαμορφώνουν κοινά συμπεράσματα.
+              </p>
+            </div>
+          </div>
 
-          <p className="text-justify">
-            Κεντρικός άξονας της έρευνας είναι η περίοδος του 19ου αιώνα, κατά την οποία η Θάσος και η Κρήτη βρέθηκαν υπό την ιδιαίτερη σφαίρα επιρροής του Μεχμέτ Αλή της Αιγύπτου: η Θάσος ως προνομιούχο βακούφι (1813) και η Κρήτη κατά την περίοδο της Αιγυπτιοκρατίας (1830–1840). Μέσα από τη μελέτη αρχείων, φιρμανιών, εμπορικών καταστίχων, ναυτικών δρόμων και αρχιτεκτονικών καταλοίπων (όπως ο Φάρος των Χανίων και τα κτίσματα της Θάσου), οι μαθητές διαπιστώνουν ότι τα νησιά δεν ήταν απομονωμένα, αλλά αποτελούσαν ζωτικούς κόμβους ενός ενιαίου μεσογειακού δικτύου.
-          </p>
+          {/* Βέλος Μετάβασης 2 -> 3 */}
+          <div className="flex justify-center -my-2">
+            <div className="w-8 h-8 rounded-full bg-blue-200/80 border border-blue-400 text-blue-900 flex items-center justify-center shadow-sm">
+              <ArrowDown className="w-4 h-4 stroke-[2.5]" />
+            </div>
+          </div>
 
-          <p className="text-justify">
-            Μέσω της καινοτόμου ψηφιακής πλατφόρμας, τα τεκμήρια τεκμηριώνονται επιστημονικά, διασταυρώνονται κριτικά και δημοσιεύονται σε ένα κοινό, διαδραστικό χρονολόγιο και γεωγραφικό χάρτη, ενισχύοντας την ιστορική σκέψη και τη διασχολική αλληλεγγύη.
+          {/* 3ο ΣΤΑΔΙΟ */}
+          <div className="relative bg-gradient-to-br from-emerald-50/60 to-white border-2 border-emerald-300/80 rounded-2xl p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 pb-3 border-b border-emerald-200">
+              <span className="w-9 h-9 rounded-xl bg-emerald-600 text-white font-black flex items-center justify-center text-sm shadow">
+                3
+              </span>
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-900 block">
+                  3ο ΣΤΑΔΙΟ | ΚΟΙΝΗ ΨΗΦΙΑΚΗ ΠΑΡΟΥΣΙΑΣΗ
+                </span>
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-slate-900">
+                  «Νησιά σε Δίκτυο» — Κοινός Διαδραστικός Ιστότοπος
+                </h3>
+              </div>
+            </div>
+            <div className="mt-4 flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-emerald-100 text-emerald-800 shrink-0 mt-0.5">
+                <Globe className="w-5 h-5" />
+              </div>
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-serif">
+                Η συγκριτική ιστορική αφήγηση παρουσιάζεται μέσα από κείμενα, τεκμήρια, οπτικοακουστικό υλικό και διαδραστικό χάρτη.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Σημείωση — Η Λογική της Συγκριτικής Προσέγγισης */}
+        <div className="bg-amber-100/60 border-l-4 border-amber-600 rounded-2xl p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">
+            <Lightbulb className="w-4 h-4 text-amber-700" />
+            <span>ΣΗΜΕΙΩΣΗ — Η ΛΟΓΙΚΗ ΤΗΣ ΣΥΓΚΡΙΤΙΚΗΣ ΠΡΟΣΕΓΓΙΣΗΣ</span>
+          </div>
+          <p className="text-xs sm:text-sm text-amber-950 leading-relaxed font-serif text-justify">
+            «Η σύγκριση δεν πρέπει να περιοριστεί σε μια απλή καταγραφή ομοιοτήτων και διαφορών. Θα πρέπει να επιχειρήσει να εξηγήσει γιατί η αιγυπτιακή διοίκηση είχε διαφορετικά χαρακτηριστικά και συνέπειες στα δύο νησιά, λαμβάνοντας υπόψη τις διαφορετικές ιστορικές συνθήκες.»
           </p>
         </div>
       </div>
