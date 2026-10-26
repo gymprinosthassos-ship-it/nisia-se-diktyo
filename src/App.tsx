@@ -387,86 +387,84 @@ export function App() {
       </header>
 
       {/* Hero Banner with Historical Aesthetic & Artwork Background */}
-      <section className="no-print relative bg-slate-950 text-white pt-8 pb-14 px-4 overflow-hidden border-b border-slate-800">
+      <section className="no-print relative bg-slate-950 text-white pt-10 pb-16 sm:pb-20 px-4 overflow-hidden border-b border-slate-800">
         {/* Background Artwork Layer (clearly visible, saturated historical illustration) */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 filter saturate-125 contrast-110 pointer-events-none scale-105"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-75 filter saturate-125 contrast-110 pointer-events-none scale-105"
           style={{ backgroundImage: `url('/logo.jpg')` }}
         />
         {/* Soft Localized Dark Overlays to ensure text is crisp and readable */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/40 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/60 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-slate-950/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-transparent to-slate-950/70 pointer-events-none" />
 
         {/* Subtle background glow */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="relative max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Title with Circular Seal Medallion */}
-            <div className="lg:col-span-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="relative shrink-0 group">
-                <img 
-                  src="/logo.jpg" 
-                  alt="Σφραγίδα Διασχολικού Εργαστηρίου" 
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400 shadow-2xl object-cover ring-4 ring-amber-500/30 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
-                />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl lg:text-[1.65rem] font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-                  ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ <span className="text-amber-400 whitespace-nowrap text-base sm:text-lg block sm:inline mt-1 sm:mt-0 font-sans font-bold">(2026 – 2027)</span>
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl font-serif">
-                  «Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή»
-                </p>
+        <div className="relative max-w-6xl mx-auto flex flex-col justify-between">
+          {/* Title with Circular Seal Medallion */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="relative shrink-0 group">
+              <img 
+                src="/logo.jpg" 
+                alt="Σφραγίδα Διασχολικού Εργαστηρίου" 
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-amber-400 shadow-2xl object-cover ring-4 ring-amber-500/30 group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
+              />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ <span className="text-amber-400 whitespace-nowrap text-base sm:text-lg block sm:inline mt-1 sm:mt-0 font-sans font-bold">(2026 – 2027)</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-200 mt-1.5 max-w-2xl font-serif drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                «Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή»
+              </p>
+            </div>
+          </div>
+
+          {/* Wings / Πτέρυγες (Interactive Cards) - Positioned LOWER DOWN */}
+          <div className="mt-10 sm:mt-16 pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 max-w-2xl">
+            <div 
+              onClick={() => {
+                setCurrentTab('identity');
+                scrollToTop();
+              }}
+              className="group flex-1 bg-slate-950/80 hover:bg-slate-900/90 backdrop-blur-md border border-slate-700/80 hover:border-amber-400/90 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
+              title="Προβολή ομάδων και ρόλου της Α΄ Πτέρυγας"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition">
+                  <ScrollText className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-amber-400 font-bold text-xs uppercase tracking-wider block">
+                    Α΄ ΠΤΕΡΥΓΑ
+                  </span>
+                  <span className="text-white text-xs font-semibold">
+                    Αρχειακή Έρευνα <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Wings / Πτέρυγες (Interactive Cards) */}
-            <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
-              <div 
-                onClick={() => {
-                  setCurrentTab('identity');
-                  scrollToTop();
-                }}
-                className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-amber-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
-                title="Προβολή ομάδων και ρόλου της Α΄ Πτέρυγας"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-110 transition">
-                    <ScrollText className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="text-amber-400 font-bold text-xs uppercase tracking-wider block">
-                      Α΄ ΠΤΕΡΥΓΑ
-                    </span>
-                    <span className="text-white text-xs font-semibold">
-                      Αρχειακή Έρευνα <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
-                    </span>
-                  </div>
+            <div 
+              onClick={() => {
+                setCurrentTab('identity');
+                scrollToTop();
+              }}
+              className="group flex-1 bg-slate-950/80 hover:bg-slate-900/90 backdrop-blur-md border border-slate-700/80 hover:border-blue-400/90 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
+              title="Προβολή ομάδων και ρόλου της Β΄ Πτέρυγας"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 group-hover:scale-110 transition">
+                  <MonitorPlay className="w-5 h-5" />
                 </div>
-              </div>
-
-              <div 
-                onClick={() => {
-                  setCurrentTab('identity');
-                  scrollToTop();
-                }}
-                className="group bg-slate-950/80 backdrop-blur-md hover:bg-slate-900/90 border border-slate-700/80 hover:border-blue-400/80 rounded-xl p-3 shadow-xl transition-all duration-200 cursor-pointer"
-                title="Προβολή ομάδων και ρόλου της Β΄ Πτέρυγας"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 group-hover:scale-110 transition">
-                    <MonitorPlay className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="text-blue-400 font-bold text-xs uppercase tracking-wider block">
-                      Β΄ ΠΤΕΡΥΓΑ
-                    </span>
-                    <span className="text-white text-xs font-semibold">
-                      Ψηφιακή Δημιουργία <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
-                    </span>
-                  </div>
+                <div>
+                  <span className="text-blue-400 font-bold text-xs uppercase tracking-wider block">
+                    Β΄ ΠΤΕΡΥΓΑ
+                  </span>
+                  <span className="text-white text-xs font-semibold">
+                    Ψηφιακή Δημιουργία <span className="text-slate-300 font-normal">(4 Υποομάδες)</span>
+                  </span>
                 </div>
               </div>
             </div>
