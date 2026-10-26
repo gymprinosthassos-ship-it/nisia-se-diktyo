@@ -35,7 +35,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   // Φόρτωση συμμετεχόντων (με υποστήριξη τοπικής προσαρμογής στο localStorage)
   const [participants, setParticipants] = useState<IslandParticipants[]>(() => {
     try {
-      const saved = localStorage.getItem('nisia_participants_data');
+      const saved = localStorage.getItem('nisia_participants_data_v2');
       if (saved) {
         return JSON.parse(saved);
       }
@@ -53,7 +53,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   // Συγχρονισμός τοπικών αλλαγών
   useEffect(() => {
     try {
-      localStorage.setItem('nisia_participants_data', JSON.stringify(participants));
+      localStorage.setItem('nisia_participants_data_v2', JSON.stringify(participants));
     } catch {
       // ignore
     }
@@ -515,15 +515,37 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                               Μαθητές & Μαθήτριες Ομάδας:
                             </span>
                             <div className="flex flex-wrap gap-1.5">
-                              {group.students.map((student, sIdx) => (
-                                <span 
-                                  key={sIdx}
-                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300 font-medium hover:text-white hover:border-slate-700 transition"
-                                >
-                                  <UserCheck className="w-3 h-3 text-slate-500" />
-                                  <span>{student}</span>
-                                </span>
-                              ))}
+                              {group.students.map((student, sIdx) => {
+                                const isLeader1 = student.startsWith('(1)');
+                                const isLeader2 = student.startsWith('(2)');
+                                const cleanName = student.replace(/^\([12]\)\s*/, '');
+
+                                return (
+                                  <span 
+                                    key={sIdx}
+                                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
+                                      isLeader1 
+                                        ? 'bg-rose-950/60 border-rose-500/60 text-rose-200 font-semibold shadow-sm'
+                                        : isLeader2
+                                        ? 'bg-purple-950/60 border-purple-500/60 text-purple-200 font-semibold shadow-sm'
+                                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
+                                    }`}
+                                  >
+                                    {isLeader1 ? (
+                                      <span className="w-4 h-4 rounded-full bg-rose-500 text-white font-black flex items-center justify-center text-[10px] shadow">
+                                        1
+                                      </span>
+                                    ) : isLeader2 ? (
+                                      <span className="w-4 h-4 rounded-full bg-purple-500 text-white font-black flex items-center justify-center text-[10px] shadow">
+                                        2
+                                      </span>
+                                    ) : (
+                                      <UserCheck className="w-3 h-3 text-slate-500" />
+                                    )}
+                                    <span>{cleanName}</span>
+                                  </span>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
