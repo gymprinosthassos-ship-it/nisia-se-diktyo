@@ -4,6 +4,8 @@ export interface TeacherMember {
 }
 
 export interface StudentTeamGroup {
+  wing: 'Α' | 'Β' | 'Χ';
+  wingTitle: string;
   code: string;
   name: string;
   students: string[];
@@ -13,8 +15,7 @@ export interface IslandParticipants {
   schoolId: string;
   island: string;
   schoolName: string;
-  wingName: string;
-  wingBadge: string;
+  region: string;
   teachers: TeacherMember[];
   teams: StudentTeamGroup[];
 }
@@ -24,14 +25,18 @@ export const islandParticipantsData: IslandParticipants[] = [
     schoolId: 'school-prinos',
     island: 'Θάσος',
     schoolName: 'Γυμνάσιο Πρίνου Θάσου',
-    wingName: 'Α΄ ΠΤΕΡΥΓΑ — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ',
-    wingBadge: 'Βόρειο Αιγαίο',
+    region: 'Βόρειο Αιγαίο',
     teachers: [
-      { name: '[Όνομα Εκπαιδευτικού 1]', role: 'Υπεύθυνος Συντονιστής / Καθηγητής' },
-      { name: '[Όνομα Εκπαιδευτικού 2]', role: 'Συντονιστής Ιστορικής Έρευνας' }
+      { name: 'Στέλλα Λεπίδα', role: 'Υπεύθυνη Συντονίστρια / Εκπαιδευτικός' },
+      { name: 'Αναστάσιος Καλλίνικος', role: 'Συντονιστής Εκπαιδευτικός' },
+      { name: 'Φίλιππος Παπαγεωργίου', role: 'Συντονιστής Εκπαιδευτικός' },
+      { name: 'Χαλίλ Αλ Χανάκτε', role: 'Συντονιστής Εκπαιδευτικός' }
     ],
     teams: [
+      // ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ (ΘΑΣΟΣ)
       {
+        wing: 'Α',
+        wingTitle: 'ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ',
         code: 'Α1',
         name: 'Κοινωνία και καθημερινή ζωή στη Θάσο',
         students: [
@@ -44,6 +49,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Α',
+        wingTitle: 'ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ',
         code: 'Α2',
         name: 'Ο Μεχμέτ Αλή και η Θάσος',
         students: [
@@ -55,6 +62,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Α',
+        wingTitle: 'ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ',
         code: 'Α3',
         name: 'Εμπόριο, λιμάνια και μεσογειακά δίκτυα',
         students: [
@@ -66,6 +75,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Α',
+        wingTitle: 'ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ',
         code: 'Α4',
         name: 'Αρχιτεκτονική και υλικός πολιτισμός',
         students: [
@@ -76,21 +87,12 @@ export const islandParticipantsData: IslandParticipants[] = [
           'Μιχάλης Παπαγγελίδης',
           'Λουκία Μανιταρίδου'
         ]
-      }
-    ]
-  },
-  {
-    schoolId: 'school-chania',
-    island: 'Κρήτη',
-    schoolName: '3ο Γενικό Λύκειο Χανίων',
-    wingName: 'Β΄ ΠΤΕΡΥΓΑ — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ',
-    wingBadge: 'Νότια Μεσόγειος',
-    teachers: [
-      { name: '[Όνομα Εκπαιδευτικού 1]', role: 'Υπεύθυνος Συντονιστής / Καθηγητής' },
-      { name: '[Όνομα Εκπαιδευτικού 2]', role: 'Συντονιστής Ψηφιακής Επιμέλειας' }
-    ],
-    teams: [
+      },
+
+      // ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ (ΘΑΣΟΣ)
       {
+        wing: 'Β',
+        wingTitle: 'ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ',
         code: 'Β1',
         name: 'Ιστοσελίδα και διαδραστικός χάρτης',
         students: [
@@ -102,6 +104,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Β',
+        wingTitle: 'ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ',
         code: 'Β2',
         name: 'Ψηφιακή επιμέλεια και οργάνωση αρχείων',
         students: [
@@ -113,6 +117,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Β',
+        wingTitle: 'ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ',
         code: 'Β3',
         name: 'Φωτογραφία και οπτικοακουστικές παραγωγές',
         students: [
@@ -127,6 +133,8 @@ export const islandParticipantsData: IslandParticipants[] = [
         ]
       },
       {
+        wing: 'Β',
+        wingTitle: 'ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ',
         code: 'Β4',
         name: 'Συνεντεύξεις, κείμενα και αφήγηση',
         students: [
@@ -136,6 +144,46 @@ export const islandParticipantsData: IslandParticipants[] = [
           'Χρήστος Παπαδιάκας',
           'Γιάννης Μετούκου'
         ]
+      }
+    ]
+  },
+  {
+    schoolId: 'school-chania',
+    island: 'Κρήτη',
+    schoolName: '3ο Γενικό Λύκειο Χανίων',
+    region: 'Νότια Μεσόγειος',
+    teachers: [
+      { name: '[Όνομα Εκπαιδευτικού 1]', role: 'Υπεύθυνος Συντονιστής / Καθηγητής' },
+      { name: '[Όνομα Εκπαιδευτικού 2]', role: 'Συντονιστής Έρευνας Κρήτης' }
+    ],
+    teams: [
+      {
+        wing: 'Χ',
+        wingTitle: 'ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ',
+        code: 'Χ1',
+        name: 'Κοινωνία και καθημερινή ζωή στα Χανιά / Κρήτη',
+        students: ['[Αναμονή ονομάτων μαθητών 3ου ΓΕΛ Χανίων]']
+      },
+      {
+        wing: 'Χ',
+        wingTitle: 'ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ',
+        code: 'Χ2',
+        name: 'Ο Μεχμέτ Αλή και η Κρήτη (Αιγυπτιοκρατία 1830–1840)',
+        students: ['[Αναμονή ονομάτων μαθητών 3ου ΓΕΛ Χανίων]']
+      },
+      {
+        wing: 'Χ',
+        wingTitle: 'ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ',
+        code: 'Χ3',
+        name: 'Εμπόριο, λιμάνια και μεσογειακά δίκτυα (Λιμάνι Χανίων)',
+        students: ['[Αναμονή ονομάτων μαθητών 3ου ΓΕΛ Χανίων]']
+      },
+      {
+        wing: 'Χ',
+        wingTitle: 'ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ',
+        code: 'Χ4',
+        name: 'Αρχιτεκτονική και υλικός πολιτισμός (Φάρος Χανίων & κτίρια)',
+        students: ['[Αναμονή ονομάτων μαθητών 3ου ΓΕΛ Χανίων]']
       }
     ]
   }

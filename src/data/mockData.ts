@@ -18,17 +18,25 @@ export const mockSchools: School[] = [
 ];
 
 export const mockTeams: Team[] = [
-  // Α' ΠΤΕΡΥΓΑ — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ
+  // ΓΥΜΝΑΣΙΟ ΠΡΙΝΟΥ ΘΑΣΟΥ
+  // Α' ΠΤΕΡΥΓΑ — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ (ΘΑΣΟΣ)
   { id: 'team-a1', school_id: 'school-prinos', name: 'Α1: Κοινωνία & καθημερινή ζωή στη Θάσο', active: true },
   { id: 'team-a2', school_id: 'school-prinos', name: 'Α2: Ο Μεχμέτ Αλή και η Θάσος', active: true },
   { id: 'team-a3', school_id: 'school-prinos', name: 'Α3: Εμπόριο, λιμάνια & μεσογειακά δίκτυα', active: true },
   { id: 'team-a4', school_id: 'school-prinos', name: 'Α4: Αρχιτεκτονική & υλικός πολιτισμός', active: true },
   
-  // Β' ΠΤΕΡΥΓΑ — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ
-  { id: 'team-b1', school_id: 'school-chania', name: 'Β1: Ιστοσελίδα & διαδραστικός χάρτης', active: true },
-  { id: 'team-b2', school_id: 'school-chania', name: 'Β2: Ψηφιακή επιμέλεια & οργάνωση αρχείων', active: true },
-  { id: 'team-b3', school_id: 'school-chania', name: 'Β3: Φωτογραφία & οπτικοακουστικές παραγωγές', active: true },
-  { id: 'team-b4', school_id: 'school-chania', name: 'Β4: Συνεντεύξεις, κείμενα & αφήγηση', active: true }
+  // Β' ΠΤΕΡΥΓΑ — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ (ΘΑΣΟΣ)
+  { id: 'team-b1', school_id: 'school-prinos', name: 'Β1: Ιστοσελίδα & διαδραστικός χάρτης', active: true },
+  { id: 'team-b2', school_id: 'school-prinos', name: 'Β2: Ψηφιακή επιμέλεια & οργάνωση αρχείων', active: true },
+  { id: 'team-b3', school_id: 'school-prinos', name: 'Β3: Φωτογραφία & οπτικοακουστικές παραγωγές', active: true },
+  { id: 'team-b4', school_id: 'school-prinos', name: 'Β4: Συνεντεύξεις, κείμενα & αφήγηση', active: true },
+
+  // 3ο ΓΕΝΙΚΟ ΛΥΚΕΙΟ ΧΑΝΙΩΝ
+  // ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ
+  { id: 'team-c1', school_id: 'school-chania', name: 'Χ1: Κοινωνία & καθημερινή ζωή στα Χανιά', active: true },
+  { id: 'team-c2', school_id: 'school-chania', name: 'Χ2: Ο Μεχμέτ Αλή και η Κρήτη (1830–1840)', active: true },
+  { id: 'team-c3', school_id: 'school-chania', name: 'Χ3: Εμπόριο, λιμάνια & δίκτυα Χανίων', active: true },
+  { id: 'team-c4', school_id: 'school-chania', name: 'Χ4: Αρχιτεκτονική & υλικός πολιτισμός Χανίων', active: true }
 ];
 
 export const mockEntries: HistoricalEntry[] = [
