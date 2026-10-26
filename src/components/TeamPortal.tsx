@@ -165,9 +165,15 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
               }}
               className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-blue-500"
             >
-              {schools.map(s => (
-                <option key={s.id} value={s.id}>{s.name} ({s.city})</option>
-              ))}
+              {schools.map(s => {
+                const displayName = s.name
+                  .replace(/4[οo]\s*Γενικό\s*Λύκειο/gi, '3ο Γενικό Λύκειο')
+                  .replace(/4[οo]\s*ΓΕΛ/gi, '3ο ΓΕΛ')
+                  .replace(/4[οo]\s*Λύκειο/gi, '3ο Λύκειο');
+                return (
+                  <option key={s.id} value={s.id}>{displayName} ({s.city})</option>
+                );
+              })}
             </select>
           </div>
 

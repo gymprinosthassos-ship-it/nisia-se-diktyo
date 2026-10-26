@@ -46,6 +46,13 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Βοηθητική συνάρτηση διόρθωσης ονομασίας (3ο αντί για 4ο Λύκειο Χανίων)
+  const sanitizeSchoolText = (text: string) =>
+    text
+      .replace(/4[οo]\s*Γενικό\s*Λύκειο/gi, '3ο Γενικό Λύκειο')
+      .replace(/4[οo]\s*ΓΕΛ/gi, '3ο ΓΕΛ')
+      .replace(/4[οo]\s*Λύκειο/gi, '3ο Λύκειο');
+
   // Φόρτωση ζωντανών δεδομένων από Supabase
   useEffect(() => {
     async function loadData() {
@@ -56,9 +63,14 @@ export function App() {
 
       try {
         // 1. Φόρτωση Σχολείων
-        const { data: schoolsData } = await supabase.from('schools').select('*');
-        if (schoolsData && schoolsData.length > 0) {
-          setSchools(schoolsData as School[]);
+        const { data: rawSchoolsData } = await supabase.from('schools').select('*');
+        let normalizedSchools: School[] = mockSchools;
+        if (rawSchoolsData && rawSchoolsData.length > 0) {
+          normalizedSchools = (rawSchoolsData as School[]).map(s => ({
+            ...s,
+            name: sanitizeSchoolText(s.name)
+          }));
+          setSchools(normalizedSchools);
         }
 
         // 2. Φόρτωση Ομάδων
@@ -80,8 +92,9 @@ export function App() {
           // Σύνδεση σχολείων και ομάδων
           const enrichedEntries = entriesData.map(e => ({
             ...e,
-            school: (schoolsData || mockSchools).find(s => s.id === e.school_id),
-            team: (teamsData || mockTeams).find(t => t.id === e.team_id)
+            school: (normalizedSchools || mockSchools).find(s => s.id === e.school_id),
+            team: (teamsData || mockTeams).find(t => t.id === e.team_id),
+            partner_comment: e.partner_comment ? sanitizeSchoolText(e.partner_comment) : null
           })) as HistoricalEntry[];
 
           // Συγχώνευση με τα mock entries ώστε να υπάρχουν πάντα τεκμήρια και για τα δύο σχολεία (Θάσος & Χανιά)
