@@ -36,7 +36,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs uppercase tracking-widest font-bold text-amber-400">
-                  Εγχειρίδιο Χρήσης & Βοήθεια
+                  ΕΓΧΕΙΡΙΔΙΟ ΧΡΗΣΗΣ & ΒΟΗΘΕΙΑ
                 </span>
                 <span className="text-slate-600">•</span>
                 <span className="text-xs text-slate-400">19ος Αιώνας</span>

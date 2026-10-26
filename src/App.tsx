@@ -532,7 +532,7 @@ export function App() {
             {/* Quick Navigation Column */}
             <div className="md:col-span-3 space-y-2.5">
               <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
-                Πλοήγηση
+                ΠΛΟΗΓΗΣΗ
               </span>
               <ul className="space-y-2">
                 {navItems.map((item) => (
@@ -567,7 +567,7 @@ export function App() {
             {/* Schools & Credits Column */}
             <div className="md:col-span-4 space-y-2.5">
               <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
-                Συνεργαζόμενα Σχολεία
+                ΣΥΝΕΡΓΑΖΟΜΕΝΑ ΣΧΟΛΕΙΑ
               </span>
               <div className="space-y-2 text-slate-400">
                 <div className="flex items-start gap-2">

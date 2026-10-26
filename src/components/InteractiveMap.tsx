@@ -396,7 +396,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
       <div className="text-center mb-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
           <Compass className="w-3.5 h-3.5 text-amber-700" />
-          <span>Υποομάδα Β1 • Διαδραστική Χαρτογράφηση Τεκμηρίων</span>
+          <span>ΥΠΟΟΜΑΔΑ Β1 • ΔΙΑΔΡΑΣΤΙΚΗ ΧΑΡΤΟΓΡΑΦΗΣΗ ΤΕΚΜΗΡΙΩΝ</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
           Θαλάσσιοι Δρόμοι & Φωτογραφικά Τεκμήρια
@@ -532,7 +532,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-1 bg-amber-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>Καρτέλα Τεκμηρίου (Δεξιά Προβολή)</span>
+                    <span>ΚΑΡΤΕΛΑ ΤΕΚΜΗΡΙΟΥ (ΔΕΞΙΑ ΠΡΟΒΟΛΗ)</span>
                   </span>
                 </div>
 
@@ -560,7 +560,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               {currentHubEntries.length > 1 && (
                 <div className="p-2.5 bg-[#f6eee0] border border-[#dfd2be] rounded-xl space-y-1.5">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-amber-950 block">
-                    Τεκμήρια αυτού του κόμβου ({currentHubEntries.length}):
+                    ΤΕΚΜΗΡΙΑ ΑΥΤΟΥ ΤΟΥ ΚΟΜΒΟΥ ({currentHubEntries.length}):
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {currentHubEntries.map((doc, idx) => (
@@ -611,7 +611,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               {/* Ερευνητικό Ερώτημα */}
               <div className="p-4 bg-amber-100/70 rounded-xl border-l-4 border-amber-600 shadow-sm">
                 <span className="text-xs font-bold uppercase tracking-wider text-amber-900 block mb-1">
-                  Ερευνητικό Ερώτημα
+                  ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑ
                 </span>
                 <p className="text-sm font-medium text-amber-950">
                   {selectedEntry.research_question}
@@ -686,7 +686,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                 <div className="p-4 bg-indigo-50/80 rounded-xl border-l-4 border-indigo-700 shadow-sm">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 mb-1 flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5 text-indigo-700" />
-                    <span>Σχόλιο Συνεργαζόμενου Σχολείου</span>
+                    <span>ΣΧΟΛΙΟ ΣΥΝΕΡΓΑΖΟΜΕΝΟΥ ΣΧΟΛΕΙΟΥ</span>
                   </h4>
                   <p className="text-sm text-indigo-950 italic">
                     «{selectedEntry.partner_comment}»

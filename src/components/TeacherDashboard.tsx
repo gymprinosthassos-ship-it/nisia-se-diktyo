@@ -52,7 +52,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         <div>
           <div className="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-wider mb-2">
             <ShieldCheck className="w-4 h-4" />
-            <span>Περιβάλλον Εκπαιδευτικών & Συντονιστών</span>
+            <span>ΠΕΡΙΒΑΛΛΟΝ ΕΚΠΑΙΔΕΥΤΙΚΩΝ & ΣΥΝΤΟΝΙΣΤΩΝ</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black">
             Ταμπλό Ελέγχου & Δημοσίευσης (Moderation)

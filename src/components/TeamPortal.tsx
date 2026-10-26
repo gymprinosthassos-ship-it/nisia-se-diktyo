@@ -227,7 +227,7 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
       {/* Session Header */}
       <div className="bg-blue-900 text-white p-4 rounded-2xl shadow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-8">
         <div>
-          <span className="text-xs text-blue-200 uppercase font-semibold">Συνδεδεμένη Ομάδα</span>
+          <span className="text-xs text-blue-200 uppercase font-semibold">ΣΥΝΔΕΔΕΜΕΝΗ ΟΜΑΔΑ</span>
           <h2 className="text-lg font-bold">{session.team_name} — {session.school_name}</h2>
         </div>
         <button

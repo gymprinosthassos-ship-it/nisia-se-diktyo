@@ -83,7 +83,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider mb-3 shadow-sm">
           <BookOpen className="w-3.5 h-3.5 text-amber-700" />
-          <span>Κοινό Ψηφιακό Χρονολόγιο (19ος Αιώνας)</span>
+          <span>ΚΟΙΝΟ ΨΗΦΙΑΚΟ ΧΡΟΝΟΛΟΓΙΟ (19ος ΑΙΩΝΑΣ)</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
           Νησιά σε Δίκτυο: Θάσος & Κρήτη
@@ -387,7 +387,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
             {/* Ερευνητικό Ερώτημα */}
             <div className="mb-6 p-4 bg-amber-50 rounded-xl border-l-4 border-amber-500">
               <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 mb-1">
-                Ερευνητικό Ερώτημα
+                ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑ
               </h4>
               <p className="text-sm font-medium text-amber-950">
                 {activeModalEntry.research_question}
@@ -445,7 +445,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
             {/* Ιστορική Ερμηνεία */}
             <div className="mb-6 p-4 bg-blue-50/70 rounded-xl border border-blue-200">
               <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 mb-1">
-                Ιστορική Ερμηνεία & Συμπεράσματα Ομάδας
+                ΙΣΤΟΡΙΚΗ ΕΡΜΗΝΕΙΑ & ΣΥΜΠΕΡΑΣΜΑΤΑ ΟΜΑΔΑΣ
               </h4>
               <p className="text-sm text-slate-800 leading-relaxed">
                 {activeModalEntry.interpretation}
@@ -457,7 +457,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries }) => {
               <div className="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-600">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 mb-1 flex items-center gap-1.5">
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Συνεισφορά & Αντίλογος Συνεργαζόμενου Σχολείου</span>
+                  <span>ΣΥΝΕΙΣΦΟΡΑ & ΑΝΤΙΛΟΓΟΣ ΣΥΝΕΡΓΑΖΟΜΕΝΟΥ ΣΧΟΛΕΙΟΥ</span>
                 </h4>
                 <p className="text-sm text-indigo-950 italic">
                   «{activeModalEntry.partner_comment}»
