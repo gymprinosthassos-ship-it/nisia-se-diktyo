@@ -134,7 +134,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
               <div>
                 <strong className="text-slate-800">Συντονισμός Εκπαιδευτικών:</strong>
                 <p className="text-slate-600 mt-0.5">
-                  Στέλλα Λεπίδα, Αναστάσιος Καλλίνικος, Φίλιππος Παπαγεωργίου, Χαλίλ Αλ Χανάκτε
+                  Στυλιανή Λεπίδα, Αναστάσιος Καλλίνικος, Φίλιππος Παπαγεωργίου, Χαλίλ Αλ Χανάκτε
                 </p>
               </div>
             </div>
