@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 interface ProjectIdentityViewProps {
   teams: Team[];
@@ -32,7 +33,7 @@ interface ProjectIdentityViewProps {
 }
 
 export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab }) => {
-  // Φόρτωση συμμετεχόντων (με υποστήριξη τοπικής προσαρμογής στο localStorage)
+  // Αρχική κατάσταση με ανάγνωση από localStorage ως γρήγορη προσωρινή μνήμη
   const [participants, setParticipants] = useState<IslandParticipants[]>(() => {
     try {
       const saved = localStorage.getItem('nisia_participants_data_v4');
@@ -49,15 +50,41 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   const [editSchoolId, setEditSchoolId] = useState<'school-prinos' | 'school-chania'>('school-prinos');
   const [tempParticipants, setTempParticipants] = useState<IslandParticipants[]>(participants);
   const [saveNotification, setSaveNotification] = useState<string>('');
+  
 
-  // Συγχρονισμός τοπικών αλλαγών
+  // Αυτόματη ανάκτηση συμμετεχόντων από τη ζωντανή βάση δεδομένων Supabase
   useEffect(() => {
-    try {
-      localStorage.setItem('nisia_participants_data_v4', JSON.stringify(participants));
-    } catch {
-      // ignore
+    async function fetchLiveParticipants() {
+      if (!isSupabaseConfigured()) return;
+      try {
+        const { data, error } = await supabase
+          .from('project_participants')
+          .select('*')
+          .order('school_id');
+
+        if (!error && data && data.length > 0) {
+          const formatted: IslandParticipants[] = data.map((row: any) => ({
+            schoolId: row.school_id,
+            island: row.island,
+            schoolName: row.school_name,
+            region: row.region,
+            teachers: row.teachers || [],
+            teams: row.teams || []
+          }));
+          setParticipants(formatted);
+          try {
+            localStorage.setItem('nisia_participants_data_v4', JSON.stringify(formatted));
+          } catch {
+            // ignore
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching participants from Supabase:', err);
+      }
     }
-  }, [participants]);
+
+    fetchLiveParticipants();
+  }, []);
 
   const handleOpenEdit = (schoolId: 'school-prinos' | 'school-chania') => {
     setEditSchoolId(schoolId);
@@ -65,18 +92,79 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
     setIsEditingNames(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
+    
     setParticipants(tempParticipants);
     setIsEditingNames(false);
-    setSaveNotification('Τα ονόματα αποθηκεύτηκαν επιτυχώς!');
+
+    // Αποθήκευση τοπικά
+    try {
+      localStorage.setItem('nisia_participants_data_v4', JSON.stringify(tempParticipants));
+    } catch {
+      // ignore
+    }
+
+    // Ζωντανή αποθήκευση στη βάση Supabase (για όλους τους χρήστες)
+    if (isSupabaseConfigured()) {
+      try {
+        const payload = tempParticipants.map(item => ({
+          id: item.schoolId,
+          school_id: item.schoolId,
+          island: item.island,
+          school_name: item.schoolName,
+          region: item.region,
+          teachers: item.teachers,
+          teams: item.teams,
+          updated_at: new Date().toISOString()
+        }));
+
+        const { error } = await supabase
+          .from('project_participants')
+          .upsert(payload);
+
+        if (error) {
+          console.error('Error saving participants to Supabase:', error);
+          setSaveNotification('Αποθηκεύτηκε τοπικά (σφάλμα δικτύου)');
+        } else {
+          setSaveNotification('Οι αλλαγές αποθηκεύτηκαν ζωντανά στη βάση δεδομένων!');
+        }
+      } catch (err) {
+        console.error('Supabase save error:', err);
+        setSaveNotification('Αποθηκεύτηκε τοπικά');
+      }
+    } else {
+      setSaveNotification('Οι αλλαγές αποθηκεύτηκαν!');
+    }
+
+    
     setTimeout(() => setSaveNotification(''), 4000);
   };
 
-  const handleResetDefaults = () => {
-    if (window.confirm('Επαναφορά στα αρχικά πρότυπα ονομάτων;')) {
+  const handleResetDefaults = async () => {
+    if (window.confirm('Είστε σίγουροι ότι θέλετε επαναφορά στις αρχικές ρυθμίσεις;')) {
       setParticipants(islandParticipantsData);
       localStorage.removeItem('nisia_participants_data_v4');
       setIsEditingNames(false);
+
+      if (isSupabaseConfigured()) {
+        try {
+          const payload = islandParticipantsData.map(item => ({
+            id: item.schoolId,
+            school_id: item.schoolId,
+            island: item.island,
+            school_name: item.schoolName,
+            region: item.region,
+            teachers: item.teachers,
+            teams: item.teams,
+            updated_at: new Date().toISOString()
+          }));
+          await supabase.from('project_participants').upsert(payload);
+          setSaveNotification('Έγινε επαναφορά στις αρχικές ρυθμίσεις στη βάση!');
+          setTimeout(() => setSaveNotification(''), 4000);
+        } catch (err) {
+          console.error('Reset error:', err);
+        }
+      }
     }
   };
 
