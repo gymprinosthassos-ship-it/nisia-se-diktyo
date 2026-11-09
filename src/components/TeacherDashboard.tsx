@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { HistoricalEntry } from '../types/database.types';
-import { Check, RotateCcw, Download, Printer, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Check, RotateCcw, Download, Printer, ShieldCheck, MessageSquare, Lock, KeyRound } from 'lucide-react';
 
 interface TeacherDashboardProps {
   entries: HistoricalEntry[];
@@ -20,6 +20,40 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [partnerCommentText, setPartnerCommentText] = useState<{ [key: string]: string }>({});
   const [activeFeedbackId, setActiveFeedbackId] = useState<string | null>(null);
   const [activeCommentId, setActiveCommentId] = useState<string | null>(null);
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('teacher_auth_pin') === '64010';
+    } catch {
+      return false;
+    }
+  });
+  const [teacherPin, setTeacherPin] = useState<string>('');
+  const [pinError, setPinError] = useState<string>('');
+
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (teacherPin.trim() === '64010') {
+      setIsUnlocked(true);
+      try {
+        sessionStorage.setItem('teacher_auth_pin', '64010');
+      } catch {
+        // ignore
+      }
+      setPinError('');
+    } else {
+      setPinError('Λάθος κωδικός ασφαλείας! Παρακαλώ εισάγετε το έγκυρο PIN (64010).');
+    }
+  };
+
+  const handleLock = () => {
+    setIsUnlocked(false);
+    try {
+      sessionStorage.removeItem('teacher_auth_pin');
+    } catch {
+      // ignore
+    }
+    setTeacherPin('');
+  };
 
   // Φιλτράρισμα
   const pendingEntries = entries.filter(e => e.status === 'submitted');
@@ -45,6 +79,63 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     window.print();
   };
 
+  if (!isUnlocked) {
+    return (
+      <div className="w-full max-w-md mx-auto px-4 py-16">
+        <div className="bg-white rounded-3xl p-7 shadow-xl border border-slate-200 text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/15 text-amber-700 flex items-center justify-center mx-auto shadow-inner">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-bold font-serif text-slate-900">
+              Πίνακας Ελέγχου Εκπαιδευτικών
+            </h2>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Για την πρόσβαση στην έγκριση, επιστροφή διορθώσεων και σχολιασμό αναρτήσεων, απαιτείται ο Κωδικός Ασφαλείας Έργου.
+            </p>
+          </div>
+
+          <form onSubmit={handleUnlock} className="space-y-4">
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-bold text-slate-700 block">
+                Κωδικός Ασφαλείας (PIN):
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={teacherPin}
+                  onChange={(e) => {
+                    setTeacherPin(e.target.value);
+                    if (pinError) setPinError('');
+                  }}
+                  placeholder="Εισάγετε 64010..."
+                  className="w-full text-center text-base tracking-widest font-mono font-bold py-2.5 px-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            {pinError && (
+              <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 text-left">
+                <span>⚠️</span>
+                <span>{pinError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>Ξεκλείδωμα Πίνακα</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto my-8 px-4">
       {/* Header Ταμπλό */}
@@ -64,6 +155,14 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
         {/* Κουμπιά Εξαγωγής / Εκτύπωσης */}
         <div className="no-print flex items-center gap-3">
+          <button
+            onClick={handleLock}
+            className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow"
+            title="Κλείδωμα Πίνακα"
+          >
+            <Lock className="w-4 h-4 text-amber-400" />
+            <span>Κλείδωμα</span>
+          </button>
           <button
             onClick={handleExportJSON}
             className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow"

@@ -25,7 +25,9 @@ import {
   Plus,
   Trash2,
   UserPlus,
-  FolderPlus
+  FolderPlus,
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
@@ -54,6 +56,8 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   const [editSchoolId, setEditSchoolId] = useState<'school-prinos' | 'school-chania'>('school-prinos');
   const [tempParticipants, setTempParticipants] = useState<IslandParticipants[]>(participants);
   const [saveNotification, setSaveNotification] = useState<string>('');
+  const [securityPin, setSecurityPin] = useState<string>('');
+  const [pinError, setPinError] = useState<string>('');
   
 
   // Αυτόματη ανάκτηση συμμετεχόντων από τη ζωντανή βάση δεδομένων Supabase
@@ -93,11 +97,17 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   const handleOpenEdit = (schoolId: 'school-prinos' | 'school-chania') => {
     setEditSchoolId(schoolId);
     setTempParticipants(JSON.parse(JSON.stringify(participants)));
+    setSecurityPin('');
+    setPinError('');
     setIsEditingNames(true);
   };
 
   const handleSaveEdit = async () => {
-    
+    if (securityPin.trim() !== '64010') {
+      setPinError('Λάθος κωδικός ασφαλείας! Απαιτείται ο έγκυρος κωδικός (PIN: 64010) για την αλλαγή οποιουδήποτε πεδίου.');
+      return;
+    }
+    setPinError('');
     setParticipants(tempParticipants);
     setIsEditingNames(false);
 
@@ -145,6 +155,11 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   };
 
   const handleResetDefaults = async () => {
+    const pin = window.prompt('Εισάγετε τον Κωδικό Ασφαλείας (PIN) για επαναφορά στις αρχικές ρυθμίσεις:');
+    if (pin !== '64010') {
+      alert('Λάθος κωδικός ασφαλείας! Η επαναφορά ακυρώθηκε.');
+      return;
+    }
     if (window.confirm('Είστε σίγουροι ότι θέλετε επαναφορά στις αρχικές ρυθμίσεις;')) {
       setParticipants(islandParticipantsData);
       localStorage.removeItem('nisia_participants_data_v4');
@@ -1177,6 +1192,46 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                   );
                 })}
               </div>
+            </div>
+
+                        {/* 3. ΚΩΔΙΚΟΣ ΑΣΦΑΛΕΙΑΣ ΓΙΑ ΑΠΟΘΗΚΕΥΣΗ */}
+            <div className={`p-4 rounded-2xl border-2 transition ${pinError ? 'bg-rose-50 border-rose-300' : 'bg-slate-100 border-slate-300'}`}>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-xl ${pinError ? 'bg-rose-100 text-rose-700' : 'bg-amber-500 text-slate-950 font-bold'}`}>
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                      <Lock className="w-3.5 h-3.5 text-slate-600" />
+                      <span>Κωδικός Ασφαλείας Έργου (PIN)</span>
+                    </h4>
+                    <p className="text-[11px] text-slate-600">
+                      Απαιτείται ο 5-ψήφιος κωδικός για την αποθήκευση οποιασδήποτε αλλαγής σε εκπαιδευτικούς, ομάδες ή μαθητές.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="w-full sm:w-56">
+                  <input
+                    type="password"
+                    value={securityPin}
+                    onChange={(e) => {
+                      setSecurityPin(e.target.value);
+                      if (pinError) setPinError('');
+                    }}
+                    placeholder="Εισάγετε PIN..."
+                    className="w-full text-center text-sm font-mono tracking-widest font-bold px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 bg-white"
+                  />
+                </div>
+              </div>
+
+              {pinError && (
+                <div className="mt-2.5 p-2 rounded-lg bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{pinError}</span>
+                </div>
+              )}
             </div>
 
             {/* Action Buttons Footer */}

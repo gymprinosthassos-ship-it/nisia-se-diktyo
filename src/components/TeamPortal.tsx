@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { School, Team, HistoricalEntry, TeamSession } from '../types/database.types';
 import { compressHistoricalImage } from '../utils/imageCompressor';
-import { Lock, LogIn, Send, Save, Image as ImageIcon, Video, AlertCircle, CheckCircle2, LogOut } from 'lucide-react';
+import { Lock, LogIn, Send, Save, Image as ImageIcon, Video, AlertCircle, CheckCircle2, LogOut, ShieldCheck } from 'lucide-react';
 
 interface TeamPortalProps {
   schools: School[];
@@ -41,6 +41,8 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
   const [compressedFile, setCompressedFile] = useState<File | null>(null);
   const [compressionStatus, setCompressionStatus] = useState<string>('');
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
+  const [uploadPin, setUploadPin] = useState<string>('');
+  const [uploadPinError, setUploadPinError] = useState<string>('');
 
   // Διαθέσιμες ομάδες για το επιλεγμένο σχολείο
   const availableTeams = teams.filter(t => t.school_id === selectedSchoolId);
@@ -56,7 +58,7 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
     }
 
     // Demo check: δεχόμαστε τον κωδικό 123456 ή οποιοδήποτε 6ψήφιο για δοκιμή
-    if (passcode.trim() === '123456' || passcode.length >= 4) {
+    if (passcode.trim() === '64010') {
       const school = schools.find(s => s.id === selectedSchoolId);
       const team = teams.find(t => t.school_id === selectedSchoolId && t.name === selectedTeamName);
       setSession({
@@ -84,6 +86,11 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
 
   // Διαχείριση Υποβολής
   const handleSubmit = (status: 'draft' | 'submitted') => {
+    if (uploadPin.trim() !== '64010') {
+      setUploadPinError('Απαιτείται ο έγκυρος Κωδικός Ασφαλείας (PIN: 64010) για την ανάρτηση υλικού.');
+      return;
+    }
+    setUploadPinError('');
     if (!title || !historicalContext || !researchQuestion) {
       alert('Παρακαλώ συμπληρώστε τουλάχιστον Τίτλο, Ερευνητικό Ερώτημα και Ιστορικό Πλαίσιο.');
       return;
@@ -497,6 +504,46 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
         </div>
 
         {/* Κουμπιά Υποβολής */}
+                {/* Κωδικός Ασφαλείας Ανάρτησης */}
+        <div className={`p-4 rounded-2xl border-2 transition ${uploadPinError ? 'bg-rose-50 border-rose-300' : 'bg-blue-50/60 border-blue-200'}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className={`p-2 rounded-xl ${uploadPinError ? 'bg-rose-100 text-rose-700' : 'bg-blue-600 text-white font-bold'}`}>
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Κωδικός Ασφαλείας Ανάρτησης (PIN)</span>
+                </h4>
+                <p className="text-[11px] text-slate-600">
+                  Εισάγετε τον 5-ψήφιο κωδικό για την επιβεβαίωση της ανάρτησης ιστορικού υλικού.
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full sm:w-56">
+              <input
+                type="password"
+                value={uploadPin}
+                onChange={(e) => {
+                  setUploadPin(e.target.value);
+                  if (uploadPinError) setUploadPinError('');
+                }}
+                placeholder="Εισάγετε PIN..."
+                className="w-full text-center text-sm font-mono tracking-widest font-bold px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 bg-white"
+              />
+            </div>
+          </div>
+
+          {uploadPinError && (
+            <div className="mt-2.5 p-2 rounded-lg bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{uploadPinError}</span>
+            </div>
+          )}
+        </div>
+
         <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100">
           <button
             type="button"
