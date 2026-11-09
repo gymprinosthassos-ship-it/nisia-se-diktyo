@@ -7,7 +7,7 @@ interface ChaniaLighthouseIconProps {
 
 /**
  * Εικονίδιο του ιστορικού Αιγυπτιακού Φάρου των Χανίων (1830-1840)
- * Σχεδιασμένο με την αυθεντική μακρόστενη, λεπτή και επιβλητική σιλουέτα τύπου μιναρέ.
+ * Σχεδιασμένο με μακρόστενη, λεπτή γραμμή και στενή, ευθυγραμμισμένη βάση.
  */
 export const ChaniaLighthouseIcon: React.FC<ChaniaLighthouseIconProps> = ({ 
   className = "w-6 h-6",
@@ -23,7 +23,7 @@ export const ChaniaLighthouseIcon: React.FC<ChaniaLighthouseIconProps> = ({
       strokeLinejoin="round"
       className={className}
       style={size ? { width: size, height: size } : undefined}
-      aria-label="Φάρος Χανίων (Μακρόστενος)"
+      aria-label="Φάρος Χανίων (Στενή Βάση)"
     >
       {/* 1. Ακίδα κορυφής & Θόλος φανού */}
       <path d="M12 1v1.5" strokeWidth="1.5" />
@@ -46,21 +46,21 @@ export const ChaniaLighthouseIcon: React.FC<ChaniaLighthouseIconProps> = ({
       <path d="M9.2 7.6h5.6" strokeWidth="1.4" />
 
       {/* 4. Μακρόστενος κυλινδρικός κορμός (τύπου μιναρέ) */}
-      <path d="M10.2 7.6l-.5 6h4.6l-.5-6" strokeWidth="1.8" />
-      {/* Ενδιάμεσος λεπτός δακτύλιος */}
-      <path d="M9.9 10.8h4.2" strokeWidth="1.2" />
+      <path d="M10.2 7.6l-.4 5.8h4.4l-.4-5.8" strokeWidth="1.8" />
+      {/* Ενδιάμεσος λεπτός πέτρινος δακτύλιος */}
+      <path d="M9.9 10.6h4.2" strokeWidth="1.2" />
 
       {/* 5. Μεσαίο πολυγωνικό διάζωμα */}
-      <path d="M9.7 13.6h4.6" strokeWidth="2" />
-      <path d="M9.5 13.6l-.7 4.2h6.4l-.7-4.2" strokeWidth="1.8" />
+      <path d="M9.6 13.4h4.8" strokeWidth="1.8" />
+      <path d="M9.5 13.4l-.5 4h6l-.5-4" strokeWidth="1.8" />
 
-      {/* 6. Βάση πέτρινου προμαχώνα (Ενετικό κάστρο λιμενοβραχίονα) */}
-      <path d="M8.2 17.8h7.6" strokeWidth="2" />
-      <path d="M8.5 17.8l-1.3 3.4h9.6l-1.3-3.4" strokeWidth="1.8" />
+      {/* 6. Στενή βάση πέτρινου προμαχώνα */}
+      <path d="M8.6 17.4h6.8" strokeWidth="1.8" />
+      <path d="M8.8 17.4l-.7 3.8h7.8l-.7-3.8" strokeWidth="1.8" />
 
-      {/* 7. Πέτρινη βάση & κυματισμός θάλασσας */}
-      <path d="M6.5 21.2h11" strokeWidth="1.8" />
-      <path d="M4 22.8c2-.4 4.5.4 8 0s6 .4 8 0" strokeWidth="1.4" />
+      {/* 7. Κρηπίδωμα & συμπαγής κυματισμός βάσης */}
+      <path d="M7.6 21.2h8.8" strokeWidth="2" />
+      <path d="M6 22.8c2-.4 3.5.4 6 0s4 .4 6 0" strokeWidth="1.4" />
 
       {/* 8. Διακριτικές φωτεινές ακτίνες φάρου */}
       <path d="M7.5 4.8l-2.5-1" strokeWidth="1.3" />
