@@ -3,8 +3,11 @@ import {
   X, 
   Play, 
   Pause, 
+  RotateCcw,
   Compass, 
   Headphones, 
+  Volume2,
+  Sparkles,
   ArrowRight, 
   ArrowLeft 
 } from 'lucide-react';
@@ -18,6 +21,7 @@ export interface NarratorStation {
   accentColor: string;
   badgeBg: string;
   text: string;
+  audioUrl: string;
   historicalQuote?: string;
   actionButton?: {
     label: string;
@@ -35,6 +39,7 @@ const narratorStations: NarratorStation[] = [
     accentColor: 'text-amber-500',
     badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
     text: 'Καλώς ήρθατε στους Ιστορικούς Δεσμούς. Βρισκόμαστε στο 1813. Ο Μεχμέτ Αλή Πασάς, γεννημένος στην Καβάλα και ισχυρός ηγεμόνας της Αιγύπτου, λαμβάνει τη Θάσο ως δωρεά από τον Σουλτάνο Μαχμούτ Β΄. Ο Μεχμέτ Αλή αφιερώνει τα έσοδα του νησιού ως Βακούφι για τη συντήρηση του περίφημου Ιμαρέτ της Καβάλας. Στον Πρίνο και σε όλο το νησί, οι παλαιοί ελαιώνες, τα παραδοσιακά λιοτρίβια και τα τρία ενετικά και αιγυπτιακά κτήρια μαρτυρούν μια εποχή ιδιαίτερης διοικητικής και οικονομικής αυτονομίας.',
+    audioUrl: '/audio/narrator-station-1.mp3',
     historicalQuote: '«Η νήσος Θάσος αφιερούται εις το εν Καβάλα ευαγές ίδρυμα, διατηρούσα τα αρχαία αυτής προνόμια...» — Οθωμανικό Φιρμάνιο (1813)',
     actionButton: {
       label: 'Δείτε το στο Χρονολόγιο (1813)',
@@ -50,6 +55,7 @@ const narratorStations: NarratorStation[] = [
     accentColor: 'text-cyan-400',
     badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
     text: 'Η θάλασσα δεν χώριζε τα νησιά, αλλά τα ένωνε. Καθ\' όλη τη διάρκεια του 19ου αιώνα, εμπορικά ιστιοφόρα και καΐκια όργωναν το Αιγαίο Πέλαγος. Από τα λιμάνια του Πρίνου και του Λιμένα, φορτία με εκλεκτό θασίτικο λάδι και ναυπηγική ξυλεία ταξίδευαν νότια. Οι ναυτικοί χάρτες και τα κατάστιχα καταγράφουν τις θαλάσσιες ρότες που συνέδεαν το Βόρειο Αιγαίο με τις Κυκλάδες και την Κρήτη, μέσα σε μια Μεσόγειο έντονων γεωπολιτικών αλλαγών.',
+    audioUrl: '/audio/narrator-station-2.mp3',
     historicalQuote: '«Τα θασιακά σκάφη διέπλεον το Αιγαίον, μεταφέροντα έλαιον και ξυλείαν έως τα λιμάνια της Κρήτης και της Αλεξανδρείας...»',
     actionButton: {
       label: 'Εξερευνήστε τις Ρότες στον Χάρτη',
@@ -65,6 +71,7 @@ const narratorStations: NarratorStation[] = [
     accentColor: 'text-blue-400',
     badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
     text: 'Καταπλέουμε στα Χανιά. Μετά την Επανάσταση του 1821, οι Μεγάλες Δυνάμεις παραχωρούν τη διοίκηση της Κρήτης στον Μεχμέτ Αλή της Αιγύπτου για μία ολόκληρη δεκαετία (1830–1840). Υπό τον διοικητή Μουσταφά Ναϊλή Πασά, τα Χανιά γνωρίζουν έντονο οικοδομικό οργασμό. Το Ενετικό Λιμάνι εκβαθύνεται, αναστηλώνεται ο εμβληματικός Αιγυπτιακός Φάρος των Χανίων σε σχήμα μιναρέ, ενώ το εμπόριο ελαιολάδου και σαπουνιού γνωρίζει πρωτοφανή άνθηση.',
+    audioUrl: '/audio/narrator-station-3.mp3',
     historicalQuote: '«Ο Φάρος των Χανίων ανηγέρθη επί αιγυπτιακής διοικήσεως, δεσπόζων επί των παλαιών ενετικών οχυρώσεων...» — Αρχειακές Πηγές Χανίων',
     actionButton: {
       label: 'Δείτε τα Τεκμήρια των Χανίων',
@@ -80,6 +87,7 @@ const narratorStations: NarratorStation[] = [
     accentColor: 'text-emerald-400',
     badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
     text: 'Διακόσια χρόνια μετά, η ιστορία γίνεται γέφυρα μαθητικής συνεργασίας. Οι μαθήτριες, οι μαθητές και οι εκπαιδευτικοί του Γυμνασίου Πρίνου Θάσου και του 3ου ΓΕΛ Χανίων συναντιούνται σε ένα κοινό ψηφιακό ταξίδι. Μελετούν αρχειακά έγγραφα, καταγράφουν προφορικές μαρτυρίες, φωτογραφίζουν μνημεία και δημιουργούν αυτή τη ζωντανή πλατφόρμα. Οι ιστορικοί δεσμοί του 19ου αιώνα ζωντανεύουν ξανά μέσα από τη φωνή της νέας γενιάς.',
+    audioUrl: '/audio/narrator-station-4.mp3',
     historicalQuote: '«Γεφυρώνοντας το Βόρειο Αιγαίο με την Κρήτη μέσα από τη μαθητική ιστορική έρευνα.»',
     actionButton: {
       label: 'Γνωρίστε τις Μαθητικές Ομάδες',
@@ -101,72 +109,116 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
 }) => {
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [speechSupported, setSpeechSupported] = useState<boolean>(false);
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const station = narratorStations[currentIdx];
 
-  // Έλεγχος διαθεσιμότητας Web Speech API
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      setSpeechSupported(true);
+  // Καθαρισμός και προετοιμασία ήχου κατά την αλλαγή σταθμού
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
-  }, []);
-
-  // Διακοπή ομιλίας όταν αλλάζει σταθμός ή κλείνει το modal
-  const stopSpeech = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-    }
+    setIsPlaying(false);
+    setCurrentTime(0);
   };
 
   useEffect(() => {
-    stopSpeech();
+    stopAudio();
+    if (audioRef.current) {
+      audioRef.current.src = station.audioUrl;
+      audioRef.current.load();
+    }
   }, [currentIdx, isOpen]);
 
-  // Χειρισμός έναρξης / παύσης φωνής
-  const toggleSpeech = () => {
-    if (!speechSupported) return;
+  // Cleanup κατά το unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  // Έλεγχος έναρξης/παύσης φυσικού neural ήχου
+  const togglePlay = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(station.audioUrl);
+      
+      audioRef.current.onloadedmetadata = () => {
+        if (audioRef.current) {
+          setDuration(audioRef.current.duration || 0);
+        }
+      };
+
+      audioRef.current.ontimeupdate = () => {
+        if (audioRef.current) {
+          setCurrentTime(audioRef.current.currentTime || 0);
+          if (audioRef.current.duration && !duration) {
+            setDuration(audioRef.current.duration);
+          }
+        }
+      };
+
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      };
+
+      audioRef.current.onerror = () => {
+        console.error('Σφάλμα αναπαραγωγής αρχείου ήχου:', station.audioUrl);
+        setIsPlaying(false);
+      };
+    }
 
     if (isPlaying) {
-      stopSpeech();
-      return;
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch(err => {
+        console.error('Audio play error:', err);
+        setIsPlaying(false);
+      });
     }
+  };
 
-    const utterance = new SpeechSynthesisUtterance(station.text);
-    utterance.lang = 'el-GR';
-    utterance.rate = 0.95; // Λίγο πιο αργός, επιβλητικός ρυθμός αφήγησης
-    utterance.pitch = 1.0;
-
-    // Προσπάθεια εύρεσης ελληνικής φωνής
-    const voices = window.speechSynthesis.getVoices();
-    const greekVoice = voices.find(v => v.lang.startsWith('el'));
-    if (greekVoice) {
-      utterance.voice = greekVoice;
+  const handleRestart = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      setCurrentTime(0);
+      if (!isPlaying) {
+        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
     }
-
-    utterance.onend = () => setIsPlaying(false);
-    utterance.onerror = () => setIsPlaying(false);
-
-    speechRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-    setIsPlaying(true);
   };
 
   const handleNext = () => {
-    stopSpeech();
+    stopAudio();
     if (currentIdx < narratorStations.length - 1) {
       setCurrentIdx(prev => prev + 1);
     }
   };
 
   const handlePrev = () => {
-    stopSpeech();
+    stopAudio();
     if (currentIdx > 0) {
       setCurrentIdx(prev => prev - 1);
     }
   };
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   if (!isOpen) return null;
 
@@ -181,9 +233,15 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
               <Headphones className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">
-                Διαδραστικος Ξεναγος Εργου
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">
+                  Ψηφιακος Ξεναγος Εργου
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <Sparkles className="w-2.5 h-2.5" />
+                  Φυσική Φωνή Ντοκιμαντέρ
+                </span>
+              </div>
               <h2 className="text-lg sm:text-xl font-bold font-serif text-white">
                 Το Ταξίδι των Ιστορικών Δεσμών
               </h2>
@@ -192,7 +250,7 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
 
           <button
             onClick={() => {
-              stopSpeech();
+              stopAudio();
               onClose();
             }}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
@@ -210,12 +268,12 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
               <button
                 key={st.id}
                 onClick={() => {
-                  stopSpeech();
+                  stopAudio();
                   setCurrentIdx(idx);
                 }}
                 className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center gap-0.5 border text-center ${
                   isActive 
-                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-lg scale-102' 
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-lg scale-102 font-bold' 
                     : 'bg-slate-950/80 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-200'
                 }`}
               >
@@ -246,37 +304,60 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
             </p>
           </div>
 
-          {/* Voiceover Control Box */}
-          <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={toggleSpeech}
-                className={`p-3 rounded-2xl font-bold flex items-center gap-2 text-xs shadow-md transition ${
-                  isPlaying 
-                    ? 'bg-amber-500 text-slate-950 hover:bg-amber-400 animate-pulse' 
-                    : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700'
-                }`}
-              >
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-                <span>{isPlaying ? 'Παύση Φωνής' : 'Ακούστε τον Αφηγητή'}</span>
-              </button>
+          {/* Natural Voiceover Player Controls */}
+          <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={togglePlay}
+                  className={`p-3 rounded-2xl font-bold flex items-center gap-2 text-xs shadow-md transition ${
+                    isPlaying 
+                      ? 'bg-amber-500 text-slate-950 hover:bg-amber-400 ring-2 ring-amber-400/50' 
+                      : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700'
+                  }`}
+                >
+                  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                  <span>{isPlaying ? 'Παύση' : 'Ακούστε τον Αφηγητή'}</span>
+                </button>
 
-              {isPlaying && (
-                <div className="flex items-center gap-1">
-                  <span className="w-1 h-3 bg-amber-400 rounded-full animate-bounce"></span>
-                  <span className="w-1 h-5 bg-amber-400 rounded-full animate-bounce [animation-delay:150ms]"></span>
-                  <span className="w-1 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:300ms]"></span>
-                  <span className="w-1 h-4 bg-amber-400 rounded-full animate-bounce [animation-delay:450ms]"></span>
-                  <span className="text-xs text-amber-300 italic hidden sm:inline ml-1.5 font-serif">
-                    Ομιλία σε εξέλιξη...
-                  </span>
-                </div>
-              )}
+                {currentTime > 0 && (
+                  <button
+                    onClick={handleRestart}
+                    className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition"
+                    title="Επανάληψη από την αρχή"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                )}
+
+                {isPlaying && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1 h-3 bg-amber-400 rounded-full animate-bounce"></span>
+                    <span className="w-1 h-5 bg-amber-400 rounded-full animate-bounce [animation-delay:150ms]"></span>
+                    <span className="w-1 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:300ms]"></span>
+                    <span className="w-1 h-4 bg-amber-400 rounded-full animate-bounce [animation-delay:450ms]"></span>
+                    <span className="text-xs text-amber-300 italic hidden sm:inline ml-1 font-serif">
+                      Αφήγηση σε εξέλιξη...
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-mono">
+                  {formatTime(currentTime)} {duration > 0 && `/ ${formatTime(duration)}`}
+                </span>
+              </div>
             </div>
 
-            <span className="text-[11px] text-slate-500 hidden sm:block">
-              Φωνητική αφήγηση
-            </span>
+            {/* Audio Progress Bar */}
+            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-amber-500 to-amber-300 h-full transition-all duration-200 rounded-full"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
           </div>
 
           {/* Narration Narrative Text */}
@@ -318,7 +399,7 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
           {station.actionButton && (
             <button
               onClick={() => {
-                stopSpeech();
+                stopAudio();
                 onClose();
                 onNavigateToTab(station.actionButton!.targetTab as any);
               }}
