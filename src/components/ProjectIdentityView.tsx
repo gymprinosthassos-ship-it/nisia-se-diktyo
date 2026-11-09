@@ -21,7 +21,11 @@ import {
   UserCheck,
   CheckCircle2,
   Edit3,
-  X
+  X,
+  Plus,
+  Trash2,
+  UserPlus,
+  FolderPlus
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
@@ -166,6 +170,141 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         }
       }
     }
+  };
+
+    // --- Χειριστές Διαχείρισης Εκπαιδευτικών ---
+  const handleAddTeacher = () => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target) {
+        target.teachers.push({
+          name: '',
+          role: 'Συντονιστής Εκπαιδευτικός'
+        });
+      }
+      return copy;
+    });
+  };
+
+  const handleRemoveTeacher = (tIdx: number) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teachers.length > 1) {
+        target.teachers.splice(tIdx, 1);
+      }
+      return copy;
+    });
+  };
+
+  const handleTeacherChange = (tIdx: number, field: 'name' | 'role', value: string) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teachers[tIdx]) {
+        target.teachers[tIdx][field] = value;
+      }
+      return copy;
+    });
+  };
+
+  // --- Χειριστές Διαχείρισης Ομάδων ---
+  const handleAddTeam = () => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target) {
+        const isThasos = editSchoolId === 'school-prinos';
+        const nextNum = target.teams.length + 1;
+        const wingCode = isThasos ? (nextNum <= 4 ? 'Α' : 'Β') : 'Γ';
+        const wingTitle = isThasos 
+          ? (nextNum <= 4 ? 'ΠΤΕΡΥΓΑ Α — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ' : 'ΠΤΕΡΥΓΑ Β — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ')
+          : 'ΠΤΕΡΥΓΑ Γ — ΧΑΝΙΑ';
+        target.teams.push({
+          wing: wingCode as any,
+          wingTitle,
+          code: `${wingCode}${nextNum}`,
+          name: `Νέα Μαθητική Ομάδα ${wingCode}${nextNum}`,
+          students: ["(1) Νέος Μαθητής", "(2) Νέος Μαθητής"]
+        });
+      }
+      return copy;
+    });
+  };
+
+  const handleRemoveTeam = (tmIdx: number) => {
+    if (!window.confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την ομάδα;')) return;
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams.length > 1) {
+        target.teams.splice(tmIdx, 1);
+      }
+      return copy;
+    });
+  };
+
+  const handleTeamMetaChange = (tmIdx: number, field: 'code' | 'name', value: string) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams[tmIdx]) {
+        target.teams[tmIdx][field] = value;
+      }
+      return copy;
+    });
+  };
+
+  // --- Χειριστές Διαχείρισης Μαθητών μέσα σε Ομάδα ---
+  const handleAddStudent = (tmIdx: number) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams[tmIdx]) {
+        target.teams[tmIdx].students.push('');
+      }
+      return copy;
+    });
+  };
+
+  const handleRemoveStudent = (tmIdx: number, sIdx: number) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams[tmIdx] && target.teams[tmIdx].students.length > 1) {
+        target.teams[tmIdx].students.splice(sIdx, 1);
+      }
+      return copy;
+    });
+  };
+
+  const handleStudentChange = (tmIdx: number, sIdx: number, value: string) => {
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams[tmIdx]) {
+        target.teams[tmIdx].students[sIdx] = value;
+      }
+      return copy;
+    });
+  };
+
+  const [bulkModeMap, setBulkModeMap] = useState<Record<string, boolean>>({});
+  const toggleBulkMode = (code: string) => {
+    setBulkModeMap(prev => ({ ...prev, [code]: !prev[code] }));
+  };
+
+  const handleBulkStudentsChange = (tmIdx: number, text: string) => {
+    const list = text.split(',').map(s => s.trim()).filter(Boolean);
+    setTempParticipants(prev => {
+      const copy: IslandParticipants[] = JSON.parse(JSON.stringify(prev));
+      const target = copy.find(p => p.schoolId === editSchoolId);
+      if (target && target.teams[tmIdx]) {
+        target.teams[tmIdx].students = list;
+      }
+      return copy;
+    });
   };
 
   const currentEditIsland = tempParticipants.find(p => p.schoolId === editSchoolId);
@@ -508,7 +647,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
             const isThasos = island.schoolId === 'school-prinos';
             const wingAGroups = island.teams.filter(t => t.wing === 'Α');
             const wingBGroups = island.teams.filter(t => t.wing === 'Β');
-            const chaniaGroups = island.teams.filter(t => t.wing === 'Χ');
+            const chaniaGroups = !isThasos ? island.teams : island.teams.filter(t => t.wing === 'Γ' || t.wing === 'Χ');
 
             return (
               <div 
@@ -785,124 +924,240 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
       {/* MODAL ΕΠΕΞΕΡΓΑΣΙΑΣ ΟΝΟΜΑΤΩΝ ΚΑΘΗΓΗΤΩΝ & ΜΑΘΗΤΩΝ */}
       {/* ============================================================== */}
       {isEditingNames && currentEditIsland && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-300 max-h-[90vh] overflow-y-auto space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-amber-100 text-amber-900">
-                  <Edit3 className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-4xl w-full p-5 sm:p-8 shadow-2xl border border-slate-300 max-h-[92vh] overflow-y-auto space-y-6">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-100 text-amber-900">
+                  <Edit3 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold font-serif text-slate-900">
-                    Επεξεργασία Ονομάτων: {currentEditIsland.schoolName} ({currentEditIsland.island})
+                  <h3 className="text-xl sm:text-2xl font-bold font-serif text-slate-900">
+                    Διαχείριση Συμμετεχόντων: {currentEditIsland.schoolName}
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Πληκτρολογήστε τα ονόματα των εκπαιδευτικών και των μαθητών ανά ομάδα
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Προσθέστε ή αφαιρέστε πλαίσια για εκπαιδευτικούς, ομάδες και μαθητές.
                   </p>
                 </div>
               </div>
               <button 
                 onClick={() => setIsEditingNames(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
-            {/* 1. Επεξεργασία Καθηγητών */}
-            <div className="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <GraduationCap className="w-4 h-4 text-amber-700" />
-                <span>Υπεύθυνοι Καθηγητές / Συντονιστές</span>
-              </h4>
-
-              {currentEditIsland.teachers.map((teacher, tIdx) => (
-                <div key={tIdx} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">
-                      Ονοματεπώνυμο Εκπαιδευτικού {tIdx + 1}:
-                    </label>
-                    <input
-                      type="text"
-                      value={teacher.name}
-                      onChange={(e) => {
-                        const updated = [...tempParticipants];
-                        const target = updated.find(p => p.schoolId === editSchoolId);
-                        if (target) {
-                          target.teachers[tIdx].name = e.target.value;
-                          setTempParticipants(updated);
-                        }
-                      }}
-                      className="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-600 block mb-0.5">
-                      Ρόλος / Ειδικότητα:
-                    </label>
-                    <input
-                      type="text"
-                      value={teacher.role}
-                      onChange={(e) => {
-                        const updated = [...tempParticipants];
-                        const target = updated.find(p => p.schoolId === editSchoolId);
-                        if (target) {
-                          target.teachers[tIdx].role = e.target.value;
-                          setTempParticipants(updated);
-                        }
-                      }}
-                      className="w-full text-xs p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500"
-                    />
-                  </div>
+            {/* 1. ΕΚΠΑΙΔΕΥΤΙΚΟΙ ΣΥΝΤΟΝΙΣΤΕΣ */}
+            <div className="space-y-4 p-5 bg-amber-50/50 rounded-2xl border border-amber-200/80">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-amber-700" />
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    Εκπαιδευτικοί Συντονιστές ({currentEditIsland.teachers.length})
+                  </h4>
                 </div>
-              ))}
+                <button
+                  type="button"
+                  onClick={handleAddTeacher}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-sm transition"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Προσθήκη Εκπαιδευτικού</span>
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {currentEditIsland.teachers.map((teacher, tIdx) => (
+                  <div 
+                    key={tIdx} 
+                    className="p-3.5 bg-white rounded-xl border border-amber-200/60 shadow-sm flex flex-col sm:flex-row items-center gap-2.5"
+                  >
+                    <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-xs shrink-0">
+                      {tIdx + 1}
+                    </span>
+
+                    <div className="flex-1 w-full sm:w-auto">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-0.5">
+                        Ονοματεπώνυμο Εκπαιδευτικού
+                      </label>
+                      <input
+                        type="text"
+                        value={teacher.name}
+                        placeholder="π.χ. Μαρία Παπαδοπούλου"
+                        onChange={(e) => handleTeacherChange(tIdx, 'name', e.target.value)}
+                        className="w-full text-xs font-medium p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 bg-slate-50/50 focus:bg-white"
+                      />
+                    </div>
+
+                    <div className="w-full sm:w-64">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-0.5">
+                        Ρόλος / Ειδικότητα
+                      </label>
+                      <input
+                        type="text"
+                        value={teacher.role}
+                        placeholder="π.χ. Συντονιστής Εκπαιδευτικός"
+                        onChange={(e) => handleTeacherChange(tIdx, 'role', e.target.value)}
+                        className="w-full text-xs font-medium p-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 bg-slate-50/50 focus:bg-white"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTeacher(tIdx)}
+                      disabled={currentEditIsland.teachers.length <= 1}
+                      title="Αφαίρεση Εκπαιδευτικού"
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400 rounded-lg transition self-end sm:self-center mt-2 sm:mt-4 shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* 2. Επεξεργασία Μαθητών ανά Ομάδα */}
+            {/* 2. ΜΑΘΗΤΙΚΕΣ ΟΜΑΔΕΣ & ΜΑΘΗΤΕΣ */}
             <div className="space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-blue-700" />
-                <span>Μαθητές ανά Υποομάδα</span>
-              </h4>
-
-              {currentEditIsland.teams.map((team, tmIdx) => (
-                <div key={team.code} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900">
-                      Ομάδα {team.code}: {team.name}
-                    </span>
-                    <span className="text-[11px] text-slate-500">
-                      (Χωρίστε τα ονόματα με κόμμα)
-                    </span>
-                  </div>
-
-                  <textarea
-                    rows={2}
-                    value={team.students.join(', ')}
-                    onChange={(e) => {
-                      const updated = [...tempParticipants];
-                      const target = updated.find(p => p.schoolId === editSchoolId);
-                      if (target) {
-                        const studentNames = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                        target.teams[tmIdx].students = studentNames;
-                        setTempParticipants(updated);
-                      }
-                    }}
-                    placeholder="π.χ. (1) Ιλόι Χυσμπατράμι, (2) Ρέα Μαγδαληνού, Ειρήνη Βαρέτο..."
-                    className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 font-sans"
-                  />
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-blue-700" />
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900">
+                    Μαθητικές Ομάδες ({currentEditIsland.teams.length})
+                  </h4>
                 </div>
-              ))}
+                <button
+                  type="button"
+                  onClick={handleAddTeam}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-sm transition"
+                >
+                  <FolderPlus className="w-4 h-4" />
+                  <span>Προσθήκη Νέας Ομάδας</span>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {currentEditIsland.teams.map((team, tmIdx) => {
+                  const isBulk = Boolean(bulkModeMap[team.code || tmIdx]);
+
+                  return (
+                    <div 
+                      key={team.code || tmIdx} 
+                      className="p-4 sm:p-5 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm space-y-3"
+                    >
+                      {/* Team Header Row */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200">
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                          <input
+                            type="text"
+                            value={team.code}
+                            title="Κωδικός Ομάδας"
+                            onChange={(e) => handleTeamMetaChange(tmIdx, 'code', e.target.value)}
+                            className="w-16 text-center text-xs font-bold px-2 py-1.5 rounded-lg bg-blue-100 text-blue-900 border border-blue-200 focus:ring-2 focus:ring-blue-500"
+                          />
+                          <input
+                            type="text"
+                            value={team.name}
+                            placeholder="Όνομα / Θέμα Ομάδας"
+                            onChange={(e) => handleTeamMetaChange(tmIdx, 'name', e.target.value)}
+                            className="flex-1 sm:w-80 text-xs font-bold p-1.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 bg-white"
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          <button
+                            type="button"
+                            onClick={() => toggleBulkMode(team.code || String(tmIdx))}
+                            className="text-[11px] text-slate-500 hover:text-slate-800 underline font-medium"
+                          >
+                            {isBulk ? 'Προβολή ανά μαθητή' : 'Μαζική επεξεργασία (κείμενο)'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveTeam(tmIdx)}
+                            disabled={currentEditIsland.teams.length <= 1}
+                            title="Διαγραφή Ομάδας"
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 disabled:opacity-30 rounded-lg transition"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Students inside Team */}
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                            <span>Μαθητές Ομάδας ({team.students.length})</span>
+                          </label>
+                          {!isBulk && (
+                            <button
+                              type="button"
+                              onClick={() => handleAddStudent(tmIdx)}
+                              className="inline-flex items-center gap-1 text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-2.5 py-1 rounded-lg transition"
+                            >
+                              <UserPlus className="w-3 h-3" />
+                              <span>Προσθήκη Μαθητή</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {isBulk ? (
+                          <textarea
+                            rows={3}
+                            value={team.students.join(', ')}
+                            onChange={(e) => handleBulkStudentsChange(tmIdx, e.target.value)}
+                            placeholder="π.χ. (1) Ιλόι Χυσμπατράμι, (2) Ρέα Μαγδαληνού, Ειρήνη Βαρέτο..."
+                            className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 font-sans bg-white"
+                          />
+                        ) : (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                            {team.students.map((student, sIdx) => (
+                              <div 
+                                key={sIdx}
+                                className="flex items-center gap-1.5 p-1.5 bg-white rounded-lg border border-slate-200 shadow-2xs hover:border-blue-300 transition"
+                              >
+                                <span className="text-[10px] font-bold text-slate-400 w-4 text-center shrink-0">
+                                  {sIdx + 1}
+                                </span>
+                                <input
+                                  type="text"
+                                  value={student}
+                                  placeholder="Όνομα μαθητή"
+                                  onChange={(e) => handleStudentChange(tmIdx, sIdx, e.target.value)}
+                                  className="flex-1 text-xs px-1.5 py-1 rounded border-0 focus:ring-1 focus:ring-blue-500 font-medium"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveStudent(tmIdx, sIdx)}
+                                  disabled={team.students.length <= 1}
+                                  title="Αφαίρεση Μαθητή"
+                                  className="p-1 text-slate-300 hover:text-red-500 hover:bg-red-50 disabled:opacity-20 rounded transition shrink-0"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons Footer */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-200">
               <button
                 type="button"
                 onClick={handleResetDefaults}
                 className="text-xs text-red-600 hover:text-red-800 underline font-medium"
               >
-                Επαναφορά προτύπων
+                Επαναφορά στα αρχικά
               </button>
 
               <div className="flex items-center gap-2">
@@ -918,7 +1173,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                   onClick={handleSaveEdit}
                   className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-md transition"
                 >
-                  Αποθήκευση Ονομάτων
+                  Αποθήκευση Αλλαγών
                 </button>
               </div>
             </div>
