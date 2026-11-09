@@ -29,10 +29,10 @@ import {
   ShieldCheck,
   Lock,
   ChevronDown,
+  ChevronUp,
   Maximize2,
   Minimize2
 } from 'lucide-react';
-import { Traveler19thAvatar } from './Traveler19thAvatar';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -40,10 +40,9 @@ import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 interface ProjectIdentityViewProps {
   teams: Team[];
   onNavigateToTab: (tab: 'timeline' | 'map' | 'teams' | 'teachers') => void;
-  onOpenNarrator?: () => void;
 }
 
-export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab, onOpenNarrator }) => {
+export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab }) => {
   // Αρχική κατάσταση με ανάγνωση από localStorage ως γρήγορη προσωρινή μνήμη
   const [participants, setParticipants] = useState<IslandParticipants[]>(() => {
     try {
@@ -68,9 +67,9 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
     part2: boolean;
     part3: boolean;
   }>({
-    part1: true,  // Μέρος 1: Ταυτότητα & Σχολεία (ανοικτό από προεπιλογή)
-    part2: false, // Μέρος 2: Τρία Στάδια Ερευνητικής Διαδικασίας
-    part3: false  // Μέρος 3: Εκπαιδευτικοί & Μαθητικές Ομάδες
+    part1: false, // Συνεπτυγμένο με βελάκι προς τα κάτω για μηδενικό scroll
+    part2: false,
+    part3: false
   });
 
   const toggleSection = (section: 'part1' | 'part2' | 'part3') => {
@@ -377,39 +376,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         </p>
       </div>
 
-      {/* Banner Ψηφιακού Ξεναγού */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 text-white">
-        <div className="flex items-center gap-4 text-center sm:text-left">
-          <div className="relative shrink-0">
-            <Traveler19thAvatar className="w-16 h-16 sm:w-20 sm:h-20" />
-            <span className="absolute -bottom-1 -right-1 px-2 py-0.5 bg-amber-500 text-slate-950 font-extrabold text-[9px] rounded-full uppercase tracking-wider shadow">
-              19ος αι.
-            </span>
-          </div>
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold uppercase tracking-wider border border-amber-500/30">
-              <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>Φωνητική Ξενάγηση 19ου Αιώνα</span>
-            </div>
-            <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
-              Ψηφιακός Αφηγητής: Το Ταξίδι των Ιστορικών Δεσμών
-            </h3>
-            <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
-              Ακούστε τον παλιό ταξιδευτή να σας ιστορεί τις ρότες, τα Βακούφια και τα μνημεία Θάσου και Χανίων με αυθεντική φωνή εποχής.
-            </p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => { if (onOpenNarrator) onOpenNarrator();  }}
-          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-xl transition flex items-center justify-center gap-3 hover:scale-105 transform shrink-0 group"
-        >
-          <Traveler19thAvatar className="w-7 h-7 ring-1 ring-slate-950/40" showBorder={false} />
-          <span>Ακούστε τον Ταξιδευτή</span>
-        </button>
-      </div>
-
-            {/* Γραμμή Ελέγχου Αναπτυσσόμενων Ενοτήτων */}
+      {/* Γραμμή Ελέγχου Αναπτυσσόμενων Ενοτήτων */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-amber-50/80 border border-amber-200 shadow-sm">
         <div className="flex items-center gap-2 text-xs font-bold text-amber-950 uppercase tracking-wider">
           <Layers className="w-4 h-4 text-amber-700" />
@@ -462,11 +429,17 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <span className="hidden md:inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-              {openSections.part1 ? 'Ανοικτό' : 'Κλειστό'}
-            </span>
-            <div className={`w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center transition-transform duration-200 ${openSections.part1 ? 'rotate-180 bg-amber-200 text-slate-900' : ''}`}>
-              <ChevronDown className="w-5 h-5" />
+            <div className={`px-4 py-2 rounded-2xl flex items-center gap-2 font-bold text-xs sm:text-sm transition-all shadow-sm ${
+              openSections.part1
+                ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-400'
+                : 'bg-amber-100 text-amber-950 border border-amber-300 hover:bg-amber-200'
+            }`}>
+              <span>{openSections.part1 ? 'Σύμπτυξη' : 'Ανάπτυξη'}</span>
+              {openSections.part1 ? (
+                <ChevronUp className="w-5 h-5 text-slate-950 stroke-[2.5]" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-amber-900 stroke-[2.5] animate-bounce" />
+              )}
             </div>
           </div>
         </button>
@@ -591,11 +564,17 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <span className="hidden md:inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-              {openSections.part2 ? 'Ανοικτό' : 'Κλειστό'}
-            </span>
-            <div className={`w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center transition-transform duration-200 ${openSections.part2 ? 'rotate-180 bg-amber-200 text-slate-900' : ''}`}>
-              <ChevronDown className="w-5 h-5" />
+            <div className={`px-4 py-2 rounded-2xl flex items-center gap-2 font-bold text-xs sm:text-sm transition-all shadow-sm ${
+              openSections.part2
+                ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-400'
+                : 'bg-amber-100 text-amber-950 border border-amber-300 hover:bg-amber-200'
+            }`}>
+              <span>{openSections.part2 ? 'Σύμπτυξη' : 'Ανάπτυξη'}</span>
+              {openSections.part2 ? (
+                <ChevronUp className="w-5 h-5 text-slate-950 stroke-[2.5]" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-amber-900 stroke-[2.5] animate-bounce" />
+              )}
             </div>
           </div>
         </button>
@@ -816,11 +795,17 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <span className="hidden md:inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-              {openSections.part3 ? 'Ανοικτό' : 'Κλειστό'}
-            </span>
-            <div className={`w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center transition-transform duration-200 ${openSections.part3 ? 'rotate-180 bg-amber-200 text-slate-900' : ''}`}>
-              <ChevronDown className="w-5 h-5" />
+            <div className={`px-4 py-2 rounded-2xl flex items-center gap-2 font-bold text-xs sm:text-sm transition-all shadow-sm ${
+              openSections.part3
+                ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-400'
+                : 'bg-amber-100 text-amber-950 border border-amber-300 hover:bg-amber-200'
+            }`}>
+              <span>{openSections.part3 ? 'Σύμπτυξη' : 'Ανάπτυξη'}</span>
+              {openSections.part3 ? (
+                <ChevronUp className="w-5 h-5 text-slate-950 stroke-[2.5]" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-amber-900 stroke-[2.5] animate-bounce" />
+              )}
             </div>
           </div>
         </button>

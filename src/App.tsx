@@ -450,7 +450,6 @@ export function App() {
         {currentTab === 'identity' && (
           <ProjectIdentityView 
             teams={teams}
-            onOpenNarrator={() => setIsNarratorOpen(true)}
             onNavigateToTab={(tab) => {
               setCurrentTab(tab);
               scrollToTop();
