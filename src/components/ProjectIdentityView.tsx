@@ -647,7 +647,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
             const isThasos = island.schoolId === 'school-prinos';
             const wingAGroups = island.teams.filter(t => t.wing === 'Α');
             const wingBGroups = island.teams.filter(t => t.wing === 'Β');
-            const chaniaGroups = !isThasos ? island.teams : island.teams.filter(t => t.wing === 'Γ' || t.wing === 'Χ');
+            const extraGroups = island.teams.filter(t => t.wing !== 'Α' && t.wing !== 'Β');
 
             return (
               <div 
@@ -655,7 +655,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                 className="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-xl border border-slate-800 space-y-6 flex flex-col justify-between"
               >
                 <div className="space-y-6">
-                  {/* Header Νησιού & Σχολείου */}
+                  {/* Header Σχολείου & Νησιού */}
                   <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div className="flex items-center gap-3">
                       <div className={`p-2.5 rounded-xl ${isThasos ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
@@ -663,13 +663,13 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                       </div>
                       <div>
                         <span className={`${isThasos ? 'text-amber-400' : 'text-blue-400'} text-xs font-bold uppercase tracking-wider block`}>
-                          {isThasos ? 'ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ ΘΑΣΟΥ (8 ΥΠΟΟΜΑΔΕΣ)' : 'ΣΥΝΕΡΓΑΖΟΜΕΝΗ ΜΟΝΑΔΑ ΚΡΗΤΗΣ'}
+                          {island.schoolName} ({island.teams.length} Ομάδες)
                         </span>
                         <h3 className="text-xl font-serif font-bold text-white">
                           {island.schoolName}
                         </h3>
                         <span className="text-[11px] text-slate-400 block mt-0.5">
-                          Νησί: <strong>{island.island}</strong> ({island.region})
+                          Έδρα: <strong>{island.island}</strong> ({island.region})
                         </span>
                       </div>
                     </div>
@@ -677,17 +677,17 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                     <button
                       onClick={() => handleOpenEdit(island.schoolId as 'school-prinos' | 'school-chania')}
                       className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
-                      title="Επεξεργασία ονομάτων"
+                      title="Επεξεργασία Ονομάτων"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                   </div>
 
-                  {/* 1. ΥΠΕΥΘΥΝΟΙ ΚΑΘΗΓΗΤΕΣ */}
+                  {/* 1. Εκπαιδευτικοί Συντονιστές */}
                   <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800">
                     <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300 mb-3">
                       <GraduationCap className="w-4 h-4 text-amber-400" />
-                      <span>ΣΥΝΤΟΝΙΣΤΕΣ ΕΚΠΑΙΔΕΥΤΙΚΟΙ {isThasos ? 'ΘΑΣΟΥ' : 'ΧΑΝΙΩΝ'}</span>
+                      <span>Εκπαιδευτικοί Συντονιστές {isThasos ? 'Θάσου' : 'Χανίων'} ({island.teachers.length})</span>
                     </div>
 
                     <div className="space-y-2">
@@ -712,14 +712,14 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                     </div>
                   </div>
 
-                  {/* 2. ΜΑΘΗΤΙΚΕΣ ΟΜΑΔΕΣ (ΓΙΑ ΤΗ ΘΑΣΟ: ΚΑΙ ΠΤΕΡΥΓΑ Α ΚΑΙ ΠΤΕΡΥΓΑ Β) */}
-                  {isThasos ? (
-                    <div className="space-y-6">
-                      {/* ΠΤΕΡΥΓΑ Α */}
+                  {/* 2. Μαθητικές Ομάδες σε Πτέρυγες (Και για Θάσο και για Χανιά) */}
+                  <div className="space-y-6">
+                    {/* ΠΤΕΡΥΓΑ Α */}
+                    {wingAGroups.length > 0 && (
                       <div className="space-y-3">
                         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400 px-1 border-b border-slate-800/80 pb-1.5">
                           <ScrollText className="w-4 h-4 text-amber-400" />
-                          <span>Α΄ ΠΤΕΡΥΓΑ — ΑΡΧΕΙΑΚΗ ΕΡΕΥΝΑ (ΘΑΣΟΣ)</span>
+                          <span>Πτέρυγα Α — Αρχειακή Έρευνα ({wingAGroups.length} Ομάδες)</span>
                         </div>
 
                         <div className="space-y-3">
@@ -733,7 +733,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                                   Ομάδα {group.code}
                                 </span>
                                 <span className="text-[11px] text-slate-400">
-                                  Θάσος
+                                  {isThasos ? 'Θάσος' : 'Χανιά'}
                                 </span>
                               </div>
 
@@ -743,7 +743,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
 
                               <div className="space-y-1.5">
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                                  Μαθητές & Μαθήτριες Ομάδας:
+                                  Σύνθεση & Υπεύθυνοι Ομάδας:
                                 </span>
                                 <div className="flex flex-wrap gap-1.5">
                                   {group.students.map((student, sIdx) => {
@@ -783,12 +783,14 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                           ))}
                         </div>
                       </div>
+                    )}
 
-                      {/* ΠΤΕΡΥΓΑ Β */}
+                    {/* ΠΤΕΡΥΓΑ Β */}
+                    {wingBGroups.length > 0 && (
                       <div className="space-y-3 pt-2">
                         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400 px-1 border-b border-slate-800/80 pb-1.5">
                           <MonitorPlay className="w-4 h-4 text-blue-400" />
-                          <span>Β΄ ΠΤΕΡΥΓΑ — ΨΗΦΙΑΚΗ ΔΗΜΙΟΥΡΓΙΑ (ΘΑΣΟΣ)</span>
+                          <span>Πτέρυγα Β — Ψηφιακή Δημιουργία & Πεδίο ({wingBGroups.length} Ομάδες)</span>
                         </div>
 
                         <div className="space-y-3">
@@ -802,7 +804,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                                   Ομάδα {group.code}
                                 </span>
                                 <span className="text-[11px] text-slate-400">
-                                  Θάσος
+                                  {isThasos ? 'Θάσος' : 'Χανιά'}
                                 </span>
                               </div>
 
@@ -812,7 +814,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
 
                               <div className="space-y-1.5">
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                                  Μαθητές & Μαθήτριες Ομάδας:
+                                  Σύνθεση & Υπεύθυνοι Ομάδας:
                                 </span>
                                 <div className="flex flex-wrap gap-1.5">
                                   {group.students.map((student, sIdx) => {
@@ -852,65 +854,89 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                           ))}
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    /* ΓΙΑ ΤΑ ΧΑΝΙΑ: ΟΙ 4 ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΚΡΗΤΗΣ */
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-300 px-1 border-b border-slate-800/80 pb-1.5">
-                        <Compass className="w-4 h-4 text-blue-400" />
-                        <span>ΕΡΕΥΝΗΤΙΚΕΣ ΟΜΑΔΕΣ ΧΑΝΙΩΝ (4 ΘΕΜΑΤΙΚΕΣ)</span>
-                      </div>
+                    )}
 
-                      <div className="space-y-3">
-                        {chaniaGroups.map((group) => (
-                          <div 
-                            key={group.code}
-                            className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 hover:border-slate-700 transition"
-                          >
-                            <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-slate-800/70">
-                              <span className="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 font-bold text-xs">
-                                Ομάδα {group.code}
-                              </span>
-                              <span className="text-[11px] text-slate-400">
-                                Κρήτη
-                              </span>
-                            </div>
+                    {/* ΛΟΙΠΕΣ ΟΜΑΔΕΣ */}
+                    {extraGroups.length > 0 && (
+                      <div className="space-y-3 pt-2">
+                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 px-1 border-b border-slate-800/80 pb-1.5">
+                          <Compass className="w-4 h-4 text-emerald-400" />
+                          <span>Ερευνητικές Ομάδες ({extraGroups.length} Ομάδες)</span>
+                        </div>
 
-                            <h4 className="text-xs sm:text-sm font-semibold text-slate-200 mb-2.5">
-                              {group.name}
-                            </h4>
+                        <div className="space-y-3">
+                          {extraGroups.map((group) => (
+                            <div 
+                              key={group.code}
+                              className="bg-slate-950/70 border border-slate-800/90 rounded-2xl p-4 hover:border-emerald-500/40 transition"
+                            >
+                              <div className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-slate-800/70">
+                                <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-xs">
+                                  Ομάδα {group.code}
+                                </span>
+                                <span className="text-[11px] text-slate-400">
+                                  {isThasos ? 'Θάσος' : 'Χανιά'}
+                                </span>
+                              </div>
 
-                            <div className="space-y-1.5">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                                Μαθητές & Μαθήτριες Ομάδας:
-                              </span>
-                              <div className="flex flex-wrap gap-1.5">
-                                {group.students.map((student, sIdx) => (
-                                  <span 
-                                    key={sIdx}
-                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400 italic"
-                                  >
-                                    <UserCheck className="w-3 h-3 text-slate-600" />
-                                    <span>{student}</span>
-                                  </span>
-                                ))}
+                              <h4 className="text-xs sm:text-sm font-semibold text-slate-200 mb-2.5">
+                                {group.name}
+                              </h4>
+
+                              <div className="space-y-1.5">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                                  Σύνθεση & Υπεύθυνοι Ομάδας:
+                                </span>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {group.students.map((student, sIdx) => {
+                                    const isLeader1 = student.startsWith('(1)');
+                                    const isLeader2 = student.startsWith('(2)');
+                                    const cleanName = student.replace(/^\([12]\)\s*/, '');
+
+                                    return (
+                                      <span 
+                                        key={sIdx}
+                                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
+                                          isLeader1 
+                                            ? 'bg-rose-950/60 border-rose-500/60 text-rose-200 font-semibold shadow-sm'
+                                            : isLeader2
+                                            ? 'bg-purple-950/60 border-purple-500/60 text-purple-200 font-semibold shadow-sm'
+                                            : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
+                                        }`}
+                                      >
+                                        {isLeader1 ? (
+                                          <span className="w-4 h-4 rounded-full bg-rose-500 text-white font-black flex items-center justify-center text-[10px] shadow">
+                                            1
+                                          </span>
+                                        ) : isLeader2 ? (
+                                          <span className="w-4 h-4 rounded-full bg-purple-500 text-white font-black flex items-center justify-center text-[10px] shadow">
+                                            2
+                                          </span>
+                                        ) : (
+                                          <UserCheck className="w-3 h-3 text-slate-500" />
+                                        )}
+                                        <span>{cleanName}</span>
+                                      </span>
+                                    );
+                                  })}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
-                {/* Footer Κάρτας Νησιού */}
+                {/* Footer Κάρτας Σχολείου */}
                 <div className="pt-4 mt-6 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <span>{isThasos ? '8 Υποομάδες Μαθητών Θάσου' : '4 Ερευνητικές Ομάδες Χανίων'}</span>
+                  <span>{island.teams.length} Μαθητικές Ομάδες σε Πτέρυγες</span>
                   <button
                     onClick={() => handleOpenEdit(island.schoolId as 'school-prinos' | 'school-chania')}
                     className="text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1"
                   >
-                    <span>Συμπλήρωση / Αλλαγή Ονομάτων</span>
+                    <span>Επεξεργασία / Προσθήκη</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
