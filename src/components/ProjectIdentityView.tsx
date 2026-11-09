@@ -28,10 +28,9 @@ import {
   FolderPlus,
   ShieldCheck,
   Lock,
-  Headphones,
-  Play
 } from 'lucide-react';
 import { DigitalNarratorModal } from './DigitalNarratorModal';
+import { Traveler19thAvatar } from './Traveler19thAvatar';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -358,29 +357,32 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
       {/* Banner Ψηφιακού Ξεναγού */}
       <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 text-white">
         <div className="flex items-center gap-4 text-center sm:text-left">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shrink-0 shadow-inner">
-            <Headphones className="w-7 h-7" />
+          <div className="relative shrink-0">
+            <Traveler19thAvatar className="w-16 h-16 sm:w-20 sm:h-20" />
+            <span className="absolute -bottom-1 -right-1 px-2 py-0.5 bg-amber-500 text-slate-950 font-extrabold text-[9px] rounded-full uppercase tracking-wider shadow">
+              19ος αι.
+            </span>
           </div>
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold uppercase tracking-wider border border-amber-500/30">
               <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>Νεα Διαδραστικη Εμπειρια</span>
+              <span>Φωνητική Ξενάγηση 19ου Αιώνα</span>
             </div>
             <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
-              Ψηφιακός Ξεναγός: Το Ταξίδι των Ιστορικών Δεσμών
+              Ψηφιακός Αφηγητής: Το Ταξίδι των Ιστορικών Δεσμών
             </h3>
             <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
-              Ακολουθήστε τη φωνή της ιστορίας σε 4 κομβικούς σταθμούς μεταξύ Θάσου και Χανίων με φωνητική αφήγηση και αρχειακά τεκμήρια.
+              Ακούστε τον παλιό ταξιδευτή να σας ιστορεί τις ρότες, τα Βακούφια και τα μνημεία Θάσου και Χανίων με αυθεντική φωνή εποχής.
             </p>
           </div>
         </div>
 
         <button
           onClick={() => setIsNarratorOpen(true)}
-          className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-2.5 hover:scale-105 transform shrink-0"
+          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-xl transition flex items-center justify-center gap-3 hover:scale-105 transform shrink-0 group"
         >
-          <Play className="w-4 h-4 ml-0.5" />
-          <span>Έναρξη Ψηφιακού Ξεναγού</span>
+          <Traveler19thAvatar className="w-7 h-7 ring-1 ring-slate-950/40" showBorder={false} />
+          <span>Ακούστε τον Ταξιδευτή</span>
         </button>
       </div>
 
@@ -1328,14 +1330,24 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         onNavigateToTab={onNavigateToTab}
       />
 
-      {/* Floating Button Ψηφιακού Ξεναγού */}
+      {/* Floating Button Ψηφιακού Αφηγητή — Ταξιδευτής 19ου Αιώνα */}
       <button
         onClick={() => setIsNarratorOpen(true)}
-        className="fixed bottom-6 left-6 z-40 px-4 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-2 text-xs font-bold transition hover:scale-105 transform"
-        title="Άνοιγμα Ψηφιακού Ξεναγού"
+        className="fixed bottom-6 right-6 z-40 p-2 sm:px-4 sm:py-2.5 rounded-full sm:rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-300 border-2 border-amber-500/60 shadow-2xl backdrop-blur-md flex items-center gap-3 font-bold transition hover:scale-105 transform group"
+        title="Ψηφιακός Αφηγητής — Ταξιδευτής του 19ου Αιώνα"
       >
-        <Headphones className="w-4 h-4 text-amber-400" />
-        <span className="hidden sm:inline">Ψηφιακός Ξεναγός</span>
+        <div className="relative">
+          <Traveler19thAvatar className="w-11 h-11 sm:w-10 sm:h-10" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse" />
+        </div>
+        <div className="text-left hidden sm:block">
+          <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
+            Αφηγητης
+          </span>
+          <span className="text-xs text-slate-100 font-serif">
+            Ταξιδευτής 19ου αι.
+          </span>
+        </div>
       </button>
     </div>
   );

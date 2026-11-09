@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Traveler19thAvatar } from './Traveler19thAvatar';
 import { 
   X, 
   Play, 
   Pause, 
   RotateCcw,
   Compass, 
-  Headphones, 
-  Volume2,
+Volume2,
   Sparkles,
   ArrowRight, 
   ArrowLeft 
@@ -228,18 +228,16 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
         
         {/* Top Bar */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shadow-inner">
-              <Headphones className="w-5 h-5 animate-pulse" />
-            </div>
+          <div className="flex items-center gap-3.5">
+            <Traveler19thAvatar className="w-13 h-13 sm:w-14 sm:h-14 ring-2 ring-amber-500/80 shadow-md" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">
-                  Ψηφιακος Ξεναγος Εργου
+                  Ψηφιακος Αφηγητης Εργου
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   <Sparkles className="w-2.5 h-2.5" />
-                  Φωνή Χρονικογράφου 19ου αι. (Μπάσα & Κρητική χροιά)
+                  Ταξιδευτής 19ου αι. (Μπάσα / Κρητική χροιά)
                 </span>
               </div>
               <h2 className="text-lg sm:text-xl font-bold font-serif text-white">
@@ -316,8 +314,9 @@ export const DigitalNarratorModal: React.FC<DigitalNarratorModalProps> = ({
                       : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700'
                   }`}
                 >
-                  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-                  <span>{isPlaying ? 'Παύση' : 'Ακούστε τον Αφηγητή'}</span>
+                  <Traveler19thAvatar className="w-5 h-5 rounded-full" showBorder={false} />
+                  {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                  <span>{isPlaying ? 'Παύση' : 'Ακούστε τον Ταξιδευτή'}</span>
                 </button>
 
                 {currentTime > 0 && (
