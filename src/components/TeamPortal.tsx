@@ -87,7 +87,7 @@ export const TeamPortal: React.FC<TeamPortalProps> = ({ schools, teams, onSubmit
   // Διαχείριση Υποβολής
   const handleSubmit = (status: 'draft' | 'submitted') => {
     if (uploadPin.trim() !== '64010') {
-      setUploadPinError('Απαιτείται ο έγκυρος Κωδικός Ασφαλείας (PIN: 64010) για την ανάρτηση υλικού.');
+      setUploadPinError('Απαιτείται ο έγκυρος κωδικός ασφαλείας για την ανάρτηση υλικού.');
       return;
     }
     setUploadPinError('');

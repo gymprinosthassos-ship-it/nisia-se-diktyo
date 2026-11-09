@@ -1,10 +1,10 @@
+import { ChaniaLighthouseIcon } from './ChaniaLighthouseIcon';
 import React, { useState, useEffect } from 'react';
 import { 
   Building, 
   Users, 
   GraduationCap, 
-  Compass, 
-  Anchor, 
+Anchor, 
   ScrollText, 
   MonitorPlay, 
   MapPin, 
@@ -126,7 +126,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
 
   const handleSaveEdit = async () => {
     if (securityPin.trim() !== '64010') {
-      setPinError('Λάθος κωδικός ασφαλείας! Απαιτείται ο έγκυρος κωδικός (PIN: 64010) για την αλλαγή οποιουδήποτε πεδίου.');
+      setPinError('Λάθος κωδικός ασφαλείας! Παρακαλώ εισάγετε τον έγκυρο κωδικό.');
       return;
     }
     setPinError('');
@@ -177,7 +177,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   };
 
   const handleResetDefaults = async () => {
-    const pin = window.prompt('Εισάγετε τον Κωδικό Ασφαλείας (PIN) για επαναφορά στις αρχικές ρυθμίσεις:');
+    const pin = window.prompt('Εισάγετε τον Κωδικό Ασφαλείας για επαναφορά στις αρχικές ρυθμίσεις:');
     if (pin !== '64010') {
       alert('Λάθος κωδικός ασφαλείας! Η επαναφορά ακυρώθηκε.');
       return;
@@ -465,8 +465,8 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         {/* Σχολείο 2: 3ο ΓΕΛ Χανίων */}
         <div className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-md hover:shadow-lg transition">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shrink-0">
-              <Compass className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center shrink-0">
+              <ChaniaLighthouseIcon className="w-6 h-6 text-blue-700" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 text-amber-700 font-bold text-xs uppercase tracking-wider mb-1">
@@ -840,7 +840,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                   <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div className="flex items-center gap-3">
                       <div className={`p-2.5 rounded-xl ${isThasos ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
-                        {isThasos ? <Anchor className="w-6 h-6" /> : <Compass className="w-6 h-6" />}
+                        {isThasos ? <Anchor className="w-6 h-6" /> : <ChaniaLighthouseIcon className="w-6 h-6" />}
                       </div>
                       <div>
                         <span className={`${isThasos ? 'text-amber-400' : 'text-blue-400'} text-xs font-bold uppercase tracking-wider block`}>
@@ -1041,7 +1041,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
                     {extraGroups.length > 0 && (
                       <div className="space-y-3 pt-2">
                         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 px-1 border-b border-slate-800/80 pb-1.5">
-                          <Compass className="w-4 h-4 text-emerald-400" />
+                          {isThasos ? <Anchor className="w-4 h-4 text-amber-400" /> : <ChaniaLighthouseIcon className="w-4 h-4 text-emerald-400" />}
                           <span>Ερευνητικές Ομάδες ({extraGroups.length} Ομάδες)</span>
                         </div>
 

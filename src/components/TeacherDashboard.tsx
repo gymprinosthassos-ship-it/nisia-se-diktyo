@@ -41,7 +41,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       }
       setPinError('');
     } else {
-      setPinError('Λάθος κωδικός ασφαλείας! Παρακαλώ εισάγετε το έγκυρο PIN (64010).');
+      setPinError('Λάθος κωδικός ασφαλείας! Παρακαλώ εισάγετε τον έγκυρο κωδικό.');
     }
   };
 
@@ -109,7 +109,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     setTeacherPin(e.target.value);
                     if (pinError) setPinError('');
                   }}
-                  placeholder="Εισάγετε 64010..."
+                  placeholder="Εισάγετε κωδικό..."
                   className="w-full text-center text-base tracking-widest font-mono font-bold py-2.5 px-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 bg-slate-50 focus:bg-white"
                   autoFocus
                 />

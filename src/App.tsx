@@ -1,3 +1,4 @@
+import { ChaniaLighthouseIcon } from './components/ChaniaLighthouseIcon';
 import { useState, useEffect } from 'react';
 import { ProjectIdentityView } from './components/ProjectIdentityView';
 import { TimelineView } from './components/TimelineView';
@@ -15,8 +16,7 @@ import {
   BookOpen, 
   Users, 
   ShieldCheck, 
-  Compass, 
-  Anchor, 
+Anchor, 
   Map as MapIcon, 
   Cloud,
   Menu,
@@ -286,7 +286,7 @@ export function App() {
             </span>
             <span className="text-amber-400 text-xs font-bold px-0.5">⟷</span>
             <span className="text-amber-300 font-semibold flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              <ChaniaLighthouseIcon className="w-3.5 h-3.5 text-blue-400" />
               3ο Γενικό Λύκειο Χανίων
             </span>
           </div>
@@ -574,7 +574,7 @@ export function App() {
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Compass className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <ChaniaLighthouseIcon className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-slate-200 block">3ο Γενικό Λύκειο Χανίων</strong>
                     <span className="text-[11px]">Χανιά, Κρήτη • Α΄ & Β΄ Πτέρυγες</span>

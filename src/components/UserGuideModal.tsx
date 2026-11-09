@@ -95,7 +95,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>👨‍🏫 Καθηγητές & PIN 64010</span>
+            <span>👨‍🏫 Καθηγητές & Κωδικός Ασφαλείας</span>
           </button>
 
           <button
@@ -145,7 +145,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
               <div className="p-4 bg-amber-50 rounded-2xl border border-amber-300 flex items-center gap-3">
                 <Lock className="w-5 h-5 text-amber-700 shrink-0" />
                 <div className="text-xs sm:text-sm text-amber-950">
-                  <strong>Κωδικός Ασφαλείας Υποβολής:</strong> Για την ανάρτηση οποιουδήποτε υλικού απαιτείται ο επίσημος κωδικός ασφαλείας: <span className="font-mono font-bold bg-amber-200 px-2 py-0.5 rounded text-amber-950">64010</span>.
+                  <strong>Κωδικός Ασφαλείας Υποβολής:</strong> Για την ανάρτηση οποιουδήποτε υλικού απαιτείται ο επίσημος κωδικός ασφαλείας (ο οποίος κοινοποιείται προφορικά από τους υπεύθυνους εκπαιδευτικούς).
                 </div>
               </div>
 
@@ -187,7 +187,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
                     <h3 className="text-sm font-bold text-slate-900">Πρόχειρο ή Οριστική Υποβολή</h3>
                   </div>
                   <p className="text-xs text-slate-600">
-                    Μπορείτε να αποθηκεύσετε ως <strong>Πρόχειρο</strong> για να συνεχίσετε αργότερα, ή να πατήσετε <strong>Οριστική Υποβολή</strong> (με PIN 64010) για έγκριση από τους καθηγητές.
+                    Μπορείτε να αποθηκεύσετε ως <strong>Πρόχειρο</strong> για να συνεχίσετε αργότερα, ή να πατήσετε <strong>Οριστική Υποβολή</strong> (με τον κωδικό ασφαλείας) για έγκριση από τους καθηγητές.
                   </p>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
           )}
 
           {/* ========================================================= */}
-          {/* TAB 2: ΚΑΘΗΓΗΤΕΣ & ΔΙΑΧΕΙΡΙΣΗ (PIN 64010) */}
+          {/* TAB 2: ΚΑΘΗΓΗΤΕΣ & ΔΙΑΧΕΙΡΙΣΗ (ΚΩΔΙΚΟΣ ΑΣΦΑΛΕΙΑΣ) */}
           {/* ========================================================= */}
           {activeTab === 'teachers' && (
             <div className="space-y-6">
@@ -214,7 +214,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
                 <div className="flex items-center gap-2 text-amber-900 font-bold">
                   <Lock className="w-4 h-4 text-amber-700" />
                   <h3 className="text-sm sm:text-base font-bold">
-                    Κωδικός Ασφαλείας & Επεξεργασία Συμμετεχόντων (PIN: 64010)
+                    Κωδικός Ασφαλείας & Επεξεργασία Συμμετεχόντων
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-700">
@@ -222,8 +222,8 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
                 </p>
                 <div className="p-3 bg-white rounded-xl border border-amber-200 flex items-center justify-between">
                   <span className="text-xs text-slate-600 font-medium">Ενιαίος Κωδικός Ασφαλείας:</span>
-                  <span className="font-mono text-base font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300">
-                    64010
+                  <span className="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300">
+                    Κοινοποιείται Προφορικά
                   </span>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
                   <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/80 flex items-center justify-between">
                     <div>
                       <strong className="text-amber-950 block">Μέρος 03: Εκπαιδευτικοί & Μαθητικές Ομάδες Εργασίας</strong>
-                      <span className="text-slate-500 text-xs">Θάσος αριστερά, Χανιά δεξιά, Πτέρυγες Α/Β και επεξεργασία με PIN 64010.</span>
+                      <span className="text-slate-500 text-xs">Θάσος αριστερά, Χανιά δεξιά, Πτέρυγες Α/Β και επεξεργασία με κωδικό ασφαλείας.</span>
                     </div>
                     <span className="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0">
                       Ανάπτυξη <ChevronDown className="w-3.5 h-3.5" />
@@ -403,7 +403,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
         {/* Footer */}
         <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between shrink-0">
           <span className="text-xs text-slate-500 hidden sm:inline">
-            Διασχολικό Εργαστήριο Τοπικής Ιστορίας (2026–2027) • PIN: 64010
+            Διασχολικό Εργαστήριο Τοπικής Ιστορίας (2026–2027) • Ασφαλής Πλατφόρμα
           </span>
           <button
             onClick={onClose}
