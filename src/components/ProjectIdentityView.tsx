@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { DigitalNarratorModal } from './DigitalNarratorModal';
 import { Traveler19thAvatar } from './Traveler19thAvatar';
+import { DraggableNarratorButton } from './DraggableNarratorButton';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -1330,25 +1331,8 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         onNavigateToTab={onNavigateToTab}
       />
 
-      {/* Floating Button Ψηφιακού Αφηγητή — Ταξιδευτής 19ου Αιώνα */}
-      <button
-        onClick={() => setIsNarratorOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-2 sm:px-4 sm:py-2.5 rounded-full sm:rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-300 border-2 border-amber-500/60 shadow-2xl backdrop-blur-md flex items-center gap-3 font-bold transition hover:scale-105 transform group"
-        title="Ψηφιακός Αφηγητής — Ταξιδευτής του 19ου Αιώνα"
-      >
-        <div className="relative">
-          <Traveler19thAvatar className="w-11 h-11 sm:w-10 sm:h-10" />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full animate-pulse" />
-        </div>
-        <div className="text-left hidden sm:block">
-          <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">
-            Αφηγητης
-          </span>
-          <span className="text-xs text-slate-100 font-serif">
-            Ταξιδευτής 19ου αι.
-          </span>
-        </div>
-      </button>
+      {/* Μετακινούμενο Στρογγυλό Κουμπί Ψηφιακού Αφηγητή (Draggable) */}
+      <DraggableNarratorButton onClick={() => setIsNarratorOpen(true)} />
     </div>
   );
 };
