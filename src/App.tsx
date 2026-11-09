@@ -66,10 +66,12 @@ export function App() {
         const { data: rawSchoolsData } = await supabase.from('schools').select('*');
         let normalizedSchools: School[] = mockSchools;
         if (rawSchoolsData && rawSchoolsData.length > 0) {
-          normalizedSchools = (rawSchoolsData as School[]).map(s => ({
-            ...s,
-            name: sanitizeSchoolText(s.name)
-          }));
+          normalizedSchools = (rawSchoolsData as School[])
+            .map(s => ({
+              ...s,
+              name: sanitizeSchoolText(s.name)
+            }))
+            .sort((a, b) => (a.id === 'school-prinos' ? -1 : (b.id === 'school-prinos' ? 1 : 0)));
           setSchools(normalizedSchools);
         }
 

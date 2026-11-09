@@ -63,8 +63,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
       try {
         const { data, error } = await supabase
           .from('project_participants')
-          .select('*')
-          .order('school_id');
+          .select('*');
 
         if (!error && data && data.length > 0) {
           const formatted: IslandParticipants[] = data.map((row: any) => ({
@@ -75,7 +74,8 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
             teachers: row.teachers || [],
             teams: row.teams || []
           }));
-          setParticipants(formatted);
+          const sorted = formatted.sort((a, b) => (a.schoolId === 'school-prinos' ? -1 : (b.schoolId === 'school-prinos' ? 1 : 0)));
+          setParticipants(sorted);
           try {
             localStorage.setItem('nisia_participants_data_v4', JSON.stringify(formatted));
           } catch {
@@ -306,6 +306,9 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
       return copy;
     });
   };
+
+  // Διασφαλίζουμε ότι η Θάσος είναι πάντα στα αριστερά (1η) και τα Χανιά στα δεξιά (2α)
+  const orderedParticipants = [...participants].sort((a, b) => (a.schoolId === 'school-prinos' ? -1 : (b.schoolId === 'school-prinos' ? 1 : 0)));
 
   const currentEditIsland = tempParticipants.find(p => p.schoolId === editSchoolId);
 
@@ -643,7 +646,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
 
         {/* 2 ΣΤΗΛΕΣ ΑΝΑ ΝΗΣΙ (ΘΑΣΟΣ & ΚΡΗΤΗ) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {participants.map((island) => {
+          {orderedParticipants.map((island) => {
             const isThasos = island.schoolId === 'school-prinos';
             const wingAGroups = island.teams.filter(t => t.wing === 'Α');
             const wingBGroups = island.teams.filter(t => t.wing === 'Β');
