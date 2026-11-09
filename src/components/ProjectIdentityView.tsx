@@ -27,8 +27,11 @@ import {
   UserPlus,
   FolderPlus,
   ShieldCheck,
-  Lock
+  Lock,
+  Headphones,
+  Play
 } from 'lucide-react';
+import { DigitalNarratorModal } from './DigitalNarratorModal';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -57,6 +60,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   const [tempParticipants, setTempParticipants] = useState<IslandParticipants[]>(participants);
   const [saveNotification, setSaveNotification] = useState<string>('');
   const [securityPin, setSecurityPin] = useState<string>('');
+  const [isNarratorOpen, setIsNarratorOpen] = useState<boolean>(false);
   const [pinError, setPinError] = useState<string>('');
   
 
@@ -349,6 +353,35 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto font-serif italic">
           «ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή (19ος Αιώνας)»
         </p>
+      </div>
+
+      {/* Banner Ψηφιακού Ξεναγού */}
+      <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 text-white">
+        <div className="flex items-center gap-4 text-center sm:text-left">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shrink-0 shadow-inner">
+            <Headphones className="w-7 h-7" />
+          </div>
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold uppercase tracking-wider border border-amber-500/30">
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span>Νεα Διαδραστικη Εμπειρια</span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+              Ψηφιακός Ξεναγός: Το Ταξίδι των Ιστορικών Δεσμών
+            </h3>
+            <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
+              Ακολουθήστε τη φωνή της ιστορίας σε 4 κομβικούς σταθμούς μεταξύ Θάσου και Χανίων με φωνητική αφήγηση και αρχειακά τεκμήρια.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setIsNarratorOpen(true)}
+          className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-2.5 hover:scale-105 transform shrink-0"
+        >
+          <Play className="w-4 h-4 ml-0.5" />
+          <span>Έναρξη Ψηφιακού Ξεναγού</span>
+        </button>
       </div>
 
       {/* Συνεργαζόμενα Σχολεία - Cards */}
@@ -1287,6 +1320,23 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
           Σύνδεση στην Υποβολή
         </button>
       </div>
+
+      {/* Ψηφιακός Ξεναγός Modal */}
+      <DigitalNarratorModal
+        isOpen={isNarratorOpen}
+        onClose={() => setIsNarratorOpen(false)}
+        onNavigateToTab={onNavigateToTab}
+      />
+
+      {/* Floating Button Ψηφιακού Ξεναγού */}
+      <button
+        onClick={() => setIsNarratorOpen(true)}
+        className="fixed bottom-6 left-6 z-40 px-4 py-2.5 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-amber-400 border border-amber-500/40 shadow-2xl backdrop-blur-md flex items-center gap-2 text-xs font-bold transition hover:scale-105 transform"
+        title="Άνοιγμα Ψηφιακού Ξεναγού"
+      >
+        <Headphones className="w-4 h-4 text-amber-400" />
+        <span className="hidden sm:inline">Ψηφιακός Ξεναγός</span>
+      </button>
     </div>
   );
 };
