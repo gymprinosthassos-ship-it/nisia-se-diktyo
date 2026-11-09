@@ -29,9 +29,7 @@ import {
   ShieldCheck,
   Lock,
 } from 'lucide-react';
-import { DigitalNarratorModal } from './DigitalNarratorModal';
 import { Traveler19thAvatar } from './Traveler19thAvatar';
-import { DraggableNarratorButton } from './DraggableNarratorButton';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
@@ -39,9 +37,10 @@ import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 interface ProjectIdentityViewProps {
   teams: Team[];
   onNavigateToTab: (tab: 'timeline' | 'map' | 'teams' | 'teachers') => void;
+  onOpenNarrator?: () => void;
 }
 
-export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab }) => {
+export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavigateToTab, onOpenNarrator }) => {
   // Αρχική κατάσταση με ανάγνωση από localStorage ως γρήγορη προσωρινή μνήμη
   const [participants, setParticipants] = useState<IslandParticipants[]>(() => {
     try {
@@ -60,8 +59,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
   const [tempParticipants, setTempParticipants] = useState<IslandParticipants[]>(participants);
   const [saveNotification, setSaveNotification] = useState<string>('');
   const [securityPin, setSecurityPin] = useState<string>('');
-  const [isNarratorOpen, setIsNarratorOpen] = useState<boolean>(false);
-  const [pinError, setPinError] = useState<string>('');
+    const [pinError, setPinError] = useState<string>('');
   
 
   // Αυτόματη ανάκτηση συμμετεχόντων από τη ζωντανή βάση δεδομένων Supabase
@@ -379,7 +377,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         </div>
 
         <button
-          onClick={() => setIsNarratorOpen(true)}
+          onClick={() => { if (onOpenNarrator) onOpenNarrator();  }}
           className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-xl transition flex items-center justify-center gap-3 hover:scale-105 transform shrink-0 group"
         >
           <Traveler19thAvatar className="w-7 h-7 ring-1 ring-slate-950/40" showBorder={false} />
@@ -1324,15 +1322,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         </button>
       </div>
 
-      {/* Ψηφιακός Ξεναγός Modal */}
-      <DigitalNarratorModal
-        isOpen={isNarratorOpen}
-        onClose={() => setIsNarratorOpen(false)}
-        onNavigateToTab={onNavigateToTab}
-      />
 
-      {/* Μετακινούμενο Στρογγυλό Κουμπί Ψηφιακού Αφηγητή (Draggable) */}
-      <DraggableNarratorButton onClick={() => setIsNarratorOpen(true)} />
     </div>
   );
 };

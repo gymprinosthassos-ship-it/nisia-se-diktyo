@@ -5,6 +5,8 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { TeamPortal } from './components/TeamPortal';
 import { TeacherDashboard } from './components/TeacherDashboard';
 import { UserGuideModal } from './components/UserGuideModal';
+import { DigitalNarratorModal } from './components/DigitalNarratorModal';
+import { DraggableNarratorButton } from './components/DraggableNarratorButton';
 import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
@@ -32,6 +34,7 @@ export function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
+  const [isNarratorOpen, setIsNarratorOpen] = useState<boolean>(false);
 
   // Παρακολούθηση scroll για το Scroll-to-Top κουμπί
   useEffect(() => {
@@ -447,6 +450,7 @@ export function App() {
         {currentTab === 'identity' && (
           <ProjectIdentityView 
             teams={teams}
+            onOpenNarrator={() => setIsNarratorOpen(true)}
             onNavigateToTab={(tab) => {
               setCurrentTab(tab);
               scrollToTop();
@@ -607,6 +611,19 @@ export function App() {
           </div>
         </div>
       </footer>
+      {/* Ψηφιακός Αφηγητής — Μετακινούμενο Στρογγυλό Κουμπί (Draggable) */}
+      <DraggableNarratorButton onClick={() => setIsNarratorOpen(true)} />
+
+      {/* Ψηφιακός Αφηγητής Modal */}
+      <DigitalNarratorModal
+        isOpen={isNarratorOpen}
+        onClose={() => setIsNarratorOpen(false)}
+        onNavigateToTab={(tab) => {
+          setCurrentTab(tab);
+          scrollToTop();
+        }}
+      />
+
       {/* Interactive User Guide Modal */}
       <UserGuideModal 
         isOpen={isGuideOpen} 

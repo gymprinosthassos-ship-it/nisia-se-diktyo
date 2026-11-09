@@ -9,37 +9,31 @@ export const DraggableNarratorButton: React.FC<DraggableNarratorButtonProps> = (
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  
-  const dragInfoRef = useRef<{
-    startX: number;
-    startY: number;
-    initialX: number;
-    initialY: number;
-    hasMoved: boolean;
-  }>({
-    startX: 0,
-    startY: 0,
-    initialX: 0,
-    initialY: 0,
-    hasMoved: false,
-  });
 
-  const buttonSize = 54; // Διάμετρος σε pixels (στρογγυλό, ιδανικό compact μέγεθος)
+  const buttonSize = 50; // Compact 50px διάμετρος (στρογγυλό, διακριτικό)
+  const posRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Συγχρονισμός του posRef με το state
+  useEffect(() => {
+    posRef.current = position;
+  }, [position]);
 
   // Αρχικοποίηση θέσης κάτω δεξιά στην οθόνη
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const initialX = Math.max(16, window.innerWidth - buttonSize - 24);
-      const initialY = Math.max(16, window.innerHeight - buttonSize - 28);
-      setPosition({ x: initialX, y: initialY });
+      const initX = Math.max(16, window.innerWidth - buttonSize - 24);
+      const initY = Math.max(16, window.innerHeight - buttonSize - 28);
+      setPosition({ x: initX, y: initY });
 
-      // Διατήρηση εντός οθόνης σε περίπτωση resize
       const handleResize = () => {
         setPosition(prev => {
           if (!prev) return prev;
-          const clampedX = Math.max(12, Math.min(window.innerWidth - buttonSize - 12, prev.x));
-          const clampedY = Math.max(12, Math.min(window.innerHeight - buttonSize - 12, prev.y));
-          return { x: clampedX, y: clampedY };
+          const maxX = window.innerWidth - buttonSize - 12;
+          const maxY = window.innerHeight - buttonSize - 12;
+          return {
+            x: Math.max(12, Math.min(maxX, prev.x)),
+            y: Math.max(12, Math.min(maxY, prev.y)),
+          };
         });
       };
 
@@ -49,65 +43,57 @@ export const DraggableNarratorButton: React.FC<DraggableNarratorButtonProps> = (
   }, []);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!position) return;
-    
-    // Ενεργοποίηση pointer capture για ομαλό drag ακόμα κι αν το ποντίκι βγει εκτός
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // ignore
-    }
+    // Αποδοχή μόνο αριστερού κλικ ή αφής
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
 
-    dragInfoRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      initialX: position.x,
-      initialY: position.y,
-      hasMoved: false,
-    };
+    // Αποτροπή προεπιλεγμένης επιλογής κειμένου ή εγγενούς drag εικόνας
+    e.preventDefault();
+    e.stopPropagation();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const currentPos = posRef.current || { x: 0, y: 0 };
+    const startPosX = currentPos.x;
+    const startPosY = currentPos.y;
+
+    let hasMoved = false;
     setIsDragging(true);
-  };
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging || !position) return;
+    const onPointerMove = (moveEvt: PointerEvent) => {
+      const dx = moveEvt.clientX - startX;
+      const dy = moveEvt.clientY - startY;
 
-    const deltaX = e.clientX - dragInfoRef.current.startX;
-    const deltaY = e.clientY - dragInfoRef.current.startY;
-    const distance = Math.hypot(deltaX, deltaY);
+      // Αν μετακινήθηκε πάνω από 4 pixels, ενεργοποιείται το σύρσιμο
+      if (!hasMoved && Math.hypot(dx, dy) > 4) {
+        hasMoved = true;
+      }
 
-    if (distance > 5) {
-      dragInfoRef.current.hasMoved = true;
-    }
+      if (hasMoved) {
+        const maxX = window.innerWidth - buttonSize - 8;
+        const maxY = window.innerHeight - buttonSize - 8;
+        const nextX = Math.max(8, Math.min(maxX, startPosX + dx));
+        const nextY = Math.max(8, Math.min(maxY, startPosY + dy));
 
-    if (dragInfoRef.current.hasMoved) {
-      const rawX = dragInfoRef.current.initialX + deltaX;
-      const rawY = dragInfoRef.current.initialY + deltaY;
+        setPosition({ x: nextX, y: nextY });
+      }
+    };
 
-      // Όρια παραθύρου (ώστε να μην χάνεται εκτός οθόνης)
-      const maxX = window.innerWidth - buttonSize - 8;
-      const maxY = window.innerHeight - buttonSize - 8;
-      const clampedX = Math.max(8, Math.min(maxX, rawX));
-      const clampedY = Math.max(8, Math.min(maxY, rawY));
+    const onPointerUp = () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
 
-      setPosition({ x: clampedX, y: clampedY });
-    }
-  };
+      setIsDragging(false);
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
+      // Εάν δεν σύρθηκε, είναι απλό κλικ -> άνοιγμα ξεναγού
+      if (!hasMoved) {
+        onClick();
+      }
+    };
 
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {
-      // ignore
-    }
-
-    setIsDragging(false);
-
-    // Εάν δεν σύρθηκε πάνω από 5 pixels, θεωρείται απλό κλικ και ανοίγει ο αφηγητής
-    if (!dragInfoRef.current.hasMoved) {
-      onClick();
-    }
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
   };
 
   if (!position) return null;
@@ -118,23 +104,24 @@ export const DraggableNarratorButton: React.FC<DraggableNarratorButtonProps> = (
         left: `${position.x}px`,
         top: `${position.y}px`,
         touchAction: 'none',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
       }}
-      className={`fixed z-50 select-none ${isDragging ? 'cursor-grabbing scale-110' : 'cursor-grab hover:scale-105'} transition-transform duration-75`}
+      className={`fixed z-[9999] select-none ${
+        isDragging ? 'cursor-grabbing scale-110 drop-shadow-2xl' : 'cursor-grab hover:scale-105'
+      } transition-transform duration-75`}
       onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={() => setIsDragging(false)}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       role="button"
       tabIndex={0}
-      aria-label="Ψηφιακός Αφηγητής 19ου Αιώνα (Σύρετε για μετακίνηση)"
+      title="Ψηφιακός Αφηγητής 19ου Αιώνα (Σύρετε για μετακίνηση)"
     >
-      {/* Στρογγυλό Μετάλλιο Αφηγητή */}
-      <div className="relative group">
-        <div className="w-[54px] h-[54px] rounded-full p-0.5 bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 shadow-2xl shadow-black/80 ring-2 ring-amber-500/50 hover:ring-amber-400 flex items-center justify-center transition-all">
+      {/* Στρογγυλό συμπαγές μετάλλιο (50px) */}
+      <div className="relative group pointer-events-none">
+        <div className="w-[50px] h-[50px] rounded-full p-0.5 bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 shadow-2xl shadow-black/90 ring-2 ring-amber-400/80 hover:ring-amber-300 flex items-center justify-center transition-all overflow-hidden">
           <Traveler19thAvatar 
-            className="w-full h-full rounded-full" 
+            className="w-full h-full rounded-full pointer-events-none" 
             showBorder={false}
           />
         </div>
@@ -142,15 +129,15 @@ export const DraggableNarratorButton: React.FC<DraggableNarratorButtonProps> = (
         {/* Πράσινη ένδειξη ενεργής παρουσίας */}
         <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full shadow-sm animate-pulse" />
 
-        {/* Tooltip οδηγίας μετακίνησης & ανοίγματος */}
+        {/* Tooltip οδηγίας */}
         {showTooltip && !isDragging && (
-          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-900/95 border border-amber-500/40 text-white text-[11px] shadow-2xl backdrop-blur-md pointer-events-none flex flex-col items-start gap-0.5 animate-fadeIn">
+          <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-900/95 border border-amber-500/50 text-white text-[11px] shadow-2xl backdrop-blur-md flex flex-col items-start gap-0.5 animate-fadeIn">
             <div className="flex items-center gap-1.5 font-bold text-amber-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
               <span>Ψηφιακός Αφηγητής</span>
             </div>
             <span className="text-[10px] text-slate-300">
-              Κλικ για ακρόαση • Σύρετε οπουδήποτε
+              Κλικ για αφήγηση • Σύρετε παντού στην οθόνη
             </span>
           </div>
         )}
