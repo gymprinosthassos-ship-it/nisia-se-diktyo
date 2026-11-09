@@ -30,8 +30,6 @@ import {
   Lock,
   ChevronDown,
   ChevronUp,
-  Maximize2,
-  Minimize2
 } from 'lucide-react';
 import type { Team } from '../types/database.types';
 import { islandParticipantsData, type IslandParticipants } from '../data/participantsData';
@@ -79,8 +77,7 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
     }));
   };
 
-  const expandAll = () => setOpenSections({ part1: true, part2: true, part3: true });
-  const collapseAll = () => setOpenSections({ part1: false, part2: false, part3: false });
+
   const [securityPin, setSecurityPin] = useState<string>('');
     const [pinError, setPinError] = useState<string>('');
   
@@ -374,31 +371,6 @@ export const ProjectIdentityView: React.FC<ProjectIdentityViewProps> = ({ onNavi
         <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto font-serif italic">
           «ΝΗΣΙΑ ΣΕ ΔΙΚΤΥΟ: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή (19ος Αιώνας)»
         </p>
-      </div>
-
-      {/* Γραμμή Ελέγχου Αναπτυσσόμενων Ενοτήτων */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-amber-50/80 border border-amber-200 shadow-sm">
-        <div className="flex items-center gap-2 text-xs font-bold text-amber-950 uppercase tracking-wider">
-          <Layers className="w-4 h-4 text-amber-700" />
-          <span>3 Αναπτυσσομενα Μερη Αρχικης Σελιδας</span>
-          <span className="text-[10px] text-slate-500 font-normal lowercase hidden sm:inline">(κλικ σε κάθε ενότητα για άνοιγμα/κλείσιμο)</span>
-        </div>
-        <div className="flex items-center gap-2 self-end sm:self-auto">
-          <button
-            onClick={expandAll}
-            className="px-3 py-1.5 rounded-xl bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition flex items-center gap-1 shadow-xs"
-          >
-            <Maximize2 className="w-3.5 h-3.5" />
-            <span>Ανάπτυξη Όλων</span>
-          </button>
-          <button
-            onClick={collapseAll}
-            className="px-3 py-1.5 rounded-xl bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition flex items-center gap-1 shadow-xs"
-          >
-            <Minimize2 className="w-3.5 h-3.5" />
-            <span>Σύμπτυξη Όλων</span>
-          </button>
-        </div>
       </div>
 
       {/* ============================================================== */}
