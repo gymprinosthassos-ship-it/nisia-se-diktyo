@@ -24,10 +24,10 @@ export const Traveler19thAvatar: React.FC<Traveler19thAvatarProps> = ({
     >
       {!imgError ? (
         <img 
-          src="/images/traveler-19th.png" 
+          src="/images/traveler-19th.jpg?v=2" 
           alt="Ταξιδευτής 19ου Αιώνα" 
           draggable={false}
-          className="w-full h-full object-cover select-none pointer-events-none"
+          className="w-full h-full object-cover object-center select-none pointer-events-none"
           onError={() => setImgError(true)}
         />
       ) : null}
