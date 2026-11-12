@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import type { HistoricalEntry } from '../types/database.types';
+import type { Language } from '../data/translations';
 import { SmartVideoEmbed } from './SmartVideoEmbed';
 import { 
   Compass, 
@@ -151,12 +152,14 @@ const create18thCenturyMarker = (
   });
 };
 
-// 18th-Century Historical Cartographic Pins:
-const thasosIcon = create18thCenturyMarker('anchor', '#450a0a', '#991b1b', '#dc2626', 'Θάσος');
-const chaniaIcon = create18thCenturyMarker('compass', '#451a03', '#92400e', '#d97706', 'Χανιά');
-const kavalaIcon = create18thCenturyMarker('fortress', '#292524', '#78350f', '#b45309', 'Καβάλα');
-const alexandriaIcon = create18thCenturyMarker('galleon', '#082f49', '#0369a1', '#38bdf8', 'Αλεξάνδρεια');
-const constantinopleIcon = create18thCenturyMarker('imperial', '#3b0764', '#7e22ce', '#c084fc', 'Κωνσταντινούπολη');
+// 18th-Century Historical Cartographic Pins (Dynamic per language)
+const getHistoricalIcons = (isEn: boolean) => ({
+  thasos: create18thCenturyMarker('anchor', '#450a0a', '#991b1b', '#dc2626', isEn ? 'Thassos' : 'Θάσος'),
+  chania: create18thCenturyMarker('compass', '#451a03', '#92400e', '#d97706', isEn ? 'Chania' : 'Χανιά'),
+  kavala: create18thCenturyMarker('fortress', '#292524', '#78350f', '#b45309', isEn ? 'Kavala' : 'Καβάλα'),
+  alexandria: create18thCenturyMarker('galleon', '#082f49', '#0369a1', '#38bdf8', isEn ? 'Alexandria' : 'Αλεξάνδρεια'),
+  constantinople: create18thCenturyMarker('imperial', '#3b0764', '#7e22ce', '#c084fc', isEn ? 'Constantinople' : 'Κωνσταντινούπολη')
+});
 
 // Component to dynamically resize Leaflet map when sidebar opens/closes
 function MapResizer({ trigger }: { trigger: any }) {
@@ -197,58 +200,81 @@ interface HistoricalHub {
   details: string;
 }
 
-const hubs: HistoricalHub[] = [
-  {
-    id: 'thasos-prinos',
-    tag: 'thasos',
-    name: 'Θάσος (Πρίνος & Λιμένας)',
-    subtitle: 'Γυμνάσιο Πρίνου — Βακούφι Μεχμέτ Αλή',
-    coords: [40.7386, 24.5772],
-    role: 'Έδρα Βακουφίου, ναυπηγεία ξυλείας και παραγωγή ελαιολάδου. Ειδικό καθεστώς αυτονομίας από το 1813.',
-    icon: thasosIcon,
-    details: 'Τα πευκοδάση της Θάσου παρείχαν ξυλεία για τα καρνάγια του Πρίνου και τον αιγυπτιακό στόλο. Τα έσοδα χρηματοδοτούσαν το Ιμαρέτ της Καβάλας.'
-  },
-  {
-    id: 'chania',
-    tag: 'chania',
-    name: 'Χανιά (Κρήτη)',
-    subtitle: '3ο Γενικό Λύκειο Χανίων — Αιγυπτιοκρατία (1830–1840)',
-    coords: [35.5186, 24.0157],
-    role: 'Κομβικό μεσογειακό λιμάνι, επισκευή Αιγυπτιακού Φάρου, εμπόριο ελαιολάδου και σαπωνοποιίας.',
-    icon: chaniaIcon,
-    details: 'Κατά τη δεκαετή διοίκηση του Μεχμέτ Αλή στην Κρήτη, τα Χανιά ανακαινίστηκαν ριζικά. Ο Φάρος αποτελεί ζωντανό τεκμήριο της σύνδεσης των δύο νησιών.'
-  },
-  {
-    id: 'kavala',
-    tag: 'kavala',
-    name: 'Καβάλα',
-    subtitle: 'Γενέτειρα Μεχμέτ Αλή & Ιμαρέτ',
-    coords: [40.9378, 24.4128],
-    role: 'Διοικητικός δεσμός με τη Θάσο μέσω των ευαγών ιδρυμάτων (Ιμαρέτ).',
-    icon: kavalaIcon,
-    details: 'Το επιβλητικό Ιμαρέτ στην παλιά πόλη της Καβάλας συντηρούνταν κυρίως από τις φορολογικές προσόδους της Θάσου.'
-  },
-  {
-    id: 'alexandria',
-    tag: 'alexandria',
-    name: 'Αλεξάνδρεια (Αίγυπτος)',
-    subtitle: 'Έδρα της Δυναστείας του Μεχμέτ Αλή',
-    coords: [31.2001, 29.9187],
-    role: 'Μητρόπολη της Ανατολικής Μεσογείου, τελικός κόμβος εξαγωγών λαδιού & ξυλείας.',
-    icon: alexandriaIcon,
-    details: 'Η Αλεξάνδρεια αναπτύχθηκε ταχύτατα τον 19ο αιώνα, προσελκύοντας έντονη ελληνική εμπορική παρουσία από τα νησιά του Αιγαίου και την Κρήτη.'
-  },
-  {
-    id: 'constantinople',
-    tag: 'constantinople',
-    name: 'Κωνσταντινούπολη (Ισταμπούλ)',
-    subtitle: 'Πρωτεύουσα Οθωμανικής Αυτοκρατορίας',
-    coords: [41.0082, 28.9784],
-    role: 'Σουλτανική εξουσία — Έκδοση Φιρμανιών παραχώρησης.',
-    icon: constantinopleIcon,
-    details: 'Εκεί εκδόθηκαν τα σουλτανικά φιρμάνια του Μαχμούτ Β΄ που καθόρισαν την τύχη της Θάσου και αργότερα της Κρήτης.'
-  }
-];
+const getHistoricalHubs = (isEn: boolean): HistoricalHub[] => {
+  const icons = getHistoricalIcons(isEn);
+  return [
+    {
+      id: 'thasos-prinos',
+      tag: 'thasos',
+      name: isEn ? 'Thassos (Prinos & Limenas)' : 'Θάσος (Πρίνος & Λιμένας)',
+      subtitle: isEn ? 'Junior High School of Prinos — Waqf of Muhammad Ali' : 'Γυμνάσιο Πρίνου — Βακούφι Μεχμέτ Αλή',
+      coords: [40.7386, 24.5772],
+      role: isEn 
+        ? 'Seat of the Waqf, naval timber shipyards, and olive oil production. Autonomous self-governing status from 1813.' 
+        : 'Έδρα Βακουφίου, ναυπηγεία ξυλείας και παραγωγή ελαιολάδου. Ειδικό καθεστώς αυτονομίας από το 1813.',
+      icon: icons.thasos,
+      details: isEn 
+        ? 'The pine forests of Thassos supplied shipbuilding timber for the carnagia of Prinos and the Egyptian fleet. Revenues funded the Kavala Imaret.' 
+        : 'Τα πευκοδάση της Θάσου παρείχαν ξυλεία για τα καρνάγια του Πρίνου και τον αιγυπτιακό στόλο. Τα έσοδα χρηματοδοτούσαν το Ιμαρέτ της Καβάλας.'
+    },
+    {
+      id: 'chania',
+      tag: 'chania',
+      name: isEn ? 'Chania (Crete)' : 'Χανιά (Κρήτη)',
+      subtitle: isEn ? '3rd Senior High School of Chania — Egyptian Era (1830–1840)' : '3ο Γενικό Λύκειο Χανίων — Αιγυπτιοκρατία (1830–1840)',
+      coords: [35.5186, 24.0157],
+      role: isEn 
+        ? 'Pivotal Mediterranean harbor, restoration of the Egyptian Lighthouse, olive oil and soap manufacturing.' 
+        : 'Κομβικό μεσογειακό λιμάνι, επισκευή Αιγυπτιακού Φάρου, εμπόριο ελαιολάδου και σαπωνοποιίας.',
+      icon: icons.chania,
+      details: isEn 
+        ? 'During the decade of Muhammad Ali\'s rule in Crete, the port of Chania was radically revitalized. The Lighthouse remains a living testament connecting the two islands.' 
+        : 'Κατά τη δεκαετή διοίκηση του Μεχμέτ Αλή στην Κρήτη, τα Χανιά ανακαινίστηκαν ριζικά. Ο Φάρος αποτελεί ζωντανό τεκμήριο της σύνδεσης των δύο νησιών.'
+    },
+    {
+      id: 'kavala',
+      tag: 'kavala',
+      name: isEn ? 'Kavala' : 'Καβάλα',
+      subtitle: isEn ? 'Birthplace of Muhammad Ali & The Imaret' : 'Γενέτειρα Μεχμέτ Αλή & Ιμαρέτ',
+      coords: [40.9378, 24.4128],
+      role: isEn 
+        ? 'Administrative and institutional bond with Thassos through charitable trusts (Waqf/Imaret).' 
+        : 'Διοικητικός δεσμός με τη Θάσο μέσω των ευαγών ιδρυμάτων (Ιμαρέτ).',
+      icon: icons.kavala,
+      details: isEn 
+        ? 'The imposing Imaret complex in Kavala\'s old town was financed predominantly through tax revenues derived from Thassos.' 
+        : 'Το επιβλητικό Ιμαρέτ στην παλιά πόλη της Καβάλας συντηρούνταν κυρίως από τις φορολογικές προσόδους της Θάσου.'
+    },
+    {
+      id: 'alexandria',
+      tag: 'alexandria',
+      name: isEn ? 'Alexandria (Egypt)' : 'Αλεξάνδρεια (Αίγυπτος)',
+      subtitle: isEn ? 'Seat of the Muhammad Ali Dynasty' : 'Έδρα της Δυναστείας του Μεχμέτ Αλή',
+      coords: [31.2001, 29.9187],
+      role: isEn 
+        ? 'Eastern Mediterranean metropolis, key terminal for olive oil, soap & naval timber exports.' 
+        : 'Μητρόπολη της Ανατολικής Μεσογείου, τελικός κόμβος εξαγωγών λαδιού & ξυλείας.',
+      icon: icons.alexandria,
+      details: isEn 
+        ? 'Alexandria expanded rapidly in the 19th century, attracting prominent Greek merchant communities from the Aegean islands and Crete.' 
+        : 'Η Αλεξάνδρεια αναπτύχθηκε ταχύτατα τον 19ο αιώνα, προσελκύοντας έντονη ελληνική εμπορική παρουσία από τα νησιά του Αιγαίου και την Κρήτη.'
+    },
+    {
+      id: 'constantinople',
+      tag: 'constantinople',
+      name: isEn ? 'Constantinople (Istanbul)' : 'Κωνσταντινούπολη (Ισταμπούλ)',
+      subtitle: isEn ? 'Capital of the Ottoman Empire' : 'Πρωτεύουσα Οθωμανικής Αυτοκρατορίας',
+      coords: [41.0082, 28.9784],
+      role: isEn 
+        ? 'Imperial Sublime Porte — Issuance of imperial firmans.' 
+        : 'Σουλτανική εξουσία — Έκδοση Φιρμανιών παραχώρησης.',
+      icon: icons.constantinople,
+      details: isEn 
+        ? 'Imperial decrees (firmans) issued by Sultan Mahmud II determined the administrative destiny of Thassos and later Crete.' 
+        : 'Εκεί εκδόθηκαν τα σουλτανικά φιρμάνια του Μαχμούτ Β΄ που καθόρισαν την τύχη της Θάσου και αργότερα της Κρήτης.'
+    }
+  ];
+};
 
 // Fallback curated documentary content for hubs if no live database entry is available
 const defaultHubEntries: Record<string, Partial<HistoricalEntry>> = {
@@ -354,9 +380,12 @@ const maritimeRoutes: [number, number][][] = [
 
 interface InteractiveMapProps {
   entries: HistoricalEntry[];
+  language?: Language;
 }
 
-export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
+export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries, language = 'el' }) => {
+  const isEn = language === 'en';
+  const hubs = getHistoricalHubs(isEn);
   const [activeHub, setActiveHub] = useState<HistoricalHub | null>(null);
   const [selectedEntry, setSelectedEntry] = useState<HistoricalEntry | null>(null);
   const [zoomImage, setZoomImage] = useState<{ url: string; title: string } | null>(null);
@@ -396,15 +425,19 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
       <div className="text-center mb-6">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-amber-50 text-amber-900 border border-amber-300 rounded-full text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
           <Compass className="w-3.5 h-3.5 text-amber-700" />
-          <span>ΥΠΟΟΜΑΔΑ Β1 • ΔΙΑΔΡΑΣΤΙΚΗ ΧΑΡΤΟΓΡΑΦΗΣΗ ΤΕΚΜΗΡΙΩΝ</span>
+          <span>{isEn ? "WING B1 • INTERACTIVE HERITAGE MAPPING" : "ΥΠΟΟΜΑΔΑ Β1 • ΔΙΑΔΡΑΣΤΙΚΗ ΧΑΡΤΟΓΡΑΦΗΣΗ ΤΕΚΜΗΡΙΩΝ"}</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
-          Θαλάσσιοι Δρόμοι & Φωτογραφικά Τεκμήρια
+          {isEn ? "Maritime Trade Routes & Archival Records" : "Θαλάσσιοι Δρόμοι & Φωτογραφικά Τεκμήρια"}
         </h2>
         <p className="mt-1 text-sm sm:text-base text-slate-700 max-w-2xl mx-auto">
           {selectedEntry 
-            ? 'Ο χάρτης μαζεύτηκε αριστερά. Το τεκμήριο εμφανίζεται δεξιά. Πατήστε «Επαναφορά πλήρους χάρτη» για πλήρη προβολή.'
-            : 'Κάντε κλικ σε ένα σημείο του χάρτη ή επιλέξτε ένα τεκμήριο: ο χάρτης μαζεύεται αριστερά και το τεκμήριο ανοίγει στα δεξιά!'}
+            ? (isEn 
+                ? 'The map docked to the left. The archival record appears on the right. Click "Full Map" to restore overview.' 
+                : 'Ο χάρτης μαζεύτηκε αριστερά. Το τεκμήριο εμφανίζεται δεξιά. Πατήστε «Επαναφορά πλήρους χάρτη» για πλήρη προβολή.')
+            : (isEn 
+                ? 'Click on any landmark marker or select an entry: the map docks to the left and evidence details open on the right!' 
+                : 'Κάντε κλικ σε ένα σημείο του χάρτη ή επιλέξτε ένα τεκμήριο: ο χάρτης μαζεύεται αριστερά και το τεκμήριο ανοίγει στα δεξιά!')}
         </p>
       </div>
 
@@ -485,7 +518,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                             className="w-full py-1.5 px-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
-                            <span>Προβολή Τεκμηρίου στα Δεξιά ➔</span>
+                            <span>{isEn ? "View Evidence on Right ➔" : "Προβολή Τεκμηρίου στα Δεξιά ➔"}</span>
                           </button>
                         )}
                       </div>
@@ -497,14 +530,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
 
             {/* Υπόμνημα */}
             <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-slate-200 p-2.5 rounded-xl shadow-lg text-[11px] space-y-1">
-              <span className="font-bold text-slate-900 block">Υπόμνημα:</span>
+              <span className="font-bold text-slate-900 block">{isEn ? "Legend:" : "Υπόμνημα:"}</span>
               <div className="flex items-center gap-1.5 text-slate-700">
                 <span className="w-3 h-0.5 border-t-2 border-dashed border-amber-600"></span>
-                <span>Θάσος ➔ Κρήτη ➔ Αλεξάνδρεια</span>
+                <span>{isEn ? "Thassos ➔ Crete ➔ Alexandria" : "Θάσος ➔ Κρήτη ➔ Αλεξάνδρεια"}</span>
               </div>
               <div className="flex items-center gap-1.5 text-slate-700">
                 <span className="w-3 h-0.5 border-t-2 border-dashed border-blue-600"></span>
-                <span>Θάσος ➔ Κωνσταντινούπολη</span>
+                <span>{isEn ? "Thassos ➔ Constantinople" : "Θάσος ➔ Κωνσταντινούπολη"}</span>
               </div>
             </div>
 
@@ -513,10 +546,10 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               <button
                 onClick={() => setSelectedEntry(null)}
                 className="absolute top-3 right-3 z-[1000] bg-slate-900/90 hover:bg-slate-900 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow-lg flex items-center gap-1.5 backdrop-blur transition hover:scale-105"
-                title="Επαναφορά πλήρους χάρτη"
+                title={isEn ? "Full Map View" : "Επαναφορά πλήρους χάρτη"}
               >
                 <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                <span>Πλήρης Χάρτης</span>
+                <span>{isEn ? "Full Map" : "Πλήρης Χάρτης"}</span>
               </button>
             )}
           </div>
@@ -529,21 +562,26 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               
               {/* Header: Επισήμανση & Κουμπί Επαναφοράς */}
               <div className="flex items-center justify-between border-b border-[#dcd1be] pb-3">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="px-2.5 py-1 bg-amber-700 text-white rounded-lg text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>ΚΑΡΤΕΛΑ ΤΕΚΜΗΡΙΟΥ (ΔΕΞΙΑ ΠΡΟΒΟΛΗ)</span>
+                    <span>{isEn ? "ARCHIVAL EVIDENCE DOSSIER" : "ΚΑΡΤΕΛΑ ΤΕΚΜΗΡΙΟΥ (ΔΕΞΙΑ ΠΡΟΒΟΛΗ)"}</span>
                   </span>
+                  {isEn && (
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-900 border border-amber-200">
+                      🏛️ Primary Greek Archival Material
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedEntry(null)}
                     className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm"
-                    title="Επιστροφή σε πλήρη χάρτη"
+                    title={isEn ? "Return to Full Map" : "Επιστροφή σε πλήρη χάρτη"}
                   >
                     <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Επαναφορά πλήρους χάρτη</span>
+                    <span>{isEn ? "Full Map" : "Επαναφορά πλήρους χάρτη"}</span>
                   </button>
 
                   <button
@@ -600,28 +638,28 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
               <div className="flex flex-wrap items-center gap-3 p-3 bg-amber-50/60 rounded-xl text-xs text-slate-800 border border-[#e5dac9]">
                 <div className="flex items-center gap-1.5">
                   <Building className="w-4 h-4 text-blue-700" />
-                  <span><strong>Σχολείο:</strong> {selectedEntry.school?.name || 'Διασχολικό Εργαστήριο'}</span>
+                  <span><strong>{isEn ? "School:" : "Σχολείο:"}</strong> {selectedEntry.school?.name || 'Διασχολικό Εργαστήριο'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-amber-700" />
-                  <span><strong>Ομάδα:</strong> {selectedEntry.team?.name || 'Ομάδα Έρευνας'}</span>
+                  <span><strong>{isEn ? "Research Wing:" : "Ομάδα:"}</strong> {selectedEntry.team?.name || 'Ομάδα Έρευνας'}</span>
                 </div>
               </div>
 
               {/* Ερευνητικό Ερώτημα */}
               <div className="p-4 bg-amber-100/70 rounded-xl border-l-4 border-amber-600 shadow-sm">
                 <span className="text-xs font-bold uppercase tracking-wider text-amber-900 block mb-1">
-                  ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑ
+                  {isEn ? "RESEARCH QUESTION" : "ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑ"}
                 </span>
                 <p className="text-sm font-medium text-amber-950">
                   {selectedEntry.research_question}
                 </p>
               </div>
 
-              {/* Ιστορικό Πλαίσιο & Γεγονότα */}
+              {/* {isEn ? "Historical Framework & Events" : "Ιστορικό Πλαίσιο & Γεγονότα"} */}
               <div>
                 <h4 className="text-sm font-bold text-slate-950 mb-1.5 font-serif">
-                  Ιστορικό Πλαίσιο & Γεγονότα
+                  {isEn ? "Historical Framework & Events" : "Ιστορικό Πλαίσιο & Γεγονότα"}
                 </h4>
                 <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-line">
                   {selectedEntry.historical_context}
@@ -633,7 +671,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                 <div>
                   <h4 className="text-sm font-bold text-slate-950 mb-3 flex items-center gap-2 font-serif">
                     <Award className="w-4 h-4 text-blue-700" />
-                    <span>Πρωτογενείς Πηγές & Τεκμήρια ({selectedEntry.sources.length})</span>
+                    <span>{isEn ? "Primary Sources & Evidence" : "Πρωτογενείς Πηγές & Τεκμήρια"} ({selectedEntry.sources.length})</span>
                   </h4>
                   <div className="space-y-4">
                     {selectedEntry.sources.map(source => (
@@ -665,14 +703,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                               className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-semibold shadow-lg flex items-center gap-1.5 backdrop-blur transition"
                             >
                               <ZoomIn className="w-4 h-4 text-amber-400" />
-                              <span>Μεγέθυνση</span>
+                              <span>{isEn ? "Zoom" : "Μεγέθυνση"}</span>
                             </button>
                           </div>
                         ) : null}
 
                         {source.critique_notes && (
                           <p className="text-xs text-slate-700 mt-2 bg-[#fdfaf3] p-2.5 rounded-lg border border-[#e5dac9] leading-relaxed">
-                            <strong>Κριτική & Τεκμηρίωση:</strong> {source.critique_notes}
+                            <strong>{isEn ? "Critical Evaluation:" : "Κριτική & Τεκμηρίωση:"}</strong> {source.critique_notes}
                           </p>
                         )}
                       </div>
@@ -686,7 +724,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({ entries }) => {
                 <div className="p-4 bg-indigo-50/80 rounded-xl border-l-4 border-indigo-700 shadow-sm">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 mb-1 flex items-center gap-1.5">
                     <MessageSquare className="w-3.5 h-3.5 text-indigo-700" />
-                    <span>ΣΧΟΛΙΟ ΣΥΝΕΡΓΑΖΟΜΕΝΟΥ ΣΧΟΛΕΙΟΥ</span>
+                    <span>{isEn ? "PARTNER SCHOOL COMMENTARY & COUNTERPOINT" : "ΣΧΟΛΙΟ ΣΥΝΕΡΓΑΖΟΜΕΝΟΥ ΣΧΟΛΕΙΟΥ"}</span>
                   </h4>
                   <p className="text-sm text-indigo-950 italic">
                     «{selectedEntry.partner_comment}»

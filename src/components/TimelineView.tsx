@@ -93,7 +93,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ entries, language = 
         </h1>
         <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
           {language === 'en' ? (
-            <>Collaborative historical research, archival evidence, and oral testimonies by the student research teams of the <strong className="text-blue-900">Junior High School of Prinos (Thasos)</strong> and the <strong className="text-amber-900">3rd Senior High School of Chania (Crete)</strong>.</>
+            <>Collaborative historical research, archival evidence, and oral testimonies by the student research teams of the <strong className="text-blue-900">Junior High School of Prinos (Thassos)</strong> and the <strong className="text-amber-900">3rd Senior High School of Chania (Crete)</strong>.</>
           ) : (
             <>Συνεργατική ιστορική έρευνα, αρχειακά τεκμήρια και προφορικές μαρτυρίες από τις μαθητικές ομάδες του <strong className="text-blue-900">Γυμνασίου Πρίνου Θάσου</strong> και του <strong className="text-amber-900">3ου ΓΕΛ Χανίων</strong>.</>
           )}

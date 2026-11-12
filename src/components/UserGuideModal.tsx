@@ -124,7 +124,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                 <Lightbulb className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
                 <p className="text-blue-900 text-xs sm:text-sm">
                   {isEn ? (
-                    <>Welcome to the Inter-School Digital Lab! Here student research teams document archival records, oral testimonies, and historical findings connecting <strong>Thasos</strong> and <strong>Crete</strong>.</>
+                    <>Welcome to the Inter-School Digital Lab! Here student research teams document archival records, oral testimonies, and historical findings connecting <strong>Thassos</strong> and <strong>Crete</strong>.</>
                   ) : (
                     <>Καλώς ήρθατε στο Διασχολικό Εργαστήριο! Εδώ θα καταχωρίζετε τα ιστορικά αρχεία, τις μαρτυρίες και τα ευρήματα της ομάδας σας, συνδέοντας τη <strong>Θάσο</strong> και την <strong>Κρήτη</strong>.</>
                   )}
@@ -149,7 +149,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                 <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600">
                   {isEn ? (
                     <>
-                      <li>Select your school (<em>Junior High School of Prinos, Thasos</em> or <em>3rd Senior High School of Chania, Crete</em>).</li>
+                      <li>Select your school (<em>Junior High School of Prinos, Thassos</em> or <em>3rd Senior High School of Chania, Crete</em>).</li>
                       <li>Select your team wing (e.g., <em>Wing A1: Administration & Waqf Heritage</em>).</li>
                       <li>Type the team passphrase provided by your teacher.</li>
                     </>
@@ -182,7 +182,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                     <strong className="block text-slate-900 mb-1">
                       {isEn ? 'Period & Island:' : 'Περίοδος & Νησί:'}
                     </strong>
-                    {isEn ? 'Select administration period and island focus (Thasos or Crete).' : 'Επιλέξτε Οθωμανική Διοίκηση & αντίστοιχο νησί (Θάσος ή Κρήτη).'}
+                    {isEn ? 'Select administration period and island focus (Thassos or Crete).' : 'Επιλέξτε Οθωμανική Διοίκηση & αντίστοιχο νησί (Θάσος ή Κρήτη).'}
                   </div>
                   <div className="p-3 bg-slate-50 rounded-xl">
                     <strong className="block text-slate-900 mb-1">
@@ -226,7 +226,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                 </div>
                 <p className="text-[11px] text-slate-500 mt-2">
                   {isEn 
-                    ? '* Always specify the repository or municipal archive where the item is preserved (e.g., General State Archives of Chania, Historical Archive of Thasos, etc.).'
+                    ? '* Always specify the repository or municipal archive where the item is preserved (e.g., General State Archives of Chania, Historical Archive of Thassos, etc.).'
                     : '* Μην ξεχνάτε να αναφέρετε τον φορέα ή το αρχείο από όπου αντλήσατε το τεκμήριο (π.χ. ΓΑΚ Χανίων, Αρχείο Θάσου κ.λπ.).'}
                 </p>
               </div>
@@ -317,7 +317,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                   </div>
                   <p className="text-xs sm:text-sm text-slate-600">
                     {isEn 
-                      ? 'Allows teachers from the partner island (e.g. Chania for Thasos entries) to append a comparative historical reflection or counterpoint, strengthening inter-school dialogue!'
+                      ? 'Allows teachers from the partner island (e.g. Chania for Thassos entries) to append a comparative historical reflection or counterpoint, strengthening inter-school dialogue!'
                       : 'Επιτρέπει στους καθηγητές του έτερου σχολείου (π.χ. Χανίων για καταχώριση της Θάσου) να προσθέσουν μια παράγραφο συσχετισμού ή αντίλογου, ενισχύοντας τη διασχολική συνεργασία!'}
                   </p>
                 </div>
@@ -351,7 +351,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                   <ul className="text-xs sm:text-sm space-y-2 text-slate-600">
                     {isEn ? (
                       <>
-                        <li><strong>Island Filters:</strong> Click <em>"All Regions"</em>, <em>"Thasos"</em>, or <em>"Crete"</em> for instant geographical isolation.</li>
+                        <li><strong>Island Filters:</strong> Click <em>"All Regions"</em>, <em>"Thassos"</em>, or <em>"Crete"</em> for instant geographical isolation.</li>
                         <li><strong>Search:</strong> Type historical figures, places, or commodities (e.g., "oil", "ship", "waqf").</li>
                         <li><strong>View Modes:</strong> Toggle between chronological stream cards (Timeline) or high-accessibility List.</li>
                         <li><strong>Full Evidence Modal:</strong> Click any card to inspect full archival citations, oral audio, and video embeds.</li>
@@ -376,7 +376,7 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({
                     {isEn ? (
                       <>
                         <li>Explore 19th-century maritime trade routes across the Mediterranean and North Aegean.</li>
-                        <li>Click on cartographic wax seal markers (Thasos, Chania, Alexandria, Istanbul) to view localized historical evidence.</li>
+                        <li>Click on cartographic wax seal markers (Thassos, Chania, Alexandria, Istanbul) to view localized historical evidence.</li>
                       </>
                     ) : (
                       <>
