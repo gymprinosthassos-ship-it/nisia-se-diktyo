@@ -7,7 +7,7 @@ import { TeamPortal } from './components/TeamPortal';
 import { TeacherDashboard } from './components/TeacherDashboard';
 import { UserGuideModal } from './components/UserGuideModal';
 import { DigitalNarratorModal } from './components/DigitalNarratorModal';
-import { DraggableNarratorButton } from './components/DraggableNarratorButton';
+import { Traveler19thAvatar } from './components/Traveler19thAvatar';
 import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
@@ -19,7 +19,6 @@ import {
   ShieldCheck, 
 Anchor, 
   Map as MapIcon, 
-  Cloud,
   Menu,
   X,
   ChevronUp,
@@ -52,7 +51,6 @@ export function App() {
   const [entries, setEntries] = useState<HistoricalEntry[]>(mockEntries);
   const [schools, setSchools] = useState<School[]>(mockSchools);
   const [teams, setTeams] = useState<Team[]>(mockTeams);
-  const [isLiveConnected, setIsLiveConnected] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
@@ -128,7 +126,6 @@ export function App() {
           const existingTitles = new Set(enrichedEntries.map(e => e.title.trim().toLowerCase()));
           const extraMocks = mockEntries.filter(m => !existingTitles.has(m.title.trim().toLowerCase()));
           setEntries([...enrichedEntries, ...extraMocks]);
-          setIsLiveConnected(true);
         }
       } catch (err) {
         console.warn('Error fetching Supabase data, keeping mock data:', err);
@@ -262,59 +259,35 @@ export function App() {
     <div className="min-h-screen bg-[#f0f6fa] flex flex-col selection:bg-amber-500 selection:text-slate-900">
       {/* Top Navbar */}
       <header className="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-lg">
-        <div className="max-w-6xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between gap-4">
           {/* Logo & Τίτλος */}
           <div 
             onClick={() => {
               setCurrentTab('identity');
               setIsMobileMenuOpen(false);
             }}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-3 cursor-pointer group shrink-0"
           >
-            <div className="relative">
+            <div className="relative shrink-0 w-11 h-11 sm:w-12 sm:h-12">
               <img 
                 src="/logo.jpg" 
                 alt="Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας" 
-                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
+                className="w-full h-full rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
               />
-              <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-blue-500 border-2 border-slate-900 rounded-full"></span>
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-blue-500 border-2 border-slate-900 rounded-full" title="Active"></span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm md:text-base font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition line-clamp-1">
-                  {t.labTitle}
-                </span>
-                <span className="hidden xl:inline-block px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold tracking-wider uppercase">
-                  {t.centuryBadge}
-                </span>
-                {isLiveConnected && (
-                  <span className="hidden xl:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold">
-                    <Cloud className="w-3 h-3 text-emerald-400" />
-                    <span>{t.cloudLive}</span>
-                  </span>
-                )}
+            <div className="shrink-0">
+              <div className="text-sm sm:text-base font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition whitespace-nowrap">
+                {language === 'en' ? 'Local History Lab' : 'Εργαστήριο Ιστορίας'}
               </div>
-              <span className="text-[11px] sm:text-xs text-slate-300 block font-normal text-slate-400 line-clamp-1">
-                {t.labSubtitle}
-              </span>
+              <div className="text-[11px] sm:text-xs text-amber-200/80 font-serif whitespace-nowrap">
+                {language === 'en' ? 'Thassos & Crete (19th c.)' : 'Θάσος & Κρήτη (19ος αι.)'}
+              </div>
             </div>
-          </div>
-
-          {/* School Badges in Top Navbar (Proposal 2) */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 shadow-md text-xs">
-            <span className="text-blue-300 font-semibold flex items-center gap-1.5">
-              <Anchor className="w-3.5 h-3.5 text-blue-400" />
-              {t.prinosSchoolBadge}
-            </span>
-            <span className="text-amber-400 text-xs font-bold px-0.5">⟷</span>
-            <span className="text-amber-300 font-semibold flex items-center gap-1.5">
-              <ChaniaLighthouseIcon className="w-3.5 h-3.5 text-blue-400" />
-              {t.chaniaSchoolBadge}
-            </span>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-1.5 lg:gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -364,6 +337,18 @@ export function App() {
                 <span className="text-[11px]">EN</span>
               </button>
             </div>
+
+            {/* Digital Narrator Button */}
+            <button
+              onClick={() => setIsNarratorOpen(true)}
+              className="ml-1 px-3 py-2 rounded-xl text-xs font-bold text-amber-200 hover:text-white bg-slate-800/90 hover:bg-slate-700/80 border border-amber-500/40 hover:border-amber-400 transition flex items-center gap-2 shadow-sm"
+              title={language === 'en' ? "19th Century Digital Narrator" : "Ψηφιακός Αφηγητής 19ου Αιώνα"}
+            >
+              <div className="w-5 h-5 rounded-full overflow-hidden border border-amber-400 shrink-0">
+                <Traveler19thAvatar className="w-full h-full object-cover" showBorder={false} />
+              </div>
+              <span className="hidden lg:inline">{language === 'en' ? 'Narrator' : 'Αφηγητής'}</span>
+            </button>
 
             {/* Help & Guide Button */}
             <button
@@ -415,6 +400,25 @@ export function App() {
                 </button>
               );
             })}
+
+            {/* Mobile Narrator Button */}
+            <button
+              onClick={() => {
+                setIsNarratorOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-3 text-amber-200 bg-slate-800/80 border border-amber-500/30 hover:bg-amber-500/20 transition"
+            >
+              <div className="w-7 h-7 rounded-full overflow-hidden border border-amber-400 shrink-0">
+                <Traveler19thAvatar className="w-full h-full object-cover" showBorder={false} />
+              </div>
+              <div>
+                <div>{language === 'en' ? '19th C. Digital Narrator' : 'Ψηφιακός Αφηγητής 19ου Αιώνα'}</div>
+                <div className="text-[11px] font-normal text-amber-300/80">
+                  {language === 'en' ? 'Interactive audio inquiry & historical guide' : 'Διαδραστική ακουστική περιήγηση & ιστορικός οδηγός'}
+                </div>
+              </div>
+            </button>
 
             {/* Mobile Help Button */}
             <button
@@ -472,7 +476,9 @@ export function App() {
                 {language === 'en' ? 'Academic Year 2026 – 2027' : 'Σχολικό Έτος 2026 – 2027'}
               </div>
               <p className="text-sm sm:text-base text-slate-200 mt-2 max-w-2xl font-serif drop-shadow-[0_1px_5px_rgba(0,0,0,0.9)]">
-                {language === 'en' ? `«Islands in Network: ${t.labSubtitle}»` : `«Νησιά σε Δίκτυο: ${t.labSubtitle}»`}
+                {language === 'en' 
+                  ? '«Islands in Network: Thassos & Crete in the Ottoman Mediterranean of Muhammad Ali (19th Century)»' 
+                  : '«Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή (19ος Αιώνας)»'}
               </p>
             </div>
           </div>
@@ -661,12 +667,11 @@ export function App() {
           </div>
         </div>
       </footer>
-      {/* Ψηφιακός Αφηγητής — Μετακινούμενο Στρογγυλό Κουμπί (Draggable) */}
-      <DraggableNarratorButton onClick={() => setIsNarratorOpen(true)} />
 
       {/* Ψηφιακός Αφηγητής Modal */}
       <DigitalNarratorModal
         isOpen={isNarratorOpen}
+        language={language}
         onClose={() => setIsNarratorOpen(false)}
         onNavigateToTab={(tab) => {
           setCurrentTab(tab);
