@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { Language } from '../data/translations';
 import { 
   X, 
   BookOpen, 
@@ -11,44 +12,47 @@ import {
   MessageSquare, 
   FileText,
   HelpCircle,
-  Lightbulb,
-  Lock,
-  Layers,
-  Sparkles,
-  Move,
-  ChevronDown
+  Lightbulb
 } from 'lucide-react';
 
 interface UserGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
+  language?: Language;
 }
 
-export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'students' | 'teachers' | 'narrator' | 'navigation'>('students');
+export const UserGuideModal: React.FC<UserGuideModalProps> = ({ 
+  isOpen, 
+  onClose,
+  language = 'el' 
+}) => {
+  const [activeTab, setActiveTab] = useState<'students' | 'teachers' | 'general'>('students');
 
   if (!isOpen) return null;
 
+  const isEn = language === 'en';
+
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-300 overflow-hidden relative">
-        
+    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
+      <div className="parchment-modal-bg rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden relative">
         {/* Header */}
         <div className="bg-slate-900 text-white p-5 sm:p-6 flex items-start justify-between border-b border-slate-800 shrink-0">
-          <div className="flex items-center gap-3.5">
-            <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-inner">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
               <HelpCircle className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
-                  ΕΠΙΣΗΜΟ ΕΓΧΕΙΡΙΔΙΟ ΧΡΗΣΗΣ
+                <span className="text-xs uppercase tracking-widest font-bold text-amber-400">
+                  {isEn ? 'USER GUIDE & HELP HUB' : 'ΕΓΧΕΙΡΙΔΙΟ ΧΡΗΣΗΣ & ΒΟΗΘΕΙΑ'}
                 </span>
-                <span className="text-slate-500">•</span>
-                <span className="text-xs text-slate-300 font-serif">Έκδοση 2026-2027</span>
+                <span className="text-slate-600">•</span>
+                <span className="text-xs text-slate-400">
+                  {isEn ? '19th Century' : '19ος Αιώνας'}
+                </span>
               </div>
-              <h2 className="text-lg sm:text-2xl font-serif font-bold text-white mt-0.5">
-                Οδηγός Πλατφόρμας «Νησιά σε Δίκτυο»
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-white mt-0.5">
+                {isEn ? 'Platform Guide: "Islands in Network"' : 'Οδηγός Πλατφόρμας «Νησιά σε Δίκτυο»'}
               </h2>
             </div>
           </div>
@@ -57,303 +61,203 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
             <button
               onClick={() => window.print()}
               className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition text-xs font-semibold hidden sm:flex items-center gap-1.5"
-              title="Εκτύπωση Οδηγού"
+              title={isEn ? 'Print Guide' : 'Εκτύπωση Οδηγού'}
             >
               <Printer className="w-4 h-4" />
-              <span>Εκτύπωση</span>
+              <span>{isEn ? 'Print' : 'Εκτύπωση'}</span>
             </button>
             <button
               onClick={onClose}
               className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition focus:outline-none"
-              aria-label="Κλείσιμο"
+              aria-label={isEn ? 'Close' : 'Κλείσιμο'}
             >
               <X className="w-6 h-6" />
             </button>
           </div>
         </div>
 
-        {/* Navigation Tabs (4 Θεματικές Ενότητες) */}
-        <div className="bg-slate-100 p-2 sm:px-6 flex border-b border-slate-200 shrink-0 gap-2 overflow-x-auto">
+        {/* Navigation Tabs */}
+        <div className="no-print bg-slate-100 p-2 sm:px-6 flex border-b border-slate-200 shrink-0 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('students')}
-            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shrink-0 ${
               activeTab === 'students'
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>👩‍🎓 Μαθητές & Υποβολές</span>
+            <span>{isEn ? '👩‍🎓 Student Research Wings' : '👩‍🎓 Οδηγός για Μαθητές'}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('teachers')}
-            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shrink-0 ${
               activeTab === 'teachers'
                 ? 'bg-amber-600 text-white shadow-sm'
                 : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>👨‍🏫 Καθηγητές & Κωδικός Ασφαλείας</span>
+            <span>{isEn ? '👨‍🏫 Educator Hub & Oversight' : '👨‍🏫 Οδηγός για Καθηγητές'}</span>
           </button>
 
           <button
-            onClick={() => setActiveTab('narrator')}
-            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shrink-0 ${
-              activeTab === 'narrator'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>🎙️ Αφηγητής & 3 Αναπτυσσόμενα Μέρη</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('navigation')}
-            className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shrink-0 ${
-              activeTab === 'navigation'
+            onClick={() => setActiveTab('general')}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shrink-0 ${
+              activeTab === 'general'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>🧭 Χρονολόγιο & Χάρτης</span>
+            <span>{isEn ? '🧭 Navigation & Timeline' : '🧭 Πλοήγηση & Χρονολόγιο'}</span>
           </button>
         </div>
 
         {/* Content Body */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6 text-slate-700 text-sm leading-relaxed">
-          
-          {/* ========================================================= */}
-          {/* TAB 1: ΜΑΘΗΤΕΣ & ΥΠΟΒΟΛΕΣ */}
-          {/* ========================================================= */}
+          {/* TAB 1: ΜΑΘΗΤΕΣ */}
           {activeTab === 'students' && (
             <div className="space-y-6">
-              <div className="p-4 bg-blue-50/80 rounded-2xl border border-blue-200 flex items-start gap-3">
+              <div className="p-4 bg-blue-50/70 rounded-2xl border border-blue-200 flex items-start gap-3">
                 <Lightbulb className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-blue-950 space-y-1">
-                  <p className="font-bold">Καλώς ήρθατε στο Διασχολικό Εργαστήριο Τοπικής Ιστορίας!</p>
-                  <p>
-                    Εδώ καταχωρίζετε τα ιστορικά αρχεία, τις προφορικές μαρτυρίες και τα ευρήματα της ομάδας σας, συνδέοντας τη <strong>Θάσο</strong> και την <strong>Κρήτη</strong> του 19ου αιώνα.
-                  </p>
-                </div>
-              </div>
-
-              {/* Ενημέρωση Ασφαλείας PIN */}
-              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-300 flex items-center gap-3">
-                <Lock className="w-5 h-5 text-amber-700 shrink-0" />
-                <div className="text-xs sm:text-sm text-amber-950">
-                  <strong>Κωδικός Ασφαλείας Υποβολής:</strong> Για την ανάρτηση οποιουδήποτε υλικού απαιτείται ο επίσημος κωδικός ασφαλείας (ο οποίος κοινοποιείται προφορικά από τους υπεύθυνους εκπαιδευτικούς).
-                </div>
-              </div>
-
-              {/* Βήματα Υποβολής */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border border-slate-200 rounded-2xl p-4.5 bg-slate-50/50 hover:border-blue-300 transition space-y-2">
-                  <div className="flex items-center gap-2 text-blue-700 font-bold">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">1</span>
-                    <h3 className="text-sm font-bold text-slate-900">Σύνδεση στην Ομάδα σας</h3>
-                  </div>
-                  <p className="text-xs text-slate-600">
-                    Στην καρτέλα <strong>«Υποβολή Ομάδων»</strong>, επιλέγετε το σχολείο σας (Γυμνάσιο Πρίνου ή 3ο ΓΕΛ Χανίων), την ομάδα σας και τον κωδικό ομάδας.
-                  </p>
-                </div>
-
-                <div className="border border-slate-200 rounded-2xl p-4.5 bg-slate-50/50 hover:border-blue-300 transition space-y-2">
-                  <div className="flex items-center gap-2 text-blue-700 font-bold">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">2</span>
-                    <h3 className="text-sm font-bold text-slate-900">Συμπλήρωση Τεκμηρίου</h3>
-                  </div>
-                  <p className="text-xs text-slate-600">
-                    Εισάγετε Τίτλο, Έτος (19ος αι.), Νησί, Ερευνητικό Ερώτημα, Ιστορικό Πλαίσιο και τη σημασία για το δίκτυο των νησιών.
-                  </p>
-                </div>
-
-                <div className="border border-slate-200 rounded-2xl p-4.5 bg-slate-50/50 hover:border-blue-300 transition space-y-2">
-                  <div className="flex items-center gap-2 text-blue-700 font-bold">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">3</span>
-                    <h3 className="text-sm font-bold text-slate-900">Πηγές & Πολυμέσα</h3>
-                  </div>
-                  <p className="text-xs text-slate-600">
-                    Επισυνάπτετε αρχειακά έγγραφα (PDF/εικόνες), προφορικές μαρτυρίες, φωτογραφίες χειρογράφων ή βίντεο YouTube, αναφέροντας πάντα την πηγή (ΓΑΚ, τοπικά αρχεία).
-                  </p>
-                </div>
-
-                <div className="border border-slate-200 rounded-2xl p-4.5 bg-slate-50/50 hover:border-blue-300 transition space-y-2">
-                  <div className="flex items-center gap-2 text-blue-700 font-bold">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">4</span>
-                    <h3 className="text-sm font-bold text-slate-900">Πρόχειρο ή Οριστική Υποβολή</h3>
-                  </div>
-                  <p className="text-xs text-slate-600">
-                    Μπορείτε να αποθηκεύσετε ως <strong>Πρόχειρο</strong> για να συνεχίσετε αργότερα, ή να πατήσετε <strong>Οριστική Υποβολή</strong> (με τον κωδικό ασφαλείας) για έγκριση από τους καθηγητές.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ========================================================= */}
-          {/* TAB 2: ΚΑΘΗΓΗΤΕΣ & ΔΙΑΧΕΙΡΙΣΗ (ΚΩΔΙΚΟΣ ΑΣΦΑΛΕΙΑΣ) */}
-          {/* ========================================================= */}
-          {activeTab === 'teachers' && (
-            <div className="space-y-6">
-              <div className="p-4 bg-amber-50/80 rounded-2xl border border-amber-300 flex items-start gap-3">
-                <ShieldCheck className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-amber-950 space-y-1">
-                  <p className="font-bold">Παιδαγωγικός & Επιστημονικός Έλεγχος Πλατφόρμας</p>
-                  <p>
-                    Οι υπεύθυνοι εκπαιδευτικοί έχουν τον πλήρη συντονισμό των μαθητικών αναρτήσεων και της διαχείρισης των συμμετεχόντων ανά σχολείο.
-                  </p>
-                </div>
-              </div>
-
-              {/* Διαχείριση Ονομάτων & Ομάδων με PIN */}
-              <div className="border-2 border-amber-300/80 rounded-2xl p-5 bg-gradient-to-r from-amber-50/50 to-white space-y-3">
-                <div className="flex items-center gap-2 text-amber-900 font-bold">
-                  <Lock className="w-4 h-4 text-amber-700" />
-                  <h3 className="text-sm sm:text-base font-bold">
-                    Κωδικός Ασφαλείας & Επεξεργασία Συμμετεχόντων
-                  </h3>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700">
-                  Για να διασφαλιστεί η ακεραιότητα των δεδομένων, για οποιαδήποτε αλλαγή πεδίου, προσθήκη ή αφαίρεση ονόματος εκπαιδευτικού, μαθητή ή ομάδας απαιτείται ο κωδικός:
+                <p className="text-blue-900 text-xs sm:text-sm">
+                  {isEn ? (
+                    <>Welcome to the Inter-School Digital Lab! Here student research teams document archival records, oral testimonies, and historical findings connecting <strong>Thasos</strong> and <strong>Crete</strong>.</>
+                  ) : (
+                    <>Καλώς ήρθατε στο Διασχολικό Εργαστήριο! Εδώ θα καταχωρίζετε τα ιστορικά αρχεία, τις μαρτυρίες και τα ευρήματα της ομάδας σας, συνδέοντας τη <strong>Θάσο</strong> και την <strong>Κρήτη</strong>.</>
+                  )}
                 </p>
-                <div className="p-3 bg-white rounded-xl border border-amber-200 flex items-center justify-between">
-                  <span className="text-xs text-slate-600 font-medium">Ενιαίος Κωδικός Ασφαλείας:</span>
-                  <span className="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300">
-                    Κοινοποιείται Προφορικά
-                  </span>
-                </div>
               </div>
 
-              {/* 2 Στήλες Σχολείων & Πτέρυγες Α / Β */}
-              <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-3">
-                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-blue-600" />
-                  <span>Διάταξη Σχολείων & Οργάνωση σε Πτέρυγες</span>
-                </h3>
-                <ul className="text-xs sm:text-sm space-y-2 text-slate-600">
-                  <li><strong>Θάσος (Αριστερή Στήλη):</strong> Γυμνάσιο Πρίνου Θάσου οργανωμένο σε <em>Πτέρυγα Α΄</em> και <em>Πτέρυγα Β΄</em>.</li>
-                  <li><strong>Χανιά (Δεξιά Στήλη):</strong> 3ο Γενικό Λύκειο Χανίων με 4 υπεύθυνους εκπαιδευτικούς και ομάδες σε <em>Πτέρυγα Α΄</em> & <em>Πτέρυγα Β΄</em>.</li>
-                  <li><strong>Δυνατότητα Προσθήκης/Αφαίρεσης:</strong> Από το κουμπί <em>«Επεξεργασία»</em> μπορείτε να προσθέσετε ή να διαγράψετε οποιοδήποτε πλαίσιο μαθητή, εκπαιδευτικού ή ομάδας, με άμεση αποθήκευση στη βάση δεδομένων.</li>
-                </ul>
-              </div>
-
-              {/* Ενέργειες Καθηγητών */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <strong className="text-emerald-700 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4" /> Έγκριση & Δημοσίευση
-                  </strong>
-                  <p className="text-slate-600 text-xs">
-                    Εμφανίζει άμεσα το τεκμήριο στο δημόσιο Χρονολόγιο και στον Χάρτη.
-                  </p>
-                </div>
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <strong className="text-amber-700 flex items-center gap-1.5">
-                    <RotateCcw className="w-4 h-4" /> Επιστροφή για Διόρθωση
-                  </strong>
-                  <p className="text-slate-600 text-xs">
-                    Στέλνει παιδαγωγικό σχόλιο πίσω στην ομάδα για βελτίωση της εργασίας.
-                  </p>
-                </div>
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <strong className="text-indigo-700 flex items-center gap-1.5">
-                    <MessageSquare className="w-4 h-4" /> Σχόλιο Έτερου Σχολείου
-                  </strong>
-                  <p className="text-slate-600 text-xs">
-                    Συνεισφορά των εκπαιδευτικών του άλλου νησιού για σύγκριση πηγών.
-                  </p>
-                </div>
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <strong className="text-slate-800 flex items-center gap-1.5">
-                    <FileText className="w-4 h-4" /> Εξαγωγή Backup & Εκτύπωση
-                  </strong>
-                  <p className="text-slate-600 text-xs">
-                    Λήψη αντιγράφου ασφαλείας σε JSON ή εκτύπωση της συνολικής έκθεσης.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ========================================================= */}
-          {/* TAB 3: ΑΦΗΓΗΤΗΣ & 3 ΑΝΑΠΤΥΣΣΟΜΕΝΑ ΜΕΡΗ */}
-          {/* ========================================================= */}
-          {activeTab === 'narrator' && (
-            <div className="space-y-6">
-              
-              {/* Ψηφιακός Αφηγητής 19ου Αιώνα */}
-              <div className="border border-amber-200 rounded-2xl p-5 bg-gradient-to-br from-amber-50/70 to-white space-y-3">
-                <div className="flex items-center gap-2.5 text-amber-900 font-bold">
-                  <Move className="w-5 h-5 text-amber-700" />
-                  <h3 className="text-base font-bold">
-                    Ψηφιακός Αφηγητής — Ταξιδευτής του 19ου Αιώνα (Draggable)
+              {/* Βήμα 1 */}
+              <div className="border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition">
+                <div className="flex items-center gap-2.5 text-blue-700 font-bold mb-2">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">1</span>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {isEn ? 'Connecting to Your Research Wing' : 'Σύνδεση στην Ομάδα σας'}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700">
-                  Στη γωνία της οθόνης σας βρίσκεται το στρογγυλό ανάγλυφο μετάλλιο με το πρόσωπο του <strong>Ταξιδευτή του 19ου αιώνα</strong>:
+                <p className="text-slate-600 text-xs sm:text-sm mb-3">
+                  {isEn ? (
+                    <>Go to the <strong>"Student Teams"</strong> tab:</>
+                  ) : (
+                    <>Πηγαίνετε στην καρτέλα <strong>«Υποβολή Ομάδων»</strong>:</>
+                  )}
                 </p>
                 <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-600">
-                  <li>
-                    <strong>Μετακίνηση παντού στην οθόνη:</strong> Μπορείτε να κάνετε «κλικ και σύρσιμο» (drag & drop) με το ποντίκι ή την αφή και να το μεταφέρετε οπουδήποτε στην οθόνη ώστε να μην εμποδίζει την ανάγνωση.
-                  </li>
-                  <li>
-                    <strong>Καθολική παρουσία:</strong> Παραμένει διαθέσιμο σε όποια καρτέλα κι αν πλοηγηθείτε (Αρχική, Χρονολόγιο, Χάρτης, Ομάδες κ.λπ.).
-                  </li>
-                  <li>
-                    <strong>Φυσική Φωνή Ντοκιμαντέρ (Neural Voice):</strong> Με ένα απλό κλικ ακούτε την αυθεντική, μπάσα φωνή χρονικογράφου του 19ου αι. με ελαφρά κρητική χροιά, σε 4 συναρπαστικούς σταθμούς:
-                    <ol className="list-decimal pl-5 mt-1 space-y-1 text-slate-700">
-                      <li><em>Σταθμός 1 (Θάσος 1813):</em> Το Βακούφι & το Ιμαρέτ Καβάλας.</li>
-                      <li><em>Σταθμός 2 (Αιγαίο Πέλαγος):</em> Οι θαλάσσιοι δρόμοι λαδιού & ξυλείας.</li>
-                      <li><em>Σταθμός 3 (Χανιά 1830–1840):</em> Η Αιγυπτιοκρατία & ο Αιγυπτιακός Φάρος.</li>
-                      <li><em>Σταθμός 4 (Κοινό Έργο):</em> Η γέφυρα μαθητικής συνεργασίας των δύο σχολείων.</li>
-                    </ol>
-                  </li>
+                  {isEn ? (
+                    <>
+                      <li>Select your school (<em>Junior High School of Prinos, Thasos</em> or <em>3rd Senior High School of Chania, Crete</em>).</li>
+                      <li>Select your team wing (e.g., <em>Wing A1: Administration & Waqf Heritage</em>).</li>
+                      <li>Type the team passphrase provided by your teacher.</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>Επιλέξτε το σχολείο σας (<em>Γυμνάσιο Πρίνου Θάσου</em> ή <em>3ο ΓΕΛ Χανίων</em>).</li>
+                      <li>Επιλέξτε το όνομα της ομάδας σας (π.χ. <em>Ομάδα Α1: Διοίκηση & Βακούφια</em>).</li>
+                      <li>Πληκτρολογήστε τον κωδικό πρόσβασης που σας έδωσε ο καθηγητής σας.</li>
+                    </>
+                  )}
                 </ul>
               </div>
 
-              {/* 3 Αναπτυσσόμενα Μέρη Αρχικής Σελίδας */}
-              <div className="border border-slate-200 rounded-2xl p-5 bg-white space-y-3">
-                <div className="flex items-center gap-2.5 text-slate-900 font-bold">
-                  <Layers className="w-5 h-5 text-amber-600" />
-                  <h3 className="text-base font-bold">
-                    Η Αρχική Σελίδα σε 3 Αναπτυσσόμενα Μέρη (Accordion)
+              {/* Βήμα 2 */}
+              <div className="border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition">
+                <div className="flex items-center gap-2.5 text-blue-700 font-bold mb-2">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">2</span>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {isEn ? 'Documenting the Historical Record' : 'Συμπλήρωση της Ιστορικής Καταχώρισης'}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-600">
-                  Για να μην απαιτείται ατελείωτο scroll down, η αρχική σελίδα είναι οργανωμένη σε 3 συμπαγή μέρη με βελάκια ανάπτυξης προς τα κάτω:
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                  <div className="p-3 bg-slate-50 rounded-xl">
+                    <strong className="block text-slate-900 mb-1">
+                      {isEn ? 'Title & Year:' : 'Τίτλος & Χρονολογία:'}
+                    </strong>
+                    {isEn ? 'Concise title and specific historical year (e.g., 1835).' : 'Σύντομος τίτλος και το έτος του γεγονότος (π.χ. 1835).'}
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl">
+                    <strong className="block text-slate-900 mb-1">
+                      {isEn ? 'Period & Island:' : 'Περίοδος & Νησί:'}
+                    </strong>
+                    {isEn ? 'Select administration period and island focus (Thasos or Crete).' : 'Επιλέξτε Οθωμανική Διοίκηση & αντίστοιχο νησί (Θάσος ή Κρήτη).'}
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl">
+                    <strong className="block text-slate-900 mb-1">
+                      {isEn ? 'Research Question:' : 'Ερευνητικό Ερώτημα:'}
+                    </strong>
+                    {isEn ? 'The central historical inquiry answered by your archival finding.' : 'Το κεντρικό ερώτημα που απαντά η πηγή σας.'}
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-xl">
+                    <strong className="block text-slate-900 mb-1">
+                      {isEn ? 'Context & Synthesis:' : 'Ιστορικό Πλαίσιο & Ερμηνεία:'}
+                    </strong>
+                    {isEn ? 'Describe the events and synthesize the student team’s conclusions.' : 'Περιγράψτε τα γεγονότα και το συμπέρασμα της ομάδας.'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Βήμα 3 */}
+              <div className="border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition">
+                <div className="flex items-center gap-2.5 text-blue-700 font-bold mb-2">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">3</span>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {isEn ? 'Adding Primary Sources & Evidence' : 'Προσθήκη Τεκμηρίων & Πηγών'}
+                  </h3>
+                </div>
+                <p className="text-slate-600 text-xs sm:text-sm mb-3">
+                  {isEn ? 'Every historical record must be supported by authentic primary sources:' : 'Κάθε ιστορική καταχώριση πρέπει να βασίζεται σε πηγές:'}
                 </p>
-                <div className="space-y-2.5 text-xs sm:text-sm">
-                  <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/80 flex items-center justify-between">
-                    <div>
-                      <strong className="text-amber-950 block">Μέρος 01: Ταυτότητα Έργου & Συνεργαζόμενα Σχολεία</strong>
-                      <span className="text-slate-500 text-xs">Γυμνάσιο Πρίνου Θάσου & 3ο ΓΕΛ Χανίων (Ιστορικό πλαίσιο 19ου αι.).</span>
-                    </div>
-                    <span className="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0">
-                      Ανάπτυξη <ChevronDown className="w-3.5 h-3.5" />
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="px-2.5 py-1 bg-blue-50 text-blue-800 rounded-lg font-semibold">
+                    {isEn ? '📄 Archival Manuscript' : '📄 Αρχειακό Έγγραφο'}
+                  </span>
+                  <span className="px-2.5 py-1 bg-amber-50 text-amber-800 rounded-lg font-semibold">
+                    {isEn ? '🎙️ Oral History Testimony' : '🎙️ Προφορική Μαρτυρία'}
+                  </span>
+                  <span className="px-2.5 py-1 bg-emerald-50 text-emerald-800 rounded-lg font-semibold">
+                    {isEn ? '🎥 Video Embed (YouTube link)' : '🎥 Βίντεο (YouTube link)'}
+                  </span>
+                  <span className="px-2.5 py-1 bg-indigo-50 text-indigo-800 rounded-lg font-semibold">
+                    {isEn ? '📷 Photo / Manuscript Scan' : '📷 Φωτογραφία / Χειρόγραφο'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-2">
+                  {isEn 
+                    ? '* Always specify the repository or municipal archive where the item is preserved (e.g., General State Archives of Chania, Historical Archive of Thasos, etc.).'
+                    : '* Μην ξεχνάτε να αναφέρετε τον φορέα ή το αρχείο από όπου αντλήσατε το τεκμήριο (π.χ. ΓΑΚ Χανίων, Αρχείο Θάσου κ.λπ.).'}
+                </p>
+              </div>
+
+              {/* Βήμα 4 */}
+              <div className="border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition">
+                <div className="flex items-center gap-2.5 text-blue-700 font-bold mb-2">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs">4</span>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {isEn ? 'Saving Draft or Submitting' : 'Υποβολή ή Αποθήκευση Προσχεδίου'}
+                  </h3>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <strong className="text-slate-900 text-xs block mb-1">
+                      {isEn ? '💾 Save as Draft:' : '💾 Αποθήκευση ως Πρόχειρο (Draft):'}
+                    </strong>
+                    <span className="text-xs text-slate-600">
+                      {isEn 
+                        ? 'Saves your draft locally so you can continue later without notifying educators.'
+                        : 'Αποθηκεύει την εργασία σας για να συνεχίσετε αργότερα χωρίς να τη δει ο καθηγητής.'}
                     </span>
                   </div>
-
-                  <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/80 flex items-center justify-between">
-                    <div>
-                      <strong className="text-amber-950 block">Μέρος 02: Τα Τρία Στάδια της Ερευνητικής Διαδικασίας</strong>
-                      <span className="text-slate-500 text-xs">1ο: Τοπική Έρευνα • 2ο: Συνάντηση Ευρημάτων • 3ο: Ψηφιακός Κόμβος.</span>
-                    </div>
-                    <span className="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0">
-                      Ανάπτυξη <ChevronDown className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-
-                  <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-200/80 flex items-center justify-between">
-                    <div>
-                      <strong className="text-amber-950 block">Μέρος 03: Εκπαιδευτικοί & Μαθητικές Ομάδες Εργασίας</strong>
-                      <span className="text-slate-500 text-xs">Θάσος αριστερά, Χανιά δεξιά, Πτέρυγες Α/Β και επεξεργασία με κωδικό ασφαλείας.</span>
-                    </div>
-                    <span className="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0">
-                      Ανάπτυξη <ChevronDown className="w-3.5 h-3.5" />
+                  <div className="flex-1 p-3 bg-blue-50 rounded-xl border border-blue-200">
+                    <strong className="text-blue-900 text-xs block mb-1">
+                      {isEn ? '🚀 Final Submission:' : '🚀 Οριστική Υποβολή:'}
+                    </strong>
+                    <span className="text-xs text-blue-800">
+                      {isEn 
+                        ? 'Dispatches your entry to the teacher moderation dashboard for scientific review and publication.'
+                        : 'Στέλνει την εργασία στο ταμπλό των καθηγητών για έλεγχο και δημοσίευση.'}
                     </span>
                   </div>
                 </div>
@@ -361,40 +265,138 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
             </div>
           )}
 
-          {/* ========================================================= */}
-          {/* TAB 4: ΧΡΟΝΟΛΟΓΙΟ & ΧΑΡΤΗΣ */}
-          {/* ========================================================= */}
-          {activeTab === 'navigation' && (
+          {/* TAB 2: ΚΑΘΗΓΗΤΕΣ */}
+          {activeTab === 'teachers' && (
+            <div className="space-y-6">
+              <div className="p-4 bg-amber-50/70 rounded-2xl border border-amber-200 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                <p className="text-amber-950 text-xs sm:text-sm">
+                  {isEn ? (
+                    <>In the <strong>"Educators Hub"</strong> tab, supervising teachers hold full pedagogical and scholarly moderation over student submissions before they are published publicly.</>
+                  ) : (
+                    <>Στην καρτέλα <strong>«Εκπαιδευτικοί»</strong> έχετε τον πλήρη παιδαγωγικό και επιστημονικό έλεγχο των μαθητικών αναρτήσεων πριν αυτές εμφανιστούν δημόσια.</>
+                  )}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-300 transition">
+                  <div className="flex items-center gap-2 text-emerald-700 font-bold mb-1.5">
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span className="text-slate-900 font-bold">
+                      {isEn ? '1. Verification & Publishing' : '1. Έγκριση & Δημοσίευση (Publish)'}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    {isEn 
+                      ? 'Review the historical fidelity and citations. Clicking "Approve" immediately makes the milestone live on the interactive Timeline and Map.'
+                      : 'Ελέγχετε την επιστημονική ορθότητα της καταχώρισης. Πατώντας «Έγκριση», το τεκμήριο εμφανίζεται άμεσα στο Κοινό Χρονολόγιο και στον Χάρτη.'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-300 transition">
+                  <div className="flex items-center gap-2 text-red-600 font-bold mb-1.5">
+                    <RotateCcw className="w-5 h-5" />
+                    <span className="text-slate-900 font-bold">
+                      {isEn ? '2. Formative Feedback & Revisions' : '2. Επιστροφή για Διορθώσεις (Feedback)'}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    {isEn 
+                      ? 'If evidence is incomplete or needs refinement, type a constructive pedagogical note and click "Return to Team".'
+                      : 'Αν λείπει κάποιο στοιχείο ή απαιτείται διόρθωση πηγών, πληκτρολογείτε ένα σύντομο παιδαγωγικό σχόλιο και πατάτε «Επιστροφή στην Ομάδα».'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-300 transition">
+                  <div className="flex items-center gap-2 text-indigo-700 font-bold mb-1.5">
+                    <MessageSquare className="w-5 h-5" />
+                    <span className="text-slate-900 font-bold">
+                      {isEn ? '3. Inter-School Commentary & Counterpoint' : '3. Προσθήκη Αντίλογου / Συνεισφοράς άλλου σχολείου'}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    {isEn 
+                      ? 'Allows teachers from the partner island (e.g. Chania for Thasos entries) to append a comparative historical reflection or counterpoint, strengthening inter-school dialogue!'
+                      : 'Επιτρέπει στους καθηγητές του έτερου σχολείου (π.χ. Χανίων για καταχώριση της Θάσου) να προσθέσουν μια παράγραφο συσχετισμού ή αντίλογου, ενισχύοντας τη διασχολική συνεργασία!'}
+                  </p>
+                </div>
+
+                <div className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-300 transition">
+                  <div className="flex items-center gap-2 text-slate-800 font-bold mb-1.5">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                    <span className="text-slate-900 font-bold">
+                      {isEn ? '4. Archival Export (JSON) & Report Printing' : '4. Εξαγωγή Αρχείου (JSON) & Εκτύπωση'}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    {isEn 
+                      ? 'From the top of the dashboard, download open JSON backups of all research records or print a comprehensive unified project report.'
+                      : 'Από το επάνω μέρος του ταμπλό μπορείτε να κατεβάσετε πλήρες αντίγραφο ασφαλείας (JSON backup) ή να εκτυπώσετε το υλικό σε μορφή ενιαίας έκθεσης.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: ΠΛΟΗΓΗΣΗ & ΧΡΟΝΟΛΟΓΙΟ */}
+          {activeTab === 'general' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                  <div className="flex items-center gap-2 font-bold text-slate-900">
+                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200">
+                  <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
                     <BookOpen className="w-5 h-5 text-amber-600" />
-                    <span>Ψηφιακό Χρονολόγιο</span>
+                    <span>{isEn ? 'Digital Timeline' : 'Ψηφιακό Χρονολόγιο'}</span>
                   </div>
                   <ul className="text-xs sm:text-sm space-y-2 text-slate-600">
-                    <li><strong>Φίλτρα Νησιού:</strong> Επιλέξτε <em>«Όλες οι περιοχές»</em>, <em>«Θάσος»</em> ή <em>«Κρήτη»</em> για άμεση εστίαση.</li>
-                    <li><strong>Αναζήτηση:</strong> Πληκτρολογήστε λέξεις-κλειδιά, πρόσωπα ή έννοιες (π.χ. «Βακούφι», «Φάρος», «ελαιόλαδο»).</li>
-                    <li><strong>Προβολή:</strong> Εναλλαγή ανάμεσα σε αναλυτικό Timeline και συμπαγή Λίστα.</li>
-                    <li><strong>Λεπτομέρειες Τεκμηρίου:</strong> Κλικ σε οποιαδήποτε κάρτα για προβολή πλήρους ιστορικού κειμένου, πηγών και βίντεο.</li>
+                    {isEn ? (
+                      <>
+                        <li><strong>Island Filters:</strong> Click <em>"All Regions"</em>, <em>"Thasos"</em>, or <em>"Crete"</em> for instant geographical isolation.</li>
+                        <li><strong>Search:</strong> Type historical figures, places, or commodities (e.g., "oil", "ship", "waqf").</li>
+                        <li><strong>View Modes:</strong> Toggle between chronological stream cards (Timeline) or high-accessibility List.</li>
+                        <li><strong>Full Evidence Modal:</strong> Click any card to inspect full archival citations, oral audio, and video embeds.</li>
+                      </>
+                    ) : (
+                      <>
+                        <li><strong>Φίλτρα Νησιού:</strong> Πατήστε <em>«Όλες οι περιοχές»</em>, <em>«Θάσος»</em> ή <em>«Κρήτη»</em> για άμεση απομόνωση.</li>
+                        <li><strong>Αναζήτηση:</strong> Πληκτρολογήστε πρόσωπα, μέρη ή όρους (π.χ. «λάδι», «πλοίο»).</li>
+                        <li><strong>Προβολή:</strong> Εναλλαγή ανάμεσα σε κάρτες ροής (Timeline) ή προσβάσιμη Λίστα.</li>
+                        <li><strong>Πλήρες Τεκμήριο:</strong> Κάντε κλικ σε οποιαδήποτε κάρτα για να ανοίξει το παράθυρο με τις πηγές και το βίντεο.</li>
+                      </>
+                    )}
                   </ul>
                 </div>
 
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-                  <div className="flex items-center gap-2 font-bold text-slate-900">
+                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200">
+                  <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
                     <MapIcon className="w-5 h-5 text-blue-600" />
-                    <span>Διαδραστικός Χάρτης</span>
+                    <span>{isEn ? 'Interactive Heritage Map' : 'Διαδραστικός Χάρτης'}</span>
                   </div>
                   <ul className="text-xs sm:text-sm space-y-2 text-slate-600">
-                    <li>Εξερευνήστε τους θαλάσσιους δρόμους και τις ρότες εμπορίου του 19ου αιώνα μεταξύ Βορείου Αιγαίου, Κυκλάδων, Κρήτης και Αλεξάνδρειας.</li>
-                    <li>Πατήστε πάνω στους γεωγραφικούς δείκτες (Θάσος, Χανιά, Καβάλα, Αίγυπτος) για να δείτε τα συσχετισμένα τεκμήρια.</li>
+                    {isEn ? (
+                      <>
+                        <li>Explore 19th-century maritime trade routes across the Mediterranean and North Aegean.</li>
+                        <li>Click on cartographic wax seal markers (Thasos, Chania, Alexandria, Istanbul) to view localized historical evidence.</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>Εξερευνήστε τους θαλάσσιους δρόμους της Οθωμανικής Μεσογείου του 19ου αιώνα.</li>
+                        <li>Πατήστε πάνω στους δείκτες (Θάσος, Χανιά, Αίγυπτος, Κωνσταντινούπολη) για να δείτε τα γεωγραφικά τεκμήρια.</li>
+                      </>
+                    )}
                   </ul>
                 </div>
               </div>
 
               <div className="p-4 bg-slate-100 rounded-2xl text-xs text-slate-600 flex items-center justify-between">
-                <span>© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 3ο Γενικό Λύκειο Χανίων</span>
-                <span className="font-semibold text-slate-800">100% Ανοικτή Πλατφόρμα</span>
+                <span>
+                  {isEn 
+                    ? '© 2026–2027 • Junior High School of Prinos & 3rd Senior High School of Chania' 
+                    : '© 2026–2027 • Γυμνάσιο Πρίνου Θάσου & 3ο Γενικό Λύκειο Χανίων'}
+                </span>
+                <span className="font-semibold text-slate-800">
+                  {isEn ? '100% Open & Secure Platform' : '100% Ανοικτή Πλατφόρμα'}
+                </span>
               </div>
             </div>
           )}
@@ -403,13 +405,13 @@ export const UserGuideModal: React.FC<UserGuideModalProps> = ({ isOpen, onClose 
         {/* Footer */}
         <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between shrink-0">
           <span className="text-xs text-slate-500 hidden sm:inline">
-            Διασχολικό Εργαστήριο Τοπικής Ιστορίας (2026–2027) • Ασφαλής Πλατφόρμα
+            {isEn ? 'Inter-School History Lab (2026–2027)' : 'Διασχολικό Εργαστήριο Ιστορίας (2026–2027)'}
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition ml-auto shadow-sm"
+            className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition ml-auto"
           >
-            Κατάλαβα, κλείσιμο
+            {isEn ? 'Got it, Close' : 'Κατάλαβα, κλείσιμο'}
           </button>
         </div>
       </div>

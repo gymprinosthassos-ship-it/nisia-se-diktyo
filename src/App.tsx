@@ -1,4 +1,3 @@
-import { ChaniaLighthouseIcon } from './components/ChaniaLighthouseIcon';
 import { useState, useEffect } from 'react';
 import { ProjectIdentityView } from './components/ProjectIdentityView';
 import { TimelineView } from './components/TimelineView';
@@ -6,17 +5,17 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { TeamPortal } from './components/TeamPortal';
 import { TeacherDashboard } from './components/TeacherDashboard';
 import { UserGuideModal } from './components/UserGuideModal';
-import { DigitalNarratorModal } from './components/DigitalNarratorModal';
-import { DraggableNarratorButton } from './components/DraggableNarratorButton';
 import { mockSchools, mockTeams, mockEntries } from './data/mockData';
 import type { HistoricalEntry, School, Team } from './types/database.types';
 import { supabase, isSupabaseConfigured } from './lib/supabaseClient';
+import { translations, type Language } from './data/translations';
 import { 
   Home,
   BookOpen, 
   Users, 
   ShieldCheck, 
-Anchor, 
+  Compass, 
+  Anchor, 
   Map as MapIcon, 
   Cloud,
   Menu,
@@ -26,6 +25,25 @@ Anchor,
 } from 'lucide-react';
 
 export function App() {
+  const [language, setLanguage] = useState<Language>(() => {
+    try {
+      return (localStorage.getItem('nisia_lang_v1') as Language) || 'el';
+    } catch {
+      return 'el';
+    }
+  });
+
+  const handleLanguageChange = (newLang: Language) => {
+    setLanguage(newLang);
+    try {
+      localStorage.setItem('nisia_lang_v1', newLang);
+    } catch {
+      // ignore
+    }
+  };
+
+  const t = translations[language];
+
   const [currentTab, setCurrentTab] = useState<'identity' | 'timeline' | 'map' | 'teams' | 'teachers'>('identity');
   const [entries, setEntries] = useState<HistoricalEntry[]>(mockEntries);
   const [schools, setSchools] = useState<School[]>(mockSchools);
@@ -34,7 +52,6 @@ export function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
-  const [isNarratorOpen, setIsNarratorOpen] = useState<boolean>(false);
 
   // Παρακολούθηση scroll για το Scroll-to-Top κουμπί
   useEffect(() => {
@@ -69,12 +86,10 @@ export function App() {
         const { data: rawSchoolsData } = await supabase.from('schools').select('*');
         let normalizedSchools: School[] = mockSchools;
         if (rawSchoolsData && rawSchoolsData.length > 0) {
-          normalizedSchools = (rawSchoolsData as School[])
-            .map(s => ({
-              ...s,
-              name: sanitizeSchoolText(s.name)
-            }))
-            .sort((a, b) => (a.id === 'school-prinos' ? -1 : (b.id === 'school-prinos' ? 1 : 0)));
+          normalizedSchools = (rawSchoolsData as School[]).map(s => ({
+            ...s,
+            name: sanitizeSchoolText(s.name)
+          }));
           setSchools(normalizedSchools);
         }
 
@@ -229,11 +244,11 @@ export function App() {
   };
 
   const navItems = [
-    { id: 'identity' as const, label: 'Ταυτότητα Έργου', icon: Home, desc: 'Σκοπός, σχολεία & ομάδες' },
-    { id: 'timeline' as const, label: 'Χρονολόγιο', icon: BookOpen, desc: 'Διαδραστικό ιστορικό χρονολόγιο' },
-    { id: 'map' as const, label: 'Χάρτης Δικτύου', icon: MapIcon, desc: 'Ναυτικοί & εμπορικοί δρόμοι' },
-    { id: 'teams' as const, label: 'Υποβολή Ομάδων', icon: Users, desc: 'Καταχώριση αρχειακών τεκμηρίων' },
-    { id: 'teachers' as const, label: 'Εκπαιδευτικοί', icon: ShieldCheck, desc: 'Επιμέλεια & αξιολόγηση' },
+    { id: 'identity' as const, label: t.navIdentity, icon: Home, desc: t.navIdentityDesc },
+    { id: 'timeline' as const, label: t.navTimeline, icon: BookOpen, desc: t.navTimelineDesc },
+    { id: 'map' as const, label: t.navMap, icon: MapIcon, desc: t.navMapDesc },
+    { id: 'teams' as const, label: t.navTeams, icon: Users, desc: t.navTeamsDesc },
+    { id: 'teachers' as const, label: t.navTeachers, icon: ShieldCheck, desc: t.navTeachersDesc },
   ];
 
   return (
@@ -252,7 +267,7 @@ export function App() {
             <div className="relative">
               <img 
                 src="/logo.jpg" 
-                alt="Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας" 
+                alt={t.labTitle} 
                 className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border-2 border-amber-400 shadow-md object-cover group-hover:scale-105 group-hover:border-amber-300 transition duration-300"
               />
               <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-blue-500 border-2 border-slate-900 rounded-full"></span>
@@ -260,38 +275,38 @@ export function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm md:text-base font-serif font-bold text-white tracking-tight leading-tight group-hover:text-amber-300 transition line-clamp-1">
-                  ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ
+                  {t.labTitle}
                 </span>
                 <span className="hidden xl:inline-block px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-[10px] font-bold tracking-wider uppercase">
-                  19ος αι.
+                  {t.centuryBadge}
                 </span>
                 {isLiveConnected && (
                   <span className="hidden xl:flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold">
                     <Cloud className="w-3 h-3 text-emerald-400" />
-                    <span>Cloud Live</span>
+                    <span>{t.cloudLive}</span>
                   </span>
                 )}
               </div>
               <span className="text-[11px] sm:text-xs text-slate-300 block font-normal text-slate-400 line-clamp-1">
-                Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή
+                {t.labSubtitle}
               </span>
             </div>
           </div>
 
-          {/* School Badges in Top Navbar (Proposal 2) */}
+          {/* School Badges in Top Navbar */}
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 shadow-md text-xs">
             <span className="text-blue-300 font-semibold flex items-center gap-1.5">
               <Anchor className="w-3.5 h-3.5 text-blue-400" />
-              Γυμνάσιο Πρίνου Θάσου
+              {t.prinosSchoolBadge}
             </span>
             <span className="text-amber-400 text-xs font-bold px-0.5">⟷</span>
             <span className="text-amber-300 font-semibold flex items-center gap-1.5">
-              <ChaniaLighthouseIcon className="w-3.5 h-3.5 text-blue-400" />
-              3ο Γενικό Λύκειο Χανίων
+              <Compass className="w-3.5 h-3.5 text-amber-400" />
+              {t.chaniaSchoolBadge}
             </span>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links & Controls */}
           <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -300,7 +315,7 @@ export function App() {
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
-                  className={`relative px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
+                  className={`relative px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
@@ -315,6 +330,34 @@ export function App() {
               );
             })}
 
+            {/* Language Switcher [ EL | EN ] */}
+            <div className="ml-1 flex items-center bg-slate-800/95 border border-slate-700 rounded-xl p-0.5 text-xs font-bold shadow-inner" aria-label={t.langSwitchAria}>
+              <button
+                onClick={() => handleLanguageChange('el')}
+                className={`px-2 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  language === 'el'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Ελληνικά"
+              >
+                <span>🇬🇷</span>
+                <span className="text-[11px]">EL</span>
+              </button>
+              <button
+                onClick={() => handleLanguageChange('en')}
+                className={`px-2 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  language === 'en'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="English"
+              >
+                <span>🇬🇧</span>
+                <span className="text-[11px]">EN</span>
+              </button>
+            </div>
+
             {/* Help & Guide Button */}
             <button
               onClick={() => setIsGuideOpen(true)}
@@ -322,18 +365,34 @@ export function App() {
               title="Εγχειρίδιο Χρήσης & Βοήθεια"
             >
               <HelpCircle className="w-4 h-4 text-amber-400" />
-              <span>Βοήθεια</span>
+              <span>{t.helpButton}</span>
             </button>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
-            aria-label="Μενού πλοήγησης"
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Actions: Language + Hamburger */}
+          <div className="flex md:hidden items-center gap-2">
+            <div className="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-0.5 text-xs font-bold">
+              <button
+                onClick={() => handleLanguageChange('el')}
+                className={`px-1.5 py-1 rounded ${language === 'el' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-400'}`}
+              >
+                🇬🇷
+              </button>
+              <button
+                onClick={() => handleLanguageChange('en')}
+                className={`px-1.5 py-1 rounded ${language === 'en' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-400'}`}
+              >
+                🇬🇧
+              </button>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              aria-label="Μενού πλοήγησης"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
@@ -416,13 +475,15 @@ export function App() {
             </div>
             <div>
               <h1 className="text-xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                ΔΙΑΣΧΟΛΙΚΟ ΕΡΓΑΣΤΗΡΙΟ ΨΗΦΙΑΚΗΣ ΤΟΠΙΚΗΣ ΙΣΤΟΡΙΑΣ
+                {t.labTitle}
               </h1>
               <div className="inline-block mt-2 px-3 py-1 bg-amber-500/20 border border-amber-400/40 rounded-full text-amber-300 font-semibold text-xs sm:text-sm tracking-wide">
-                Σχολικό Έτος 2026 – 2027
+                {language === 'el' ? 'Σχολικό Έτος 2026 – 2027' : 'School Year 2026 – 2027'}
               </div>
               <p className="text-sm sm:text-base text-slate-200 mt-2 max-w-2xl font-serif drop-shadow-[0_1px_5px_rgba(0,0,0,0.9)]">
-                «Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή»
+                {language === 'el'
+                  ? '«Νησιά σε Δίκτυο: Θάσος & Κρήτη στην Οθωμανική Μεσόγειο του Μεχμέτ Αλή»'
+                  : '«Islands in Network: Thasos & Crete in the Ottoman Mediterranean of Muhammad Ali»'}
               </p>
             </div>
           </div>
@@ -450,13 +511,14 @@ export function App() {
         {currentTab === 'identity' && (
           <ProjectIdentityView 
             teams={teams}
+            language={language}
             onNavigateToTab={(tab) => {
               setCurrentTab(tab);
               scrollToTop();
             }}
           />
         )}
-        {currentTab === 'timeline' && <TimelineView entries={entries.filter(e => e.status === 'approved')} />}
+        {currentTab === 'timeline' && <TimelineView language={language} entries={entries.filter(e => e.status === 'approved')} />}
         {currentTab === 'map' && <InteractiveMap entries={entries.filter(e => e.status === 'approved')} />}
         {currentTab === 'teams' && (
           <TeamPortal 
@@ -516,7 +578,7 @@ export function App() {
             {/* Quick Navigation Column */}
             <div className="md:col-span-3 space-y-2.5">
               <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
-                ΠΛΟΗΓΗΣΗ
+                {t.footerQuickNav}
               </span>
               <ul className="space-y-2">
                 <li>
@@ -528,7 +590,7 @@ export function App() {
                     className="hover:text-amber-400 transition flex items-center gap-2"
                   >
                     <span className="text-amber-400">•</span>
-                    <span>Ταυτότητα Έργου</span>
+                    <span>{t.navIdentity}</span>
                   </button>
                 </li>
                 {navItems.filter(i => i.id !== 'identity').map((item) => (
@@ -554,7 +616,7 @@ export function App() {
                     className="hover:text-amber-400 transition flex items-center gap-2 text-amber-300 font-medium"
                   >
                     <span className="text-amber-400">★</span>
-                    <span>Εγχειρίδιο Χρήσης (Οδηγός)</span>
+                    <span>{t.footerGuideLink}</span>
                   </button>
                 </li>
               </ul>
@@ -563,21 +625,21 @@ export function App() {
             {/* Schools & Credits Column */}
             <div className="md:col-span-4 space-y-2.5">
               <span className="text-white font-bold text-xs uppercase tracking-wider block mb-3">
-                ΣΥΝΕΡΓΑΖΟΜΕΝΑ ΣΧΟΛΕΙΑ
+                {t.footerSchoolsTitle}
               </span>
               <div className="space-y-2 text-slate-400">
                 <div className="flex items-start gap-2">
                   <Anchor className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-slate-200 block">Γυμνάσιο Πρίνου Θάσου</strong>
-                    <span className="text-[11px]">Πρίνος, Θάσος • Α΄ & Β΄ Πτέρυγες</span>
+                    <strong className="text-slate-200 block">{t.prinosSchoolBadge}</strong>
+                    <span className="text-[11px]">{t.footerPrinosDesc}</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
-                  <ChaniaLighthouseIcon className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                  <Compass className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-slate-200 block">3ο Γενικό Λύκειο Χανίων</strong>
-                    <span className="text-[11px]">Χανιά, Κρήτη • Α΄ & Β΄ Πτέρυγες</span>
+                    <strong className="text-slate-200 block">{t.chaniaSchoolBadge}</strong>
+                    <span className="text-[11px]">{t.footerChaniaDesc}</span>
                   </div>
                 </div>
               </div>
@@ -587,13 +649,13 @@ export function App() {
           {/* Bottom Bar */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-slate-400 text-xs border-t border-slate-800/80 mt-6">
             <p className="text-slate-400 text-xs sm:text-sm">
-              © 2026–2027 • Διασχολικό Εργαστήριο Ψηφιακής Τοπικής Ιστορίας
+              {t.footerCopyright}
             </p>
 
             {/* Developer Credit: Ανάπτυξη Ιστοσελίδας & Logo (Μεγάλο & Ευανάγνωστο) */}
             <div className="flex items-center gap-4 px-4 py-2.5 rounded-2xl bg-slate-950/90 border border-slate-800 shadow-xl hover:border-amber-500/50 transition duration-300 group">
               <span className="text-slate-200 font-serif font-bold text-sm sm:text-base tracking-wide">
-                Ανάπτυξη Ιστοσελίδας:
+                {t.footerDevCredit}
               </span>
               <img 
                 src="/anaskalli-logo.png" 
@@ -604,29 +666,17 @@ export function App() {
 
             <div className="flex items-center gap-3">
               <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-medium">
-                100% Ασφαλής & Ανοικτή Πλατφόρμα
+                {t.footerSafeBadge}
               </span>
             </div>
           </div>
         </div>
       </footer>
-      {/* Ψηφιακός Αφηγητής — Μετακινούμενο Στρογγυλό Κουμπί (Draggable) */}
-      <DraggableNarratorButton onClick={() => setIsNarratorOpen(true)} />
-
-      {/* Ψηφιακός Αφηγητής Modal */}
-      <DigitalNarratorModal
-        isOpen={isNarratorOpen}
-        onClose={() => setIsNarratorOpen(false)}
-        onNavigateToTab={(tab) => {
-          setCurrentTab(tab);
-          scrollToTop();
-        }}
-      />
-
       {/* Interactive User Guide Modal */}
       <UserGuideModal 
         isOpen={isGuideOpen} 
         onClose={() => setIsGuideOpen(false)} 
+        language={language}
       />
     </div>
   );
